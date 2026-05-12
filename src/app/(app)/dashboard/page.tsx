@@ -13,7 +13,7 @@ export default function DashboardPage() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Leaf className="h-5 w-5 text-teal-600" />
-            <span className="font-bold text-lg text-slate-900">TROPICARE</span>
+            <span className="font-bold text-lg text-slate-900">SARIQAMA</span>
           </div>
           <Link href="/perfil">
             <div className="w-9 h-9 rounded-full bg-teal-100 flex items-center justify-center text-teal-700 font-semibold text-sm cursor-pointer">
@@ -101,7 +101,7 @@ export default function DashboardPage() {
 
         {/* Disclaimer */}
         <p className="text-xs text-slate-400 text-center mt-10 leading-relaxed">
-          TROPICARE entrega orientación sanitaria. No reemplaza evaluación médica profesional.
+          SARIQAMA entrega orientación sanitaria. No reemplaza evaluación médica profesional.
         </p>
       </main>
     </div>

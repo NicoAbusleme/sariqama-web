@@ -1,5 +1,5 @@
 // ============================================
-// TROPICARE — Tipos globales
+// SARIQAMA — Tipos globales
 // ============================================
 
 export type SemaforoColor = 'verde' | 'amarillo' | 'rojo'

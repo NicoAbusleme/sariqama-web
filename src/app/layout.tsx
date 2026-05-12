@@ -8,7 +8,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "TROPICARE — Salud del viajero para tu familia",
+  title: "SARIQAMA — Salud del viajero para tu familia",
   description:
     "Prepara la salud de tu familia antes de viajar. Checklists sanitarios, evaluación de riesgos por destino y orientación médica profesional.",
   keywords: ["salud viajero", "vacunas viaje", "dengue", "familias", "tropical"],

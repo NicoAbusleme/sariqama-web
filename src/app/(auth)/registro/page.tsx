@@ -10,7 +10,7 @@ export default function RegistroPage() {
         {/* Logo */}
         <div className="flex items-center justify-center gap-2 mb-8">
           <Leaf className="h-7 w-7 text-teal-600" />
-          <span className="font-bold text-2xl text-slate-900">TROPICARE</span>
+          <span className="font-bold text-2xl text-slate-900">SARIQAMA</span>
         </div>
 
         <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-8">
@@ -55,7 +55,7 @@ export default function RegistroPage() {
 
             {/* Consentimiento */}
             <p className="text-xs text-slate-400 leading-relaxed">
-              Al registrarte aceptas que TROPICARE entrega{" "}
+              Al registrarte aceptas que SARIQAMA entrega{" "}
               <strong>orientación sanitaria</strong> y no reemplaza una
               evaluación médica profesional.
             </p>

@@ -3,7 +3,7 @@ import { Shield, MapPin, CheckCircle, Stethoscope, ChevronRight, Leaf } from "lu
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
-// Colores TROPICARE: teal-600 (#0d9488) como primario
+// Colores SARIQAMA: teal-600 (#0d9488) como primario
 const BENEFICIOS = [
   {
     icon: MapPin,
@@ -47,7 +47,7 @@ export default function LandingPage() {
           <div className="flex items-center gap-2">
             <Leaf className="h-6 w-6 text-teal-600" />
             <span className="font-bold text-xl text-slate-900 tracking-tight">
-              TROPICARE
+              SARIQAMA
             </span>
           </div>
           <nav className="hidden md:flex items-center gap-6 text-sm text-slate-600">
@@ -172,7 +172,7 @@ export default function LandingPage() {
           <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
             <p className="text-sm text-slate-400 leading-relaxed">
               <strong className="text-slate-500">Aviso importante:</strong>{" "}
-              TROPICARE entrega orientación sanitaria basada en fuentes clínicas
+              SARIQAMA entrega orientación sanitaria basada en fuentes clínicas
               validadas. No reemplaza una evaluación médica profesional. Ante
               signos de alarma, busca atención médica de inmediato.
             </p>
@@ -206,9 +206,9 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row justify-between items-center gap-4 text-sm">
           <div className="flex items-center gap-2">
             <Leaf className="h-4 w-4 text-teal-400" />
-            <span className="text-white font-semibold">TROPICARE</span>
+            <span className="text-white font-semibold">SARIQAMA</span>
           </div>
-          <p>© 2026 TROPICARE. Orientación sanitaria, no diagnóstico médico.</p>
+          <p>© 2026 SARIQAMA. Orientación sanitaria, no diagnóstico médico.</p>
         </div>
       </footer>
     </div>

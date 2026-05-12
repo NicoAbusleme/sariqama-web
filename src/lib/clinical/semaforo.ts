@@ -1,5 +1,5 @@
 // ============================================
-// TROPICARE — Lógica determinística del semáforo
+// SARIQAMA — Lógica determinística del semáforo
 // SIN IA — reglas clínicas validadas
 // Basado en CDC Yellow Book 2026
 // ============================================
@@ -46,7 +46,7 @@ export interface ResultadoSemaforo {
 }
 
 const DISCLAIMER =
-  'TROPICARE entrega orientación sanitaria y no reemplaza una evaluación médica. Si los síntomas empeoran, busca atención de salud.'
+  'SARIQAMA entrega orientación sanitaria y no reemplaza una evaluación médica. Si los síntomas empeoran, busca atención de salud.'
 
 // Señales de alarma absolutas → ROJO inmediato
 const SIGNOS_ALARMA_ABSOLUTOS = (s: EvaluacionSintomas): boolean =>
@@ -104,7 +104,7 @@ export function evaluarSemaforo(s: EvaluacionSintomas): ResultadoSemaforo {
       descripcion:
         'Tus síntomas requieren evaluación. Te recomendamos hablar con un profesional de salud antes de continuar.',
       acciones: [
-        'Solicita una teleorientación con TROPICARE',
+        'Solicita una teleorientación con SARIQAMA',
         'Mantén buena hidratación (agua o suero oral)',
         'Registra la evolución de los síntomas en el diario',
         s.es_nino

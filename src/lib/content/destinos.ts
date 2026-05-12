@@ -1,5 +1,5 @@
 // ============================================
-// TROPICARE — Destinos piloto
+// SARIQAMA — Destinos piloto
 // Fuente: CDC Yellow Book 2026
 // Revisado: 2026-05
 // ============================================
