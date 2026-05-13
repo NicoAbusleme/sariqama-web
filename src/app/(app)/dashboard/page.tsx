@@ -1,8 +1,7 @@
 import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
-import { Plus, MapPin, CheckCircle, AlertTriangle, Stethoscope, ChevronRight } from "lucide-react"
+import { Plus, MapPin, CheckCircle, AlertTriangle, Stethoscope, ChevronRight, Settings } from "lucide-react"
 import Link from "next/link"
-import { cerrarSesion } from "@/app/actions/auth"
 import { Badge } from "@/components/ui/badge"
 
 export default async function DashboardPage() {
@@ -37,14 +36,13 @@ export default async function DashboardPage() {
                 {familia.nombre} 👋
               </h1>
             </div>
-            <form action={cerrarSesion}>
-              <button type="submit"
-                className="w-10 h-10 rounded-2xl flex items-center justify-center text-lg"
+            <Link href="/perfil">
+              <div className="w-10 h-10 rounded-2xl flex items-center justify-center"
                 style={{ background: "rgba(255,255,255,0.15)" }}
-                title="Cerrar sesión">
-                👤
-              </button>
-            </form>
+                title="Mi perfil">
+                <Settings className="h-5 w-5 text-white/80" />
+              </div>
+            </Link>
           </div>
 
           {/* Viajeros pills */}
