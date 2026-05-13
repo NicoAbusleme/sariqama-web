@@ -54,7 +54,7 @@ export default async function DashboardPage() {
                 <span key={v.id}
                   className="px-3 py-1 rounded-full text-xs font-medium text-white/90 border border-white/20"
                   style={{ background: "rgba(255,255,255,0.12)" }}>
-                  {v.nombre} · {v.edad}a
+                  {v.nombre} · {v.edad} años
                 </span>
               ))}
             </div>
@@ -88,9 +88,9 @@ export default async function DashboardPage() {
         {tieneViajes && (
           <div className="mb-5">
             <div className="flex items-center justify-between mb-3 px-1">
-              <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Viajes próximos</span>
+              <span className="text-sm font-bold text-slate-700 tracking-wide">Viajes próximos</span>
               <Link href="/viaje/nuevo">
-                <span className="text-xs text-teal-600 font-semibold flex items-center gap-1">
+                <span className="inline-flex items-center gap-1.5 bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold px-3 py-1.5 rounded-xl transition-colors">
                   <Plus className="h-3 w-3" /> Nuevo
                 </span>
               </Link>
