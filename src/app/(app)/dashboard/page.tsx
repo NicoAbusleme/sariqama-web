@@ -161,27 +161,6 @@ export default async function DashboardPage() {
         </p>
       </main>
 
-      {/* Bottom nav */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 z-50">
-        <div className="max-w-2xl mx-auto flex justify-around items-center py-2 px-4">
-          {[
-            { href: "/dashboard",                                                               icon: "🏠",  label: "Inicio",   active: true },
-            { href: "/viaje/nuevo",                                                             icon: "✈️",  label: "Viaje",    active: false },
-            { href: viajes?.[0] ? `/viaje/${viajes[0].id}/sintomas` : "/viaje/nuevo",          icon: "🌡️", label: "Síntomas", active: false },
-            { href: "/perfil",                                                                  icon: "👤",  label: "Perfil",   active: false },
-          ].map(n => (
-            <Link key={n.href} href={n.href}
-              className="flex flex-col items-center gap-1 py-1 px-3">
-              <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg ${n.active ? "bg-teal-100" : ""}`}>
-                {n.icon}
-              </div>
-              <span className={`text-[10px] font-medium ${n.active ? "text-teal-600" : "text-slate-400"}`}>
-                {n.label}
-              </span>
-            </Link>
-          ))}
-        </div>
-      </nav>
     </div>
   )
 }
