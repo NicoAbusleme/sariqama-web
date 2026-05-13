@@ -59,6 +59,9 @@ const COLOR_META = {
 export function SintomasClient({ viajeId, viajeros }: Props) {
   const [paso, setPaso] = useState<1 | 2 | 3 | 'resultado'>(viajeros.length > 0 ? 1 : 2)
   const [viajeroId, setViajeroId]     = useState<string | null>(null)
+  const [nombreInvitado, setNombreInvitado] = useState('')
+  const [invitadoNino, setInvitadoNino]     = useState(false)
+  const [modoInvitado, setModoInvitado]     = useState(false)
   const [sintomas, setSintomas]       = useState<Set<string>>(new Set())
   const [diasSintomas, setDias]       = useState(1)
   const [exposiciones, setExposiciones] = useState<Set<string>>(new Set())
@@ -68,9 +71,10 @@ export function SintomasClient({ viajeId, viajeros }: Props) {
   const [, startTransition]           = useTransition()
 
   const viajeroSel      = viajeros.find(v => v.id === viajeroId)
-  const esNino          = viajeroSel?.es_nino ?? false
+  const esNino          = modoInvitado ? invitadoNino : (viajeroSel?.es_nino ?? false)
   const embarazada      = viajeroSel?.condiciones?.includes('embarazo') ?? false
   const inmunosuprimido = viajeroSel?.condiciones?.includes('inmunosupresion') ?? false
+  const nombreEvaluado  = modoInvitado ? (nombreInvitado.trim() || 'Invitado') : viajeroSel?.nombre
 
   function toggleSintoma(key: string) {
     setSintomas(prev => { const n = new Set(prev); n.has(key) ? n.delete(key) : n.add(key); return n })
@@ -118,7 +122,7 @@ export function SintomasClient({ viajeId, viajeros }: Props) {
       const r = await guardarSintomas({
         viaje_id:       viajeId,
         viajero_id:     viajeroId ?? undefined,
-        viajero_nombre: viajeroSel?.nombre,
+        viajero_nombre: nombreEvaluado,
         sintomas:       Array.from(sintomas),
         semaforo:       res.color,
         fiebre:         tieneFiebre,
@@ -138,8 +142,9 @@ export function SintomasClient({ viajeId, viajeros }: Props) {
 
   function reiniciar() {
     setSintomas(new Set()); setExposiciones(new Set())
-    setDias(1); setResultado(null); setGuardado('idle')
-    setPaso(viajeros.length > 0 ? 1 : 2); setViajeroId(null)
+    setDias(1); setResultado(null); setGuardado('idle'); setErrorMsg(null)
+    setPaso(viajeros.length > 0 ? 1 : 2)
+    setViajeroId(null); setModoInvitado(false); setNombreInvitado(''); setInvitadoNino(false)
   }
 
   const sintomasVisibles = esNino ? [...SINTOMAS_ADULTO, ...SINTOMAS_NINO_EXTRA] : SINTOMAS_ADULTO
@@ -176,15 +181,67 @@ export function SintomasClient({ viajeId, viajeros }: Props) {
             </div>
           </button>
         ))}
-        <button onClick={() => { setViajeroId(null); setPaso(2) }}
-          className="w-full bg-white rounded-2xl border border-slate-100 p-4 text-left hover:border-teal-200 transition-all">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-slate-50 flex items-center justify-center text-xl">👤</div>
-            <p className="text-sm text-slate-500">Evaluar sin seleccionar</p>
-          </div>
-        </button>
+        {/* Invitado */}
+        <div className={cn(
+          'w-full bg-white rounded-2xl border transition-all',
+          modoInvitado ? 'border-teal-400 ring-2 ring-teal-100 shadow-sm' : 'border-slate-100'
+        )}>
+          <button
+            onClick={() => { setModoInvitado(true); setViajeroId(null) }}
+            className="w-full p-4 text-left cursor-pointer"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-slate-50 flex items-center justify-center text-xl">👤</div>
+              <div>
+                <p className="text-sm font-medium text-slate-700">Otro / Invitado</p>
+                <p className="text-xs text-slate-400">Alguien que no está en tu lista</p>
+              </div>
+              {modoInvitado && (
+                <div className="ml-auto w-5 h-5 rounded-full bg-teal-500 flex items-center justify-center">
+                  <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+              )}
+            </div>
+          </button>
+
+          {/* Campos del invitado */}
+          {modoInvitado && (
+            <div className="px-4 pb-4 flex flex-col gap-3 border-t border-slate-100 pt-3">
+              <div>
+                <label className="text-xs font-semibold text-slate-500 mb-1.5 block">Nombre (opcional)</label>
+                <input
+                  type="text"
+                  placeholder="Ej: Abuela Rosa"
+                  value={nombreInvitado}
+                  onChange={e => setNombreInvitado(e.target.value)}
+                  className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm text-slate-800 placeholder:text-slate-300 focus:outline-none focus:border-teal-400"
+                />
+              </div>
+              <button
+                onClick={() => setInvitadoNino(v => !v)}
+                className={cn(
+                  'flex items-center gap-3 rounded-xl border px-3 py-2.5 transition-all text-left',
+                  invitadoNino ? 'bg-amber-50 border-amber-200' : 'bg-slate-50 border-slate-100'
+                )}
+              >
+                <span className="text-lg">{invitadoNino ? '👶' : '🧑'}</span>
+                <span className={cn('text-sm flex-1', invitadoNino ? 'text-amber-800 font-medium' : 'text-slate-500')}>
+                  {invitadoNino ? 'Es niño/a (activa preguntas pediátricas)' : '¿Es niño/a?'}
+                </span>
+                <div className={cn(
+                  'w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center',
+                  invitadoNino ? 'border-amber-500 bg-amber-500' : 'border-slate-300'
+                )}>
+                  {invitadoNino && <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>}
+                </div>
+              </button>
+            </div>
+          )}
+        </div>
       </div>
-      {viajeroId && (
+      {(viajeroId || modoInvitado) && (
         <button onClick={() => setPaso(2)}
           className="w-full bg-teal-600 hover:bg-teal-700 text-white rounded-2xl py-3.5 font-semibold text-sm transition-colors">
           Continuar →
@@ -198,7 +255,7 @@ export function SintomasClient({ viajeId, viajeros }: Props) {
     <div className="flex flex-col gap-4">
       <div>
         <h2 className="font-semibold text-slate-900 text-lg mb-1" style={{ fontFamily: 'var(--font-fraunces)' }}>
-          {viajeroSel ? `¿Qué síntomas tiene ${viajeroSel.nombre}?` : '¿Qué síntomas tiene?'}
+          {nombreEvaluado ? `¿Qué síntomas tiene ${nombreEvaluado}?` : '¿Qué síntomas tiene?'}
         </h2>
         <p className="text-sm text-slate-500">Selecciona todo lo que aplique ahora mismo</p>
       </div>
