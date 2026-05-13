@@ -78,13 +78,13 @@ export async function guardarSintomas(data: {
   const { data: familia } = await supabase.from('familias').select('id').eq('user_id', user.id).single()
   if (!familia || viaje.familia_id !== familia.id) return { error: 'No autorizado' }
 
+  // fiebre en BD es numeric (temperatura). Lo omitimos ya que está en sintomas[].
   const { error } = await supabase.from('sintomas_log').insert({
     viaje_id:        data.viaje_id,
     viajero_id:      data.viajero_id ?? null,
     viajero_nombre:  data.viajero_nombre ?? null,
     sintomas:        data.sintomas,
     semaforo:        data.semaforo,
-    fiebre:          data.fiebre,
     dias_sintomas:   data.dias_sintomas,
     titulo:          data.titulo,
     exposiciones:    data.exposiciones,
