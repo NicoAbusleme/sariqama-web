@@ -3,6 +3,7 @@ import { redirect, notFound } from 'next/navigation'
 import { ChevronLeft } from 'lucide-react'
 import Link from 'next/link'
 import { getDestinoBySlug } from '@/lib/content/destinos'
+import { getEscalaInfo, NIVEL_SALUD_META, VISA_META } from '@/lib/content/escalas'
 import { RiskChip } from '@/components/ui/risk-chip'
 import type { NivelRiesgo } from '@/types'
 
@@ -137,6 +138,114 @@ export default async function RiesgosPage({ params }: { params: Promise<{ id: st
               👶 Para familias con niños
             </h2>
             <p className="text-sm text-amber-700 leading-relaxed">{destino.riesgos.notas_pediatricas}</p>
+          </div>
+        )}
+
+        {/* ── Escalas ─────────────────────────────────────────────── */}
+        {viaje.escalas && viaje.escalas.length > 0 && (
+          <div className="mt-2">
+            <h2 className="font-semibold text-slate-900 mb-3 flex items-center gap-2"
+              style={{ fontFamily: 'var(--font-fraunces)' }}>
+              ✈️ Escalas en tu ruta
+            </h2>
+
+            <div className="flex flex-col gap-4">
+              {viaje.escalas.map((escala: { destino: string; horas: number }, idx: number) => {
+                const info = getEscalaInfo(escala.destino)
+                if (!info) return null
+                const saludMeta = NIVEL_SALUD_META[info.nivel_salud]
+                const visaMeta  = VISA_META[info.aduana.visa as keyof typeof VISA_META]
+                const durLabel  = escala.horas < 3 ? '< 2 h' : escala.horas <= 6 ? '3–6 h' : escala.horas <= 12 ? '7–12 h' : escala.horas <= 24 ? '13–24 h' : '+24 h'
+
+                return (
+                  <div key={idx} className="bg-white rounded-2xl border border-slate-100 overflow-hidden">
+                    {/* Cabecera escala */}
+                    <div className="flex items-center gap-3 px-4 pt-4 pb-3 border-b border-slate-50">
+                      <span className="text-2xl">{info.flag}</span>
+                      <div className="flex-1">
+                        <p className="font-semibold text-slate-900 text-sm">{escala.destino}</p>
+                        <p className="text-xs text-slate-400">{durLabel} de escala</p>
+                      </div>
+                      <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full ${saludMeta.badge}`}>
+                        {saludMeta.label}
+                      </span>
+                    </div>
+
+                    <div className="p-4 flex flex-col gap-4">
+
+                      {/* Riesgos de salud */}
+                      <div>
+                        <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wide mb-2">
+                          🏥 Riesgos de salud
+                        </p>
+                        <div className="flex flex-col gap-1.5">
+                          {info.riesgos_salud.map((r, i) => (
+                            <div key={i} className="flex items-start gap-2">
+                              <div className={`w-2 h-2 rounded-full flex-shrink-0 mt-1.5 ${saludMeta.dot}`} />
+                              <p className="text-xs text-slate-600 leading-relaxed">{r}</p>
+                            </div>
+                          ))}
+                        </div>
+                        {info.vacunas_recomendadas && (
+                          <div className="flex flex-wrap gap-1.5 mt-2">
+                            {info.vacunas_recomendadas.map(v => (
+                              <span key={v} className="text-[11px] bg-purple-50 text-purple-700 border border-purple-100 px-2.5 py-0.5 rounded-full">
+                                💉 {v}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Aduana */}
+                      <div>
+                        <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wide mb-2">
+                          🛃 Aduana e ingreso
+                        </p>
+
+                        {/* Visa */}
+                        <div className={`rounded-xl border px-3 py-2.5 mb-3 ${visaMeta.bg}`}>
+                          <p className={`text-xs font-semibold ${visaMeta.color}`}>
+                            {visaMeta.icon} {info.aduana.visa_nota}
+                          </p>
+                        </div>
+
+                        {/* Documentos */}
+                        <p className="text-[11px] font-semibold text-slate-500 mb-1.5">Documentos necesarios</p>
+                        <div className="flex flex-col gap-1 mb-3">
+                          {info.aduana.documentos.map((d, i) => (
+                            <div key={i} className="flex items-start gap-2">
+                              <span className="text-slate-400 text-xs mt-0.5">•</span>
+                              <p className="text-xs text-slate-600">{d}</p>
+                            </div>
+                          ))}
+                        </div>
+
+                        {/* Restricciones */}
+                        <p className="text-[11px] font-semibold text-slate-500 mb-1.5">Restricciones de aduana</p>
+                        <div className="flex flex-col gap-1">
+                          {info.aduana.restricciones.map((r, i) => (
+                            <div key={i} className="flex items-start gap-2">
+                              <span className="text-amber-400 text-xs mt-0.5">⚠</span>
+                              <p className="text-xs text-slate-600">{r}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Nota de tránsito */}
+                      {info.notas_transito && (
+                        <div className="bg-blue-50 border border-blue-100 rounded-xl px-3 py-2.5">
+                          <p className="text-xs text-blue-700 leading-relaxed">
+                            💡 {info.notas_transito}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
           </div>
         )}
 
