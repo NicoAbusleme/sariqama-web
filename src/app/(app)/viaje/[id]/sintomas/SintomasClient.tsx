@@ -387,6 +387,14 @@ export function SintomasClient({ viajeId, viajeros }: Props) {
           </Link>
         )}
 
+        {/* Error visible si falla el guardado */}
+        {guardado === 'error' && errorMsg && (
+          <div className="bg-red-50 border border-red-200 rounded-2xl p-3">
+            <p className="text-xs font-semibold text-red-600 mb-1">⚠️ Error al guardar en base de datos:</p>
+            <p className="text-xs text-red-500 font-mono break-all">{errorMsg}</p>
+          </div>
+        )}
+
         {/* Disclaimer */}
         <div className="bg-slate-50 rounded-2xl border border-slate-100 p-4">
           <p className="text-[11px] text-slate-400 leading-relaxed text-center">⚕️ {resultado.disclaimer}</p>
