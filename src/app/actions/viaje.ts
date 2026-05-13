@@ -1,0 +1,76 @@
+'use server'
+
+import { createClient } from '@/lib/supabase/server'
+import { redirect } from 'next/navigation'
+
+export async function crearViaje(data: {
+  destino_slug: string
+  destino_nombre: string
+  fecha_salida: string
+  fecha_regreso: string
+  tipo: string
+}) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'No autorizado' }
+
+  const { data: familia } = await supabase
+    .from('familias').select('id').eq('user_id', user.id).single()
+  if (!familia) return { error: 'Familia no encontrada' }
+
+  const { data: viaje, error } = await supabase
+    .from('viajes')
+    .insert({ familia_id: familia.id, ...data })
+    .select('id')
+    .single()
+
+  if (error) return { error: error.message }
+
+  // Generar checklist automático según destino y tipo de viaje
+  const items = generarChecklist(data.destino_slug, data.tipo)
+  if (items.length > 0) {
+    await supabase.from('checklist_items').insert(
+      items.map(i => ({ ...i, viaje_id: viaje.id }))
+    )
+  }
+
+  redirect(`/viaje/${viaje.id}`)
+}
+
+function generarChecklist(destino_slug: string, tipo: string) {
+  const base = [
+    { tarea: 'Verificar vacunas requeridas y recomendadas', categoria: 'vacunas', prioridad: 'alta', descripcion: 'Consulta con un profesional de salud con al menos 4-6 semanas de anticipación.' },
+    { tarea: 'Contratar seguro de viaje con cobertura médica', categoria: 'seguro', prioridad: 'alta', descripcion: 'Asegúrate de que cubra evacuación médica y enfermedades tropicales.' },
+    { tarea: 'Comprar repelente de insectos (DEET 30%+ o Icaridina)', categoria: 'botiquin', prioridad: 'alta', descripcion: 'Aplicar en piel expuesta al amanecer y atardecer.' },
+    { tarea: 'Preparar botiquín familiar básico', categoria: 'botiquin', prioridad: 'alta', descripcion: 'Incluye termómetro, suero oral, paracetamol, curitas y antidiarreico.' },
+    { tarea: 'Llevar documentos médicos importantes', categoria: 'documentos', prioridad: 'media', descripcion: 'Certificados de vacunas, recetas de medicamentos crónicos, tarjeta de seguro.' },
+    { tarea: 'Guardar número de emergencias del destino', categoria: 'documentos', prioridad: 'media', descripcion: 'Número local de emergencias y contacto de la embajada/consulado.' },
+  ]
+
+  const porDestino: Record<string, { tarea: string, categoria: string, prioridad: string, descripcion: string }[]> = {
+    'brasil-nordeste': [
+      { tarea: 'Vacuna fiebre amarilla (con certificado)', categoria: 'vacunas', prioridad: 'alta', descripcion: 'Requerida para ingreso a algunas zonas. Aplicar con al menos 10 días de anticipación.' },
+      { tarea: 'Ropa de manga larga para amanecer/atardecer', categoria: 'botiquin', prioridad: 'alta', descripcion: 'Protección extra contra mosquitos transmisores de dengue.' },
+    ],
+    'caribe-republica-dominicana': [
+      { tarea: 'Consultar profilaxis antipalúdica', categoria: 'vacunas', prioridad: 'alta', descripcion: 'Especialmente si visitas zonas rurales o fronterizas.' },
+      { tarea: 'Solo agua embotellada o hervida', categoria: 'botiquin', prioridad: 'alta', descripcion: 'Evitar hielo, agua del grifo y vegetales crudos lavados con agua local.' },
+    ],
+    'centroamerica-costa-rica': [
+      { tarea: 'Precaución con animales silvestres', categoria: 'botiquin', prioridad: 'media', descripcion: 'No tocar animales. En caso de mordedura, buscar atención médica inmediata.' },
+      { tarea: 'Protector solar FPS 50+', categoria: 'botiquin', prioridad: 'media', descripcion: 'El sol tropical es más intenso. Reaplicar cada 2 horas.' },
+    ],
+    'mexico-cancun-riviera': [
+      { tarea: 'Cuidado con alimentos en puestos callejeros', categoria: 'botiquin', prioridad: 'alta', descripcion: 'Alta incidencia de diarrea del viajero. Priorizar alimentos cocidos y calientes.' },
+      { tarea: 'Llevar suero oral de rehidratación', categoria: 'botiquin', prioridad: 'alta', descripcion: 'Fundamental si viajas con niños. La deshidratación es el principal riesgo.' },
+    ],
+  }
+
+  const extras = porDestino[destino_slug] || []
+
+  if (tipo === 'aventura') {
+    extras.push({ tarea: 'Kit de primeros auxilios para actividades de aventura', categoria: 'botiquin', prioridad: 'alta', descripcion: 'Vendas elásticas, antiséptico, esparadrapo, analgésico.' })
+  }
+
+  return [...base, ...extras]
+}
