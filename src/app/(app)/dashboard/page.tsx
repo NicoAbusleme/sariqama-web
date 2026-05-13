@@ -165,10 +165,10 @@ export default async function DashboardPage() {
       <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 z-50">
         <div className="max-w-2xl mx-auto flex justify-around items-center py-2 px-4">
           {[
-            { href: "/dashboard",       icon: "🏠",  label: "Inicio",    active: true },
-            { href: "/viaje/nuevo",     icon: "✈️",  label: "Viaje",     active: false },
-            { href: "/viaje",           icon: "🌡️", label: "Síntomas",  active: false },
-            { href: "/perfil",          icon: "👤",  label: "Perfil",    active: false },
+            { href: "/dashboard",                                                               icon: "🏠",  label: "Inicio",   active: true },
+            { href: "/viaje/nuevo",                                                             icon: "✈️",  label: "Viaje",    active: false },
+            { href: viajes?.[0] ? `/viaje/${viajes[0].id}/sintomas` : "/viaje/nuevo",          icon: "🌡️", label: "Síntomas", active: false },
+            { href: "/perfil",                                                                  icon: "👤",  label: "Perfil",   active: false },
           ].map(n => (
             <Link key={n.href} href={n.href}
               className="flex flex-col items-center gap-1 py-1 px-3">
