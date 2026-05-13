@@ -3,21 +3,7 @@ import { redirect, notFound } from 'next/navigation'
 import { ChevronLeft } from 'lucide-react'
 import Link from 'next/link'
 import { SintomasClient } from './SintomasClient'
-
-const SEMAFORO_META = {
-  verde:    { dot: 'bg-green-500',  badge: 'bg-green-100 text-green-700',  label: 'Sin alarma' },
-  amarillo: { dot: 'bg-amber-400',  badge: 'bg-amber-100 text-amber-700',  label: 'Atención' },
-  rojo:     { dot: 'bg-red-500',    badge: 'bg-red-100 text-red-700',      label: 'Urgencia' },
-}
-
-const SINTOMA_LABELS: Record<string, string> = {
-  fiebre: 'Fiebre', fiebre_alta: 'Fiebre >38.5°C', diarrea: 'Diarrea',
-  diarrea_con_sangre: 'Diarrea c/sangre', vomitos: 'Vómitos',
-  cefalea_intensa: 'Cefalea', rash_manchas: 'Manchas', dolor_abdominal: 'Dolor abdominal',
-  decaimiento_marcado: 'Decaimiento', sangrado: 'Sangrado',
-  dificultad_respiratoria: 'Dif. respiratoria', rechazo_liquidos: 'Rechazo líquidos',
-  llanto_sin_lagrimas: 'Llanto s/lágrimas', baja_orina: 'Poca orina',
-}
+import { HistorialCard } from './HistorialCard'
 
 export default async function SintomasPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -100,64 +86,9 @@ export default async function SintomasPage({ params }: { params: Promise<{ id: s
             </h2>
 
             <div className="flex flex-col gap-3">
-              {historial.map((reg, idx) => {
-                const meta = SEMAFORO_META[reg.semaforo as keyof typeof SEMAFORO_META] ?? SEMAFORO_META.verde
-                const fecha = new Date(reg.created_at)
-                const esHoy = new Date().toDateString() === fecha.toDateString()
-                const sintTags: string[] = (reg.sintomas ?? [])
-                  .filter((k: string) => !['fiebre_alta', 'diarrea_con_sangre'].includes(k))
-
-                return (
-                  <div key={reg.id} className="bg-white rounded-2xl border border-slate-100 p-4">
-                    <div className="flex items-start justify-between gap-3 mb-3">
-                      <div className="flex items-center gap-2">
-                        <div className={`w-3 h-3 rounded-full flex-shrink-0 ${meta.dot}`} />
-                        <span className="text-sm font-semibold text-slate-800">{reg.titulo ?? meta.label}</span>
-                        {idx === 0 && (
-                          <span className="text-[10px] bg-teal-100 text-teal-700 font-bold px-2 py-0.5 rounded-full">
-                            ÚLTIMO
-                          </span>
-                        )}
-                      </div>
-                      <div className="text-right flex-shrink-0">
-                        <p className="text-xs font-medium text-slate-600">
-                          {esHoy ? 'Hoy' : fecha.toLocaleDateString('es-CL', { day: 'numeric', month: 'short' })}
-                        </p>
-                        <p className="text-[11px] text-slate-400">
-                          {fecha.toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' })}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Quién */}
-                    {reg.viajero_nombre && (
-                      <p className="text-xs text-slate-500 mb-2">
-                        👤 {reg.viajero_nombre}
-                        {reg.dias_sintomas > 1 && ` · ${reg.dias_sintomas} días de síntomas`}
-                      </p>
-                    )}
-
-                    {/* Tags síntomas */}
-                    {sintTags.length > 0 && (
-                      <div className="flex flex-wrap gap-1.5 mb-2">
-                        {sintTags.map((k: string) => (
-                          <span key={k} className={`text-[11px] px-2 py-0.5 rounded-full font-medium ${meta.badge}`}>
-                            {SINTOMA_LABELS[k] ?? k}
-                          </span>
-                        ))}
-                        {(reg.exposiciones ?? []).map((k: string) => (
-                          <span key={k} className="text-[11px] px-2 py-0.5 rounded-full font-medium bg-amber-100 text-amber-700">
-                            {k === 'picadura_mosquito' ? '🦟 Mosquito' : k === 'mordedura_animal' ? '🐾 Animal' : '🚰 Agua'}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                    {sintTags.length === 0 && (
-                      <p className="text-xs text-slate-400 italic">Sin síntomas registrados</p>
-                    )}
-                  </div>
-                )
-              })}
+              {historial.map((reg, idx) => (
+                <HistorialCard key={reg.id} reg={reg} isFirst={idx === 0} />
+              ))}
             </div>
 
             {/* Tendencia si hay más de 1 registro */}
