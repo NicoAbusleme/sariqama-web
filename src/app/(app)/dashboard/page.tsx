@@ -74,7 +74,7 @@ export default async function DashboardPage() {
         </div>
       </header>
 
-      <main className="max-w-2xl mx-auto px-5 pb-28 -mt-4">
+      <main className="max-w-2xl mx-auto px-5 pt-5 pb-28">
 
         {/* Sin viajes */}
         {!tieneViajes && (
