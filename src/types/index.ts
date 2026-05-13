@@ -68,7 +68,8 @@ export interface Destino {
   slug: string
   nombre: string
   pais: string
-  pais_flag: string           // emoji bandera del país
+  pais_flag: string           // emoji bandera (legacy, mantener para compat)
+  pais_code: string           // ISO 3166-1 alpha-2 minúsculas, ej: "mx", "br"
   continente: string          // 'Centroamérica' | 'Sudamérica'
   region: string
   ciudades: string[]          // ciudades o zonas seleccionables

@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { SintomasClient } from './SintomasClient'
 import { HistorialCard } from './HistorialCard'
 import { getDestinoBySlug } from '@/lib/content/destinos'
+import { FlagImg } from '@/components/ui/flag-img'
 
 export default async function SintomasPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -31,7 +32,7 @@ export default async function SintomasPage({ params }: { params: Promise<{ id: s
     .limit(20)
 
   const destino = getDestinoBySlug(viaje.destino_slug)
-  const flagEmoji = destino?.pais_flag ?? '🌍'
+  const flagCode = destino?.pais_code ?? 'un'
 
   return (
     <div className="min-h-screen bg-[#F0FDF9]">
@@ -44,7 +45,7 @@ export default async function SintomasPage({ params }: { params: Promise<{ id: s
           </Link>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <span className="text-3xl">{flagEmoji}</span>
+              <FlagImg code={flagCode} size={36} className="rounded" />
               <div>
                 <h1 className="text-xl font-semibold text-white" style={{ fontFamily: 'var(--font-fraunces)' }}>
                   Evaluador de síntomas

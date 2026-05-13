@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Progress } from '@/components/ui/progress'
 import { crearViaje } from '@/app/actions/viaje'
 import { DESTINOS_PILOTO, DESTINOS_POR_CONTINENTE } from '@/lib/content/destinos'
+import { FlagImg } from '@/components/ui/flag-img'
 import { cn } from '@/lib/utils'
 import type { TipoViaje } from '@/types'
 
@@ -248,7 +249,7 @@ export default function NuevoViajePage() {
                           selected ? 'border-teal-400 shadow-sm ring-2 ring-teal-100' : 'border-slate-100 hover:border-teal-200'
                         )}>
                         <div className="flex items-center gap-3">
-                          <span className="text-3xl">{d.pais_flag}</span>
+                          <FlagImg code={d.pais_code} size={36} className="rounded" />
                           <div className="flex-1">
                             <p className="font-semibold text-slate-900 text-sm">{d.nombre}</p>
                             <p className="text-xs text-slate-400 mt-0.5">{d.region}</p>
@@ -395,7 +396,7 @@ export default function NuevoViajePage() {
             {/* Resumen destino + escalas */}
             <div className="bg-white rounded-2xl border border-slate-100 p-4 mb-5">
               <div className="flex items-center gap-3 mb-2">
-                <span className="text-2xl">{destino?.pais_flag}</span>
+                {destino && <FlagImg code={destino.pais_code} size={32} className="rounded" />}
                 <div>
                   <p className="font-semibold text-slate-900 text-sm">{destinoNombre}</p>
                   <p className="text-xs text-slate-400">{destino?.region}</p>

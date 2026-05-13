@@ -6,7 +6,8 @@
 
 export interface EscalaInfo {
   pais: string
-  flag: string
+  flag: string       // emoji (legacy)
+  flag_code: string  // ISO 3166-1 alpha-2 minúsculas, ej: "br", "us"
   nivel_salud: 'bajo' | 'moderado' | 'alto'
   riesgos_salud: string[]           // Lista corta de riesgos relevantes para tránsito
   vacunas_recomendadas?: string[]   // Solo si aplica para el tránsito
@@ -24,7 +25,7 @@ export interface EscalaInfo {
 const ESCALAS: Record<string, EscalaInfo> = {
 
   'Brasil': {
-    pais: 'Brasil', flag: '🇧🇷', nivel_salud: 'alto',
+    pais: 'Brasil', flag: '🇧🇷', flag_code: 'br', nivel_salud: 'alto',
     riesgos_salud: [
       'Dengue muy alto (todo el año)',
       'Fiebre amarilla: vacuna recomendada para zonas fuera de aeropuertos costeros',
@@ -46,7 +47,7 @@ const ESCALAS: Record<string, EscalaInfo> = {
   },
 
   'Perú': {
-    pais: 'Perú', flag: '🇵🇪', nivel_salud: 'moderado',
+    pais: 'Perú', flag: '🇵🇪', flag_code: 'pe', nivel_salud: 'moderado',
     riesgos_salud: [
       'Dengue moderado (Lima tiene bajo riesgo, zonas selváticas tienen riesgo alto)',
       'Diarrea del viajero: moderada en Lima',
@@ -67,7 +68,7 @@ const ESCALAS: Record<string, EscalaInfo> = {
   },
 
   'Colombia': {
-    pais: 'Colombia', flag: '🇨🇴', nivel_salud: 'moderado',
+    pais: 'Colombia', flag: '🇨🇴', flag_code: 'co', nivel_salud: 'moderado',
     riesgos_salud: [
       'Dengue alto en zonas cálidas (Bogotá a 2.600 m.s.n.m. tiene riesgo mínimo)',
       'Malaria: solo en zonas rurales tropicales, no en Bogotá',
@@ -87,7 +88,7 @@ const ESCALAS: Record<string, EscalaInfo> = {
   },
 
   'Panamá': {
-    pais: 'Panamá', flag: '🇵🇦', nivel_salud: 'moderado',
+    pais: 'Panamá', flag: '🇵🇦', flag_code: 'pa', nivel_salud: 'moderado',
     riesgos_salud: [
       'Dengue alto (todo el año, especialmente en zonas urbanas)',
       'Malaria: solo en zonas rurales fronterizas con Colombia, no en Ciudad de Panamá',
@@ -107,7 +108,7 @@ const ESCALAS: Record<string, EscalaInfo> = {
   },
 
   'EE.UU.': {
-    pais: 'Estados Unidos', flag: '🇺🇸', nivel_salud: 'bajo',
+    pais: 'Estados Unidos', flag: '🇺🇸', flag_code: 'us', nivel_salud: 'bajo',
     riesgos_salud: [
       'Riesgo sanitario muy bajo en aeropuertos y ciudades principales',
       'Sin enfermedades tropicales relevantes en ciudades de escala (Miami, Dallas, NY)',
@@ -128,7 +129,7 @@ const ESCALAS: Record<string, EscalaInfo> = {
   },
 
   'Argentina': {
-    pais: 'Argentina', flag: '🇦🇷', nivel_salud: 'moderado',
+    pais: 'Argentina', flag: '🇦🇷', flag_code: 'ar', nivel_salud: 'moderado',
     riesgos_salud: [
       'Dengue moderado (brotes estacionales en verano, especialmente NOA y Litoral)',
       'Buenos Aires tiene riesgo bajo, mayor riesgo en provincias del norte',
@@ -148,7 +149,7 @@ const ESCALAS: Record<string, EscalaInfo> = {
   },
 
   'España': {
-    pais: 'España', flag: '🇪🇸', nivel_salud: 'bajo',
+    pais: 'España', flag: '🇪🇸', flag_code: 'es', nivel_salud: 'bajo',
     riesgos_salud: [
       'Riesgo sanitario muy bajo — país europeo desarrollado',
       'Agua potable de alta calidad en Madrid y principales ciudades',
@@ -168,7 +169,7 @@ const ESCALAS: Record<string, EscalaInfo> = {
   },
 
   'Puerto Rico': {
-    pais: 'Puerto Rico (EE.UU.)', flag: '🇵🇷', nivel_salud: 'moderado',
+    pais: 'Puerto Rico (EE.UU.)', flag: '🇵🇷', flag_code: 'pr', nivel_salud: 'moderado',
     riesgos_salud: [
       'Dengue moderado (territorio caribeño con mosquitos Aedes)',
       'Zika: riesgo bajo actualmente, pero monitorear si hay brotes',
@@ -189,7 +190,7 @@ const ESCALAS: Record<string, EscalaInfo> = {
   },
 
   'México': {
-    pais: 'México', flag: '🇲🇽', nivel_salud: 'moderado',
+    pais: 'México', flag: '🇲🇽', flag_code: 'mx', nivel_salud: 'moderado',
     riesgos_salud: [
       'Dengue moderado-alto (especialmente en zonas tropicales, CDMX tiene riesgo bajo por altitud)',
       'Diarrea del viajero: riesgo alto — agua del grifo no recomendada en todo el país',
@@ -210,7 +211,7 @@ const ESCALAS: Record<string, EscalaInfo> = {
   },
 
   'El Salvador': {
-    pais: 'El Salvador', flag: '🇸🇻', nivel_salud: 'alto',
+    pais: 'El Salvador', flag: '🇸🇻', flag_code: 'sv', nivel_salud: 'alto',
     riesgos_salud: [
       'Dengue alto (todo el año)',
       'Malaria: riesgo bajo en zona metropolitana, moderado en zonas rurales',
@@ -230,7 +231,7 @@ const ESCALAS: Record<string, EscalaInfo> = {
   },
 
   'Guatemala': {
-    pais: 'Guatemala', flag: '🇬🇹', nivel_salud: 'alto',
+    pais: 'Guatemala', flag: '🇬🇹', flag_code: 'gt', nivel_salud: 'alto',
     riesgos_salud: [
       'Dengue alto (especialmente en zonas bajas y costeras)',
       'Malaria: moderado en zonas rurales y selváticas',

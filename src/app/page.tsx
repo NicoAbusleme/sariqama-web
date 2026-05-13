@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { ChevronRight, Shield, MapPin, CheckCircle, Stethoscope } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { FlagImg } from "@/components/ui/flag-img"
 
 const BENEFICIOS = [
   { icon: MapPin,       bg: "bg-teal-50",   color: "text-teal-600",  titulo: "Riesgos por destino",     desc: "Dengue, malaria, vacunas y más según adonde viajes." },
@@ -10,11 +11,11 @@ const BENEFICIOS = [
 ]
 
 const DESTINOS = [
-  { emoji: "🇧🇷", nombre: "Brasil",               riesgo: "Dengue muy alto",    chip: "bg-red-100 text-red-700",    continente: "Sudamérica" },
-  { emoji: "🇩🇴", nombre: "Rep. Dominicana",       riesgo: "Malaria moderado",   chip: "bg-yellow-100 text-yellow-700", continente: "Caribe" },
-  { emoji: "🇨🇷", nombre: "Costa Rica",            riesgo: "Dengue alto",        chip: "bg-orange-100 text-orange-700", continente: "Centroamérica" },
-  { emoji: "🇲🇽", nombre: "México",               riesgo: "Diarrea del viajero",chip: "bg-yellow-100 text-yellow-700", continente: "Centroamérica" },
-  { emoji: "🇨🇱", nombre: "Chile",                riesgo: "Bajo riesgo infec.", chip: "bg-green-100 text-green-700",  continente: "Sudamérica" },
+  { code: "br", nombre: "Brasil",               riesgo: "Dengue muy alto",    chip: "bg-red-100 text-red-700",       continente: "Sudamérica" },
+  { code: "do", nombre: "Rep. Dominicana",       riesgo: "Malaria moderado",   chip: "bg-yellow-100 text-yellow-700", continente: "Caribe" },
+  { code: "cr", nombre: "Costa Rica",            riesgo: "Dengue alto",        chip: "bg-orange-100 text-orange-700", continente: "Centroamérica" },
+  { code: "mx", nombre: "México",               riesgo: "Diarrea del viajero",chip: "bg-yellow-100 text-yellow-700", continente: "Centroamérica" },
+  { code: "cl", nombre: "Chile",                riesgo: "Bajo riesgo infec.", chip: "bg-green-100 text-green-700",   continente: "Sudamérica" },
 ]
 
 const STATS = [
@@ -147,7 +148,9 @@ export default function LandingPage() {
               {DESTINOS.map(d => (
                 <div key={d.nombre}
                   className="bg-[#F0FDF9] rounded-2xl p-5 text-center border border-teal-100 hover:border-teal-300 hover:shadow-sm transition-all">
-                  <div className="text-4xl mb-3">{d.emoji}</div>
+                  <div className="flex justify-center mb-3">
+                    <FlagImg code={d.code} size={52} className="rounded-md shadow-sm" />
+                  </div>
                   <div className="font-semibold text-slate-900 mb-1 text-sm">{d.nombre}</div>
                   <div className="text-[10px] text-slate-400 mb-2">{d.continente}</div>
                   <span className={`text-[11px] font-semibold px-2.5 py-1 rounded-full ${d.chip}`}>

@@ -3,6 +3,7 @@ import { redirect, notFound } from 'next/navigation'
 import { ChevronLeft } from 'lucide-react'
 import Link from 'next/link'
 import { getDestinoBySlug } from '@/lib/content/destinos'
+import { FlagImg } from '@/components/ui/flag-img'
 
 // ─── Tipos ───────────────────────────────────────────────────────────────────
 interface BotiquinItem {
@@ -127,7 +128,7 @@ export default async function BotiquinPage({ params }: { params: Promise<{ id: s
   const destino = getDestinoBySlug(viaje.destino_slug)
   if (!destino) notFound()
 
-  const flagEmoji = destino?.pais_flag ?? '🌍'
+  const flagCode = destino?.pais_code ?? 'un'
 
   const extrasDestino = EXTRAS_DESTINO[viaje.destino_slug] ?? []
 
@@ -186,7 +187,7 @@ export default async function BotiquinPage({ params }: { params: Promise<{ id: s
           </Link>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <span className="text-3xl">{flagEmoji}</span>
+              <FlagImg code={flagCode} size={36} className="rounded" />
               <div>
                 <h1
                   className="text-xl font-semibold text-white"

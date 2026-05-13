@@ -14,6 +14,7 @@ export const DESTINOS_PILOTO: Destino[] = [
     nombre: 'México',
     pais: 'México',
     pais_flag: '🇲🇽',
+    pais_code: 'mx',
     continente: 'Centroamérica',
     region: 'América del Norte / Caribe',
     ciudades: [
@@ -50,6 +51,7 @@ export const DESTINOS_PILOTO: Destino[] = [
     nombre: 'Costa Rica',
     pais: 'Costa Rica',
     pais_flag: '🇨🇷',
+    pais_code: 'cr',
     continente: 'Centroamérica',
     region: 'Centroamérica',
     ciudades: [
@@ -86,6 +88,7 @@ export const DESTINOS_PILOTO: Destino[] = [
     nombre: 'República Dominicana',
     pais: 'República Dominicana',
     pais_flag: '🇩🇴',
+    pais_code: 'do',
     continente: 'Centroamérica',
     region: 'Caribe',
     ciudades: [
@@ -127,6 +130,7 @@ export const DESTINOS_PILOTO: Destino[] = [
     nombre: 'Brasil',
     pais: 'Brasil',
     pais_flag: '🇧🇷',
+    pais_code: 'br',
     continente: 'Sudamérica',
     region: 'América del Sur',
     ciudades: [
@@ -170,6 +174,7 @@ export const DESTINOS_PILOTO: Destino[] = [
     nombre: 'Chile',
     pais: 'Chile',
     pais_flag: '🇨🇱',
+    pais_code: 'cl',
     continente: 'Sudamérica',
     region: 'América del Sur',
     ciudades: [

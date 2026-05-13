@@ -3,6 +3,7 @@ import { redirect, notFound } from 'next/navigation'
 import { ChevronLeft, CheckCircle, Shield, Stethoscope, BookOpen, ChevronRight, MapPin } from 'lucide-react'
 import Link from 'next/link'
 import { getDestinoBySlug } from '@/lib/content/destinos'
+import { FlagImg } from '@/components/ui/flag-img'
 import { RiskChip } from '@/components/ui/risk-chip'
 import { EliminarViajeBtn } from './EliminarViajeBtn'
 import type { NivelRiesgo } from '@/types'
@@ -41,7 +42,7 @@ export default async function DetalleViajePage({ params }: { params: Promise<{ i
   )
   const enViaje = diasRestantes <= 0 && new Date() <= new Date(viaje.fecha_regreso)
 
-  const flagEmoji = destino?.pais_flag ?? '🌍'
+  const flagCode = destino?.pais_code ?? 'un'
 
   return (
     <div className="min-h-screen bg-[#F0FDF9]">
@@ -53,7 +54,7 @@ export default async function DetalleViajePage({ params }: { params: Promise<{ i
           </Link>
           <div className="flex items-start justify-between">
             <div>
-              <div className="text-3xl mb-2">{flagEmoji}</div>
+              <div className="mb-2"><FlagImg code={flagCode} size={44} className="rounded" /></div>
               <h1 className="text-2xl font-semibold text-white leading-tight"
                 style={{ fontFamily: 'var(--font-fraunces)' }}>
                 {viaje.destino_nombre}

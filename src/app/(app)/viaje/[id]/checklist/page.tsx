@@ -4,6 +4,7 @@ import { ChevronLeft } from 'lucide-react'
 import Link from 'next/link'
 import { ChecklistClient } from './ChecklistClient'
 import { getDestinoBySlug } from '@/lib/content/destinos'
+import { FlagImg } from '@/components/ui/flag-img'
 
 export default async function ChecklistPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -27,7 +28,7 @@ export default async function ChecklistPage({ params }: { params: Promise<{ id: 
   const completados = items.filter(i => i.completado).length
 
   const destino = getDestinoBySlug(viaje.destino_slug)
-  const flagEmoji = destino?.pais_flag ?? '🌍'
+  const flagCode = destino?.pais_code ?? 'un'
 
   return (
     <div className="min-h-screen bg-[#F0FDF9]">
@@ -42,7 +43,7 @@ export default async function ChecklistPage({ params }: { params: Promise<{ id: 
           </Link>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <span className="text-3xl">{flagEmoji}</span>
+              <FlagImg code={flagCode} size={36} className="rounded" />
               <div>
                 <h1
                   className="text-xl font-semibold text-white"

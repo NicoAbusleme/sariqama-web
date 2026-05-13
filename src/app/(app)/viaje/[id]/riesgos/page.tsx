@@ -3,6 +3,7 @@ import { redirect, notFound } from 'next/navigation'
 import { ChevronLeft } from 'lucide-react'
 import Link from 'next/link'
 import { getDestinoBySlug } from '@/lib/content/destinos'
+import { FlagImg } from '@/components/ui/flag-img'
 import { getEscalaInfo, NIVEL_SALUD_META, VISA_META } from '@/lib/content/escalas'
 import { RiskChip } from '@/components/ui/risk-chip'
 import type { NivelRiesgo } from '@/types'
@@ -33,7 +34,7 @@ export default async function RiesgosPage({ params }: { params: Promise<{ id: st
   const destino = getDestinoBySlug(viaje.destino_slug)
   if (!destino) notFound()
 
-  const flagEmoji = destino?.pais_flag ?? '🌍'
+  const flagCode = destino?.pais_code ?? 'un'
 
   return (
     <div className="min-h-screen bg-[#F0FDF9]">
@@ -44,7 +45,7 @@ export default async function RiesgosPage({ params }: { params: Promise<{ id: st
             <ChevronLeft className="h-4 w-4" /> Volver al viaje
           </Link>
           <div className="flex items-center gap-3">
-            <span className="text-3xl">{flagEmoji}</span>
+            <FlagImg code={flagCode} size={40} className="rounded" />
             <div>
               <h1 className="text-xl font-semibold text-white"
                 style={{ fontFamily: 'var(--font-fraunces)' }}>
@@ -159,7 +160,7 @@ export default async function RiesgosPage({ params }: { params: Promise<{ id: st
                   <div key={idx} className="bg-white rounded-2xl border border-slate-100 overflow-hidden">
                     {/* Cabecera escala */}
                     <div className="flex items-center gap-3 px-4 pt-4 pb-3 border-b border-slate-50">
-                      <span className="text-2xl">{info.flag}</span>
+                      <FlagImg code={info.flag_code} size={32} className="rounded" />
                       <div className="flex-1">
                         <p className="font-semibold text-slate-900 text-sm">{escala.destino}</p>
                         <p className="text-xs text-slate-400">{durLabel} de escala</p>
