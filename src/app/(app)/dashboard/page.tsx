@@ -135,12 +135,15 @@ export default async function DashboardPage() {
           <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Accesos rápidos</span>
         </div>
         <div className="grid grid-cols-2 gap-3">
-          {[
-            { href: "/viaje/nuevo",      bg: "bg-teal-50",   icon: "✈️",  titulo: "Nuevo viaje",       sub: "Planifica tu salud" },
-            { href: "/viaje",            bg: "bg-amber-50",  icon: "🌡️", titulo: "Síntomas",           sub: "Evaluación rápida" },
-            { href: "/viaje",            bg: "bg-green-50",  icon: "✅",  titulo: "Checklist",          sub: "Preparación pre-viaje" },
-            { href: "/teleorientacion",  bg: "bg-blue-50",   icon: "👨‍⚕️", titulo: "Orientación",       sub: "Habla con un médico" },
-          ].map(a => (
+          {(() => {
+            const primerViaje = viajes?.[0]
+            return [
+              { href: "/viaje/nuevo",                                                          bg: "bg-teal-50",   icon: "✈️",  titulo: "Nuevo viaje",  sub: "Planifica tu salud" },
+              { href: primerViaje ? `/viaje/${primerViaje.id}/sintomas` : "/viaje/nuevo",      bg: "bg-amber-50",  icon: "🌡️", titulo: "Síntomas",      sub: primerViaje ? primerViaje.destino_nombre : "Crea un viaje primero" },
+              { href: primerViaje ? `/viaje/${primerViaje.id}/checklist` : "/viaje/nuevo",     bg: "bg-green-50",  icon: "✅",  titulo: "Checklist",     sub: primerViaje ? primerViaje.destino_nombre : "Crea un viaje primero" },
+              { href: "/teleorientacion",                                                       bg: "bg-blue-50",   icon: "👨‍⚕️", titulo: "Orientación",  sub: "Habla con un médico" },
+            ]
+          })().map(a => (
             <Link key={a.titulo} href={a.href}>
               <div className="bg-white rounded-2xl border border-slate-100 p-4 hover:border-teal-200 hover:shadow-sm transition-all cursor-pointer">
                 <div className={`w-11 h-11 ${a.bg} rounded-2xl flex items-center justify-center text-xl mb-3`}>

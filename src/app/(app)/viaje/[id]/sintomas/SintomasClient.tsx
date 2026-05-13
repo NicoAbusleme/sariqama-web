@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useTransition } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { evaluarSemaforo, type EvaluacionSintomas } from '@/lib/clinical/semaforo'
@@ -57,6 +58,7 @@ const COLOR_META = {
 }
 
 export function SintomasClient({ viajeId, viajeros }: Props) {
+  const router = useRouter()
   const [paso, setPaso] = useState<1 | 2 | 3 | 'resultado'>(viajeros.length > 0 ? 1 : 2)
   const [viajeroId, setViajeroId]     = useState<string | null>(null)
   const [nombreInvitado, setNombreInvitado] = useState('')
@@ -136,6 +138,7 @@ export function SintomasClient({ viajeId, viajeros }: Props) {
         setErrorMsg(r.error)
       } else {
         setGuardado('ok')
+        router.refresh() // refresca el historial (server component)
       }
     })
   }
