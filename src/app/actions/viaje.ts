@@ -9,7 +9,9 @@ export async function crearViaje(data: {
   destino_nombre: string
   fecha_salida: string
   fecha_regreso: string
-  tipo: string
+  tipo: string          // primer tipo seleccionado (compat)
+  tipos: string[]       // todos los tipos seleccionados
+  escalas: { destino: string; horas: number }[]
 }) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -21,14 +23,22 @@ export async function crearViaje(data: {
 
   const { data: viaje, error } = await supabase
     .from('viajes')
-    .insert({ familia_id: familia.id, ...data })
+    .insert({
+      familia_id:    familia.id,
+      destino_slug:  data.destino_slug,
+      destino_nombre: data.destino_nombre,
+      fecha_salida:  data.fecha_salida,
+      fecha_regreso: data.fecha_regreso,
+      tipo:          data.tipo,
+      tipos:         data.tipos,
+      escalas:       data.escalas,
+    })
     .select('id')
     .single()
 
   if (error) return { error: error.message }
 
-  // Generar checklist automático según destino y tipo de viaje
-  const items = generarChecklist(data.destino_slug, data.tipo)
+  const items = generarChecklist(data.destino_slug, data.tipos)
   if (items.length > 0) {
     await supabase.from('checklist_items').insert(
       items.map(i => ({ ...i, viaje_id: viaje.id }))
@@ -120,7 +130,7 @@ export async function toggleChecklistItem(itemId: string, completado: boolean, v
   return { ok: true }
 }
 
-function generarChecklist(destino_slug: string, tipo: string) {
+function generarChecklist(destino_slug: string, tipos: string[]) {
   const base = [
     { tarea: 'Verificar vacunas requeridas y recomendadas', categoria: 'vacunas', prioridad: 'alta', descripcion: 'Consulta con un profesional de salud con al menos 4-6 semanas de anticipación.' },
     { tarea: 'Contratar seguro de viaje con cobertura médica', categoria: 'seguro', prioridad: 'alta', descripcion: 'Asegúrate de que cubra evacuación médica y enfermedades tropicales.' },
@@ -151,8 +161,14 @@ function generarChecklist(destino_slug: string, tipo: string) {
 
   const extras = porDestino[destino_slug] || []
 
-  if (tipo === 'aventura') {
+  if (tipos.includes('aventura')) {
     extras.push({ tarea: 'Kit de primeros auxilios para actividades de aventura', categoria: 'botiquin', prioridad: 'alta', descripcion: 'Vendas elásticas, antiséptico, esparadrapo, analgésico.' })
+  }
+  if (tipos.includes('playa')) {
+    extras.push({ tarea: 'Protector solar FPS 50+ resistente al agua', categoria: 'botiquin', prioridad: 'alta', descripcion: 'Reaplicar cada 2 horas. Aplicar antes del repelente.' })
+  }
+  if (tipos.includes('rural')) {
+    extras.push({ tarea: 'Mosquitero impregnado con permetrina', categoria: 'botiquin', prioridad: 'media', descripcion: 'Recomendado para zonas rurales o de selva.' })
   }
 
   return [...base, ...extras]

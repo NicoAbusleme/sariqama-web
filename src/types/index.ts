@@ -92,6 +92,12 @@ export interface RiesgoDestino {
 
 export type NivelRiesgo = 'bajo' | 'moderado' | 'alto' | 'muy_alto' | 'no_aplica'
 
+// Escala de viaje
+export interface Escala {
+  destino: string
+  horas: number
+}
+
 // Item del checklist
 export interface ChecklistItem {
   id: string

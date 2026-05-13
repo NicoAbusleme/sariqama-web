@@ -65,6 +65,26 @@ export default async function DetalleViajePage({ params }: { params: Promise<{ i
                 {' — '}
                 {new Date(viaje.fecha_regreso).toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric' })}
               </p>
+              {/* Tipos de viaje */}
+              {viaje.tipos && viaje.tipos.length > 0 && (
+                <div className="flex flex-wrap gap-1.5 mt-2">
+                  {viaje.tipos.map((t: string) => (
+                    <span key={t} className="text-[11px] bg-white/15 text-white/90 px-2.5 py-0.5 rounded-full border border-white/20">
+                      {t === 'playa' ? '🏖️ Playa' : t === 'urbano' ? '🏙️ Ciudad' : t === 'aventura' ? '🏕️ Aventura' : t === 'rural' ? '🌿 Rural' : t === 'familiar' ? '👨‍👩‍👧 Familiar' : '🚢 Crucero'}
+                    </span>
+                  ))}
+                </div>
+              )}
+              {/* Escalas */}
+              {viaje.escalas && viaje.escalas.length > 0 && (
+                <div className="flex flex-wrap gap-1.5 mt-1.5">
+                  {viaje.escalas.map((e: { destino: string; horas: number }, i: number) => (
+                    <span key={i} className="text-[11px] bg-white/10 text-teal-100 px-2.5 py-0.5 rounded-full border border-white/15">
+                      ✈ {e.destino} · {e.horas < 3 ? '< 2h' : e.horas <= 6 ? '3–6h' : e.horas <= 12 ? '7–12h' : e.horas <= 24 ? '13–24h' : '+24h'}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
             <div className="text-right">
               {enViaje ? (
