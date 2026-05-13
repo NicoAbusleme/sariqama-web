@@ -31,6 +31,48 @@ const NIVEL_LABEL: Record<string, string> = {
   muy_alto: 'Muy alto', alto: 'Alto', moderado: 'Moderado', bajo: 'Bajo', no_aplica: 'N/A',
 }
 
+const ESCALAS_POR_DESTINO: Record<string, { label: string; flag: string }[]> = {
+  'brasil-nordeste': [
+    { label: 'São Paulo, Brasil',        flag: '🇧🇷' },
+    { label: 'Rio de Janeiro, Brasil',   flag: '🇧🇷' },
+    { label: 'Fortaleza, Brasil',        flag: '🇧🇷' },
+    { label: 'Lima, Perú',               flag: '🇵🇪' },
+    { label: 'Bogotá, Colombia',         flag: '🇨🇴' },
+    { label: 'Buenos Aires, Argentina',  flag: '🇦🇷' },
+    { label: 'Panamá, Panamá',           flag: '🇵🇦' },
+    { label: 'Miami, EE.UU.',            flag: '🇺🇸' },
+    { label: 'Madrid, España',           flag: '🇪🇸' },
+  ],
+  'caribe-republica-dominicana': [
+    { label: 'Miami, EE.UU.',            flag: '🇺🇸' },
+    { label: 'Bogotá, Colombia',         flag: '🇨🇴' },
+    { label: 'Lima, Perú',               flag: '🇵🇪' },
+    { label: 'Panamá, Panamá',           flag: '🇵🇦' },
+    { label: 'San Juan, Puerto Rico',    flag: '🇵🇷' },
+    { label: 'Ciudad de México, México', flag: '🇲🇽' },
+    { label: 'Nueva York, EE.UU.',       flag: '🇺🇸' },
+  ],
+  'centroamerica-costa-rica': [
+    { label: 'Panamá, Panamá',           flag: '🇵🇦' },
+    { label: 'Bogotá, Colombia',         flag: '🇨🇴' },
+    { label: 'Lima, Perú',               flag: '🇵🇪' },
+    { label: 'Ciudad de México, México', flag: '🇲🇽' },
+    { label: 'Miami, EE.UU.',            flag: '🇺🇸' },
+    { label: 'San Salvador, El Salvador',flag: '🇸🇻' },
+    { label: 'Guatemala, Guatemala',     flag: '🇬🇹' },
+  ],
+  'mexico-cancun-riviera': [
+    { label: 'Ciudad de México, México', flag: '🇲🇽' },
+    { label: 'Guadalajara, México',      flag: '🇲🇽' },
+    { label: 'Monterrey, México',        flag: '🇲🇽' },
+    { label: 'Bogotá, Colombia',         flag: '🇨🇴' },
+    { label: 'Lima, Perú',               flag: '🇵🇪' },
+    { label: 'Panamá, Panamá',           flag: '🇵🇦' },
+    { label: 'Miami, EE.UU.',            flag: '🇺🇸' },
+    { label: 'Dallas, EE.UU.',           flag: '🇺🇸' },
+  ],
+}
+
 const HORAS_OPTIONS = [
   { v: 2,  label: '< 2 h' },
   { v: 6,  label: '3–6 h' },
@@ -94,7 +136,7 @@ export default function NuevoViajePage() {
       tipo:           tipos[0],
       tipos,
       escalas: escalas
-        .filter(e => e.destino.trim())
+        .filter(e => e.destino !== '')
         .map(({ destino, horas }) => ({ destino, horas })),
     })
     if (result?.error) { setError(result.error); setLoading(false) }
@@ -196,13 +238,18 @@ export default function NuevoViajePage() {
                         <label className="text-xs font-medium text-slate-500 mb-1.5 block">
                           Ciudad o país de escala
                         </label>
-                        <input
-                          type="text"
-                          placeholder="Ej: Miami, EE.UU."
+                        <select
                           value={escala.destino}
                           onChange={e => updateEscala(escala.id, 'destino', e.target.value)}
-                          className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm text-slate-800 placeholder:text-slate-300 focus:outline-none focus:border-teal-400"
-                        />
+                          className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm text-slate-800 bg-white focus:outline-none focus:border-teal-400 cursor-pointer"
+                        >
+                          <option value="" disabled>Selecciona una ciudad…</option>
+                          {(ESCALAS_POR_DESTINO[destinoSlug] ?? []).map(op => (
+                            <option key={op.label} value={op.label}>
+                              {op.flag} {op.label}
+                            </option>
+                          ))}
+                        </select>
                       </div>
 
                       {/* Duración */}
