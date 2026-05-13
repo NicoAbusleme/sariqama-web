@@ -49,7 +49,7 @@ export default async function DashboardPage() {
 
           {/* Viajeros pills */}
           {viajeros && viajeros.length > 0 && (
-            <div className="flex gap-2 flex-wrap">
+            <div className="flex gap-2 flex-wrap mb-6">
               {viajeros.map(v => (
                 <span key={v.id}
                   className="px-3 py-1 rounded-full text-xs font-medium text-white/90 border border-white/20"
@@ -57,6 +57,18 @@ export default async function DashboardPage() {
                   {v.nombre} · {v.edad} años
                 </span>
               ))}
+            </div>
+          )}
+
+          {/* Título sección viajes dentro del header */}
+          {tieneViajes && (
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-bold text-white/80 uppercase tracking-widest">Viajes próximos</span>
+              <Link href="/viaje/nuevo">
+                <span className="inline-flex items-center gap-1.5 bg-white/20 hover:bg-white/30 text-white text-xs font-semibold px-3 py-1.5 rounded-xl transition-colors border border-white/20">
+                  <Plus className="h-3 w-3" /> Nuevo
+                </span>
+              </Link>
             </div>
           )}
         </div>
@@ -87,14 +99,6 @@ export default async function DashboardPage() {
         {/* Viajes próximos */}
         {tieneViajes && (
           <div className="mb-5">
-            <div className="flex items-center justify-between mb-3 px-1">
-              <span className="text-sm font-bold text-slate-700 tracking-wide">Viajes próximos</span>
-              <Link href="/viaje/nuevo">
-                <span className="inline-flex items-center gap-1.5 bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold px-3 py-1.5 rounded-xl transition-colors">
-                  <Plus className="h-3 w-3" /> Nuevo
-                </span>
-              </Link>
-            </div>
             <div className="flex flex-col gap-3">
               {viajes!.map(v => {
                 const dias = Math.ceil((new Date(v.fecha_salida).getTime() - new Date().getTime()) / 86400000)
