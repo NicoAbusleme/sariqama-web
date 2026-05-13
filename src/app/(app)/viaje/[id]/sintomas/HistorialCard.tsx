@@ -56,7 +56,7 @@ export function HistorialCard({ reg, isFirst }: { reg: Registro; isFirst: boolea
       {/* Cabecera siempre visible — toca para expandir */}
       <button
         onClick={() => setAbierto(v => !v)}
-        className="w-full p-4 text-left"
+        className="w-full p-4 text-left cursor-pointer"
       >
         <div className="flex items-start justify-between gap-3 mb-2">
           <div className="flex items-center gap-2 flex-wrap">
