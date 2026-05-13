@@ -33,9 +33,7 @@ export default async function RiesgosPage({ params }: { params: Promise<{ id: st
   const destino = getDestinoBySlug(viaje.destino_slug)
   if (!destino) notFound()
 
-  const flagEmoji = viaje.destino_slug.includes('brasil') ? '🇧🇷'
-    : viaje.destino_slug.includes('caribe') ? '🏝️'
-    : viaje.destino_slug.includes('costa') ? '🇨🇷' : '🇲🇽'
+  const flagEmoji = destino?.pais_flag ?? '🌍'
 
   return (
     <div className="min-h-screen bg-[#F0FDF9]">

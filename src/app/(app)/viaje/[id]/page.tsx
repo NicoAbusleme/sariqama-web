@@ -41,9 +41,7 @@ export default async function DetalleViajePage({ params }: { params: Promise<{ i
   )
   const enViaje = diasRestantes <= 0 && new Date() <= new Date(viaje.fecha_regreso)
 
-  const flagEmoji = viaje.destino_slug.includes('brasil') ? '🇧🇷'
-    : viaje.destino_slug.includes('caribe') ? '🏝️'
-    : viaje.destino_slug.includes('costa') ? '🇨🇷' : '🇲🇽'
+  const flagEmoji = destino?.pais_flag ?? '🌍'
 
   return (
     <div className="min-h-screen bg-[#F0FDF9]">

@@ -3,6 +3,7 @@ import { redirect, notFound } from 'next/navigation'
 import { ChevronLeft } from 'lucide-react'
 import Link from 'next/link'
 import { ChecklistClient } from './ChecklistClient'
+import { getDestinoBySlug } from '@/lib/content/destinos'
 
 export default async function ChecklistPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -25,9 +26,8 @@ export default async function ChecklistPage({ params }: { params: Promise<{ id: 
   const items = checklist ?? []
   const completados = items.filter(i => i.completado).length
 
-  const flagEmoji = viaje.destino_slug.includes('brasil') ? '🇧🇷'
-    : viaje.destino_slug.includes('caribe') ? '🏝️'
-    : viaje.destino_slug.includes('costa') ? '🇨🇷' : '🇲🇽'
+  const destino = getDestinoBySlug(viaje.destino_slug)
+  const flagEmoji = destino?.pais_flag ?? '🌍'
 
   return (
     <div className="min-h-screen bg-[#F0FDF9]">

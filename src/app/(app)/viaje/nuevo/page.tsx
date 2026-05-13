@@ -2,12 +2,12 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { ChevronRight, MapPin, Calendar, Compass, Loader2, ChevronLeft, Plus, X } from 'lucide-react'
+import { ChevronRight, MapPin, Calendar, Compass, Loader2, ChevronLeft, Plus, X, ChevronDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Progress } from '@/components/ui/progress'
 import { crearViaje } from '@/app/actions/viaje'
-import { DESTINOS_PILOTO } from '@/lib/content/destinos'
+import { DESTINOS_PILOTO, DESTINOS_POR_CONTINENTE } from '@/lib/content/destinos'
 import { cn } from '@/lib/utils'
 import type { TipoViaje } from '@/types'
 
@@ -21,21 +21,25 @@ const TIPOS: { id: TipoViaje; emoji: string; label: string; desc: string }[] = [
 ]
 
 const NIVEL_COLOR: Record<string, string> = {
-  muy_alto: 'bg-red-100 text-red-700',
-  alto:     'bg-orange-100 text-orange-700',
-  moderado: 'bg-yellow-100 text-yellow-700',
-  bajo:     'bg-green-100 text-green-700',
-  no_aplica:'bg-slate-100 text-slate-400',
+  muy_alto:  'bg-red-100 text-red-700',
+  alto:      'bg-orange-100 text-orange-700',
+  moderado:  'bg-yellow-100 text-yellow-700',
+  bajo:      'bg-green-100 text-green-700',
+  no_aplica: 'bg-slate-100 text-slate-400',
 }
 const NIVEL_LABEL: Record<string, string> = {
   muy_alto: 'Muy alto', alto: 'Alto', moderado: 'Moderado', bajo: 'Bajo', no_aplica: 'N/A',
 }
 
+const CONTINENTES = [
+  { id: 'Centroamérica', emoji: '🌎', desc: 'México · Costa Rica · Rep. Dominicana' },
+  { id: 'Sudamérica',    emoji: '🌎', desc: 'Brasil · Chile' },
+]
+
 const ESCALAS_POR_DESTINO: Record<string, { label: string; flag: string }[]> = {
-  'brasil-nordeste': [
+  'brasil': [
     { label: 'São Paulo, Brasil',        flag: '🇧🇷' },
     { label: 'Rio de Janeiro, Brasil',   flag: '🇧🇷' },
-    { label: 'Fortaleza, Brasil',        flag: '🇧🇷' },
     { label: 'Lima, Perú',               flag: '🇵🇪' },
     { label: 'Bogotá, Colombia',         flag: '🇨🇴' },
     { label: 'Buenos Aires, Argentina',  flag: '🇦🇷' },
@@ -43,7 +47,7 @@ const ESCALAS_POR_DESTINO: Record<string, { label: string; flag: string }[]> = {
     { label: 'Miami, EE.UU.',            flag: '🇺🇸' },
     { label: 'Madrid, España',           flag: '🇪🇸' },
   ],
-  'caribe-republica-dominicana': [
+  'republica-dominicana': [
     { label: 'Miami, EE.UU.',            flag: '🇺🇸' },
     { label: 'Bogotá, Colombia',         flag: '🇨🇴' },
     { label: 'Lima, Perú',               flag: '🇵🇪' },
@@ -52,7 +56,7 @@ const ESCALAS_POR_DESTINO: Record<string, { label: string; flag: string }[]> = {
     { label: 'Ciudad de México, México', flag: '🇲🇽' },
     { label: 'Nueva York, EE.UU.',       flag: '🇺🇸' },
   ],
-  'centroamerica-costa-rica': [
+  'costa-rica': [
     { label: 'Panamá, Panamá',           flag: '🇵🇦' },
     { label: 'Bogotá, Colombia',         flag: '🇨🇴' },
     { label: 'Lima, Perú',               flag: '🇵🇪' },
@@ -61,7 +65,7 @@ const ESCALAS_POR_DESTINO: Record<string, { label: string; flag: string }[]> = {
     { label: 'San Salvador, El Salvador',flag: '🇸🇻' },
     { label: 'Guatemala, Guatemala',     flag: '🇬🇹' },
   ],
-  'mexico-cancun-riviera': [
+  'mexico': [
     { label: 'Ciudad de México, México', flag: '🇲🇽' },
     { label: 'Guadalajara, México',      flag: '🇲🇽' },
     { label: 'Monterrey, México',        flag: '🇲🇽' },
@@ -70,6 +74,15 @@ const ESCALAS_POR_DESTINO: Record<string, { label: string; flag: string }[]> = {
     { label: 'Panamá, Panamá',           flag: '🇵🇦' },
     { label: 'Miami, EE.UU.',            flag: '🇺🇸' },
     { label: 'Dallas, EE.UU.',           flag: '🇺🇸' },
+  ],
+  'chile': [
+    { label: 'Buenos Aires, Argentina',  flag: '🇦🇷' },
+    { label: 'Lima, Perú',               flag: '🇵🇪' },
+    { label: 'Bogotá, Colombia',         flag: '🇨🇴' },
+    { label: 'São Paulo, Brasil',        flag: '🇧🇷' },
+    { label: 'Panamá, Panamá',           flag: '🇵🇦' },
+    { label: 'Miami, EE.UU.',            flag: '🇺🇸' },
+    { label: 'Madrid, España',           flag: '🇪🇸' },
   ],
 }
 
@@ -93,17 +106,32 @@ export default function NuevoViajePage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  // Step 1 — 3-stage selector
+  const [continente, setContinente] = useState('')
   const [destinoSlug, setDestinoSlug] = useState('')
+  const [ciudad, setCiudad] = useState('')
+
+  // Escalas
   const [escalas, setEscalas] = useState<Escala[]>([])
   const [nextEscalaId, setNextEscalaId] = useState(0)
+
+  // Step 2
   const [fechaSalida, setFechaSalida] = useState('')
   const [fechaRegreso, setFechaRegreso] = useState('')
+
+  // Step 3
   const [tipos, setTipos] = useState<TipoViaje[]>([])
 
   const totalPasos = 3
   const progreso = (paso / totalPasos) * 100
   const destino = DESTINOS_PILOTO.find(d => d.slug === destinoSlug)
   const hoy = new Date().toISOString().split('T')[0]
+  const destinosDelContinente = continente ? (DESTINOS_POR_CONTINENTE[continente] ?? []) : []
+
+  // Nombre final del destino (país + ciudad)
+  const destinoNombre = destino
+    ? ciudad ? `${destino.nombre} — ${ciudad}` : destino.nombre
+    : ''
 
   // Escala helpers
   function addEscala() {
@@ -125,12 +153,12 @@ export default function NuevoViajePage() {
   }
 
   async function handleSubmit() {
-    if (!destinoSlug || !fechaSalida || !fechaRegreso || tipos.length === 0) return
+    if (!destinoSlug || !ciudad || !fechaSalida || !fechaRegreso || tipos.length === 0) return
     setLoading(true)
     setError(null)
     const result = await crearViaje({
       destino_slug:   destinoSlug,
-      destino_nombre: destino!.nombre,
+      destino_nombre: destinoNombre,
       fecha_salida:   fechaSalida,
       fecha_regreso:  fechaRegreso,
       tipo:           tipos[0],
@@ -171,39 +199,101 @@ export default function NuevoViajePage() {
                 style={{ fontFamily: 'var(--font-fraunces)' }}>
                 ¿A dónde viajan?
               </h1>
-              <p className="text-sm text-slate-500">Selecciona tu destino principal</p>
+              <p className="text-sm text-slate-500">Selecciona continente, país y ciudad</p>
             </div>
 
-            {/* Destinos */}
-            <div className="flex flex-col gap-3 mb-6">
-              {DESTINOS_PILOTO.map(d => {
-                const dengue = d.riesgos.dengue
-                const selected = destinoSlug === d.slug
-                return (
-                  <button key={d.slug} onClick={() => setDestinoSlug(d.slug)}
+            {/* ── Etapa 1: Continente ─────────────────────────────────── */}
+            <div className="mb-5">
+              <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">
+                Continente
+              </p>
+              <div className="grid grid-cols-2 gap-3">
+                {CONTINENTES.map(c => (
+                  <button key={c.id} onClick={() => {
+                    setContinente(c.id)
+                    setDestinoSlug('')
+                    setCiudad('')
+                  }}
                     className={cn(
-                      'w-full bg-white rounded-2xl border p-4 text-left transition-all',
-                      selected ? 'border-teal-400 shadow-sm ring-2 ring-teal-100' : 'border-slate-100 hover:border-teal-200'
+                      'bg-white rounded-2xl border p-4 text-left transition-all',
+                      continente === c.id
+                        ? 'border-teal-400 shadow-sm ring-2 ring-teal-100'
+                        : 'border-slate-100 hover:border-teal-200'
                     )}>
-                    <div className="flex items-center gap-4">
-                      <div className="text-3xl">
-                        {d.pais === 'Brasil' ? '🇧🇷' : d.pais === 'República Dominicana' ? '🏝️' : d.pais === 'Costa Rica' ? '🇨🇷' : '🇲🇽'}
-                      </div>
-                      <div className="flex-1">
-                        <p className="font-semibold text-slate-900 text-sm">{d.nombre}</p>
-                        <p className="text-xs text-slate-400 mt-0.5">{d.region}</p>
-                      </div>
-                      <span className={cn('text-[11px] font-semibold px-2.5 py-1 rounded-full', NIVEL_COLOR[dengue])}>
-                        Dengue: {NIVEL_LABEL[dengue]}
-                      </span>
-                    </div>
+                    <div className="text-2xl mb-1">{c.emoji}</div>
+                    <p className="font-semibold text-slate-900 text-sm">{c.id}</p>
+                    <p className="text-xs text-slate-400 mt-0.5">{c.desc}</p>
                   </button>
-                )
-              })}
+                ))}
+              </div>
             </div>
+
+            {/* ── Etapa 2: País ───────────────────────────────────────── */}
+            {continente && (
+              <div className="mb-5">
+                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">
+                  País de destino
+                </p>
+                <div className="flex flex-col gap-3">
+                  {destinosDelContinente.map(d => {
+                    const dengue = d.riesgos.dengue
+                    const selected = destinoSlug === d.slug
+                    return (
+                      <button key={d.slug} onClick={() => {
+                        setDestinoSlug(d.slug)
+                        setCiudad('')
+                      }}
+                        className={cn(
+                          'w-full bg-white rounded-2xl border p-4 text-left transition-all',
+                          selected ? 'border-teal-400 shadow-sm ring-2 ring-teal-100' : 'border-slate-100 hover:border-teal-200'
+                        )}>
+                        <div className="flex items-center gap-3">
+                          <span className="text-3xl">{d.pais_flag}</span>
+                          <div className="flex-1">
+                            <p className="font-semibold text-slate-900 text-sm">{d.nombre}</p>
+                            <p className="text-xs text-slate-400 mt-0.5">{d.region}</p>
+                          </div>
+                          {dengue !== 'no_aplica' ? (
+                            <span className={cn('text-[11px] font-semibold px-2.5 py-1 rounded-full', NIVEL_COLOR[dengue])}>
+                              Dengue: {NIVEL_LABEL[dengue]}
+                            </span>
+                          ) : (
+                            <span className="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-green-100 text-green-700">
+                              Bajo riesgo
+                            </span>
+                          )}
+                        </div>
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* ── Etapa 3: Ciudad ─────────────────────────────────────── */}
+            {destinoSlug && destino && (
+              <div className="mb-5">
+                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">
+                  Ciudad o zona
+                </p>
+                <div className="relative">
+                  <select
+                    value={ciudad}
+                    onChange={e => setCiudad(e.target.value)}
+                    className="w-full bg-white border border-slate-200 rounded-2xl px-4 py-3.5 text-sm text-slate-800 focus:outline-none focus:border-teal-400 cursor-pointer appearance-none pr-10"
+                  >
+                    <option value="" disabled>Selecciona una ciudad…</option>
+                    {destino.ciudades.map(c => (
+                      <option key={c} value={c}>{c}</option>
+                    ))}
+                  </select>
+                  <ChevronDown className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                </div>
+              </div>
+            )}
 
             {/* ── Escalas ──────────────────────────────────────────────── */}
-            {destinoSlug && (
+            {destinoSlug && ciudad && (
               <div className="mb-4">
                 <div className="flex items-center justify-between mb-3">
                   <div>
@@ -238,18 +328,21 @@ export default function NuevoViajePage() {
                         <label className="text-xs font-medium text-slate-500 mb-1.5 block">
                           Ciudad o país de escala
                         </label>
-                        <select
-                          value={escala.destino}
-                          onChange={e => updateEscala(escala.id, 'destino', e.target.value)}
-                          className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm text-slate-800 bg-white focus:outline-none focus:border-teal-400 cursor-pointer"
-                        >
-                          <option value="" disabled>Selecciona una ciudad…</option>
-                          {(ESCALAS_POR_DESTINO[destinoSlug] ?? []).map(op => (
-                            <option key={op.label} value={op.label}>
-                              {op.flag} {op.label}
-                            </option>
-                          ))}
-                        </select>
+                        <div className="relative">
+                          <select
+                            value={escala.destino}
+                            onChange={e => updateEscala(escala.id, 'destino', e.target.value)}
+                            className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm text-slate-800 bg-white focus:outline-none focus:border-teal-400 cursor-pointer appearance-none pr-8"
+                          >
+                            <option value="" disabled>Selecciona una ciudad…</option>
+                            {(ESCALAS_POR_DESTINO[destinoSlug] ?? []).map(op => (
+                              <option key={op.label} value={op.label}>
+                                {op.flag} {op.label}
+                              </option>
+                            ))}
+                          </select>
+                          <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                        </div>
                       </div>
 
                       {/* Duración */}
@@ -302,11 +395,9 @@ export default function NuevoViajePage() {
             {/* Resumen destino + escalas */}
             <div className="bg-white rounded-2xl border border-slate-100 p-4 mb-5">
               <div className="flex items-center gap-3 mb-2">
-                <span className="text-2xl">
-                  {destino?.pais === 'Brasil' ? '🇧🇷' : destino?.pais === 'República Dominicana' ? '🏝️' : destino?.pais === 'Costa Rica' ? '🇨🇷' : '🇲🇽'}
-                </span>
+                <span className="text-2xl">{destino?.pais_flag}</span>
                 <div>
-                  <p className="font-semibold text-slate-900 text-sm">{destino?.nombre}</p>
+                  <p className="font-semibold text-slate-900 text-sm">{destinoNombre}</p>
                   <p className="text-xs text-slate-400">{destino?.region}</p>
                 </div>
               </div>
@@ -422,7 +513,7 @@ export default function NuevoViajePage() {
             <Button
               onClick={() => setPaso(paso + 1)}
               disabled={
-                (paso === 1 && !destinoSlug) ||
+                (paso === 1 && (!destinoSlug || !ciudad)) ||
                 (paso === 2 && (!fechaSalida || !fechaRegreso))
               }
               className="w-full h-13 bg-teal-600 hover:bg-teal-700 text-white rounded-2xl font-semibold text-base">

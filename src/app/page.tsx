@@ -10,14 +10,15 @@ const BENEFICIOS = [
 ]
 
 const DESTINOS = [
-  { emoji: "🇧🇷", nombre: "Brasil",       riesgo: "Dengue muy alto",    chip: "bg-red-100 text-red-700" },
-  { emoji: "🏝️", nombre: "Caribe",        riesgo: "Malaria moderado",   chip: "bg-yellow-100 text-yellow-700" },
-  { emoji: "🇨🇷", nombre: "Costa Rica",   riesgo: "Dengue alto",        chip: "bg-orange-100 text-orange-700" },
-  { emoji: "🇲🇽", nombre: "México",       riesgo: "Diarrea del viajero",chip: "bg-yellow-100 text-yellow-700" },
+  { emoji: "🇧🇷", nombre: "Brasil",               riesgo: "Dengue muy alto",    chip: "bg-red-100 text-red-700",    continente: "Sudamérica" },
+  { emoji: "🇩🇴", nombre: "Rep. Dominicana",       riesgo: "Malaria moderado",   chip: "bg-yellow-100 text-yellow-700", continente: "Caribe" },
+  { emoji: "🇨🇷", nombre: "Costa Rica",            riesgo: "Dengue alto",        chip: "bg-orange-100 text-orange-700", continente: "Centroamérica" },
+  { emoji: "🇲🇽", nombre: "México",               riesgo: "Diarrea del viajero",chip: "bg-yellow-100 text-yellow-700", continente: "Centroamérica" },
+  { emoji: "🇨🇱", nombre: "Chile",                riesgo: "Bajo riesgo infec.", chip: "bg-green-100 text-green-700",  continente: "Sudamérica" },
 ]
 
 const STATS = [
-  { num: "4", lbl: "Destinos" },
+  { num: "5", lbl: "Destinos" },
   { num: "CDC", lbl: "Fuente clínica" },
   { num: "24/7", lbl: "Disponible" },
 ]
@@ -142,12 +143,13 @@ export default function LandingPage() {
               </h2>
               <p className="text-slate-500 text-sm">Información actualizada — CDC Yellow Book 2026</p>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
               {DESTINOS.map(d => (
                 <div key={d.nombre}
                   className="bg-[#F0FDF9] rounded-2xl p-5 text-center border border-teal-100 hover:border-teal-300 hover:shadow-sm transition-all">
                   <div className="text-4xl mb-3">{d.emoji}</div>
-                  <div className="font-semibold text-slate-900 mb-2 text-sm">{d.nombre}</div>
+                  <div className="font-semibold text-slate-900 mb-1 text-sm">{d.nombre}</div>
+                  <div className="text-[10px] text-slate-400 mb-2">{d.continente}</div>
                   <span className={`text-[11px] font-semibold px-2.5 py-1 rounded-full ${d.chip}`}>
                     {d.riesgo}
                   </span>

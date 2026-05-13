@@ -49,7 +49,32 @@ const PROTECCION: BotiquinItem[] = [
 
 // ─── Extras por destino ───────────────────────────────────────────────────────
 const EXTRAS_DESTINO: Record<string, BotiquinItem[]> = {
-  'brasil-nordeste': [
+  // Nuevos slugs
+  'brasil': [
+    { nombre: 'Profilaxis antipalúdica (si viaja a Amazonia)', nota: 'Consultar con médico. No aplica para playas del nordeste costero.' },
+    { nombre: 'Mosquitero impregnado con permetrina', nota: 'Recomendado para zonas de selva o interior.' },
+  ],
+  'republica-dominicana': [
+    { nombre: 'Cloroquina profiláctica (si va a zonas rurales)', nota: 'Solo con prescripción médica. Evaluar con especialista.' },
+    { nombre: 'Tabletas purificadoras de agua', nota: 'Útil si sale de zonas turísticas.' },
+    { nombre: 'Gotas oftálmicas antibióticas', nota: 'Conjuntivitis frecuente en playas y piscinas.' },
+  ],
+  'costa-rica': [
+    { nombre: 'Crema antihistamínica tópica', nota: 'Reacciones por insectos y plantas en zona selvática.' },
+    { nombre: 'Protección antiofídica (saber dónde está el centro médico más cercano)', nota: 'Riesgo bajo pero presente en zonas rurales. No manipular animales.' },
+  ],
+  'mexico': [
+    { nombre: 'Probióticos (lactobacillus)', nota: 'Pueden reducir riesgo de diarrea del viajero.' },
+    { nombre: 'Azitromicina o ciprofloxacino (prescrito)', nota: 'Antibiótico de rescate ante diarrea severa. Solo con receta médica.' },
+    { nombre: 'Pastillas para agua / filtro portátil', nota: 'Para zonas fuera de resorts.' },
+  ],
+  'chile': [
+    { nombre: 'Protector labial con FPS 50+', nota: 'El índice UV en Chile es muy alto, especialmente en el norte y la Patagonia.' },
+    { nombre: 'Ropa térmica liviana (capa base)', nota: 'Las noches pueden ser frías incluso en verano en la Patagonia y Atacama.' },
+    { nombre: 'Bastones de trekking (si hace senderismo)', nota: 'Útiles para Torres del Paine y otros senderos de alta dificultad.' },
+  ],
+  // Aliases para viajes registrados con slugs anteriores
+  'brasil-nordeste':             [
     { nombre: 'Profilaxis antipalúdica (si viaja a Amazonia)', nota: 'Consultar con médico. No aplica para playas del nordeste costero.' },
     { nombre: 'Mosquitero impregnado con permetrina', nota: 'Recomendado para zonas de selva o interior.' },
   ],
@@ -102,9 +127,7 @@ export default async function BotiquinPage({ params }: { params: Promise<{ id: s
   const destino = getDestinoBySlug(viaje.destino_slug)
   if (!destino) notFound()
 
-  const flagEmoji = viaje.destino_slug.includes('brasil') ? '🇧🇷'
-    : viaje.destino_slug.includes('caribe') ? '🏝️'
-    : viaje.destino_slug.includes('costa') ? '🇨🇷' : '🇲🇽'
+  const flagEmoji = destino?.pais_flag ?? '🌍'
 
   const extrasDestino = EXTRAS_DESTINO[viaje.destino_slug] ?? []
 

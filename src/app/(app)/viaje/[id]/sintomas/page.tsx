@@ -4,6 +4,7 @@ import { ChevronLeft } from 'lucide-react'
 import Link from 'next/link'
 import { SintomasClient } from './SintomasClient'
 import { HistorialCard } from './HistorialCard'
+import { getDestinoBySlug } from '@/lib/content/destinos'
 
 export default async function SintomasPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -29,9 +30,8 @@ export default async function SintomasPage({ params }: { params: Promise<{ id: s
     .order('created_at', { ascending: false })
     .limit(20)
 
-  const flagEmoji = viaje.destino_slug.includes('brasil') ? '🇧🇷'
-    : viaje.destino_slug.includes('caribe') ? '🏝️'
-    : viaje.destino_slug.includes('costa') ? '🇨🇷' : '🇲🇽'
+  const destino = getDestinoBySlug(viaje.destino_slug)
+  const flagEmoji = destino?.pais_flag ?? '🌍'
 
   return (
     <div className="min-h-screen bg-[#F0FDF9]">

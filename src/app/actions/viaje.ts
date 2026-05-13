@@ -141,7 +141,29 @@ function generarChecklist(destino_slug: string, tipos: string[]) {
   ]
 
   const porDestino: Record<string, { tarea: string, categoria: string, prioridad: string, descripcion: string }[]> = {
-    'brasil-nordeste': [
+    // Nuevos slugs
+    'brasil': [
+      { tarea: 'Vacuna fiebre amarilla (con certificado)', categoria: 'vacunas', prioridad: 'alta', descripcion: 'Requerida para ingreso a algunas zonas. Aplicar con al menos 10 días de anticipación.' },
+      { tarea: 'Ropa de manga larga para amanecer/atardecer', categoria: 'botiquin', prioridad: 'alta', descripcion: 'Protección extra contra mosquitos transmisores de dengue.' },
+    ],
+    'republica-dominicana': [
+      { tarea: 'Consultar profilaxis antipalúdica', categoria: 'vacunas', prioridad: 'alta', descripcion: 'Especialmente si visitas zonas rurales o fronterizas.' },
+      { tarea: 'Solo agua embotellada o hervida', categoria: 'botiquin', prioridad: 'alta', descripcion: 'Evitar hielo, agua del grifo y vegetales crudos lavados con agua local.' },
+    ],
+    'costa-rica': [
+      { tarea: 'Precaución con animales silvestres', categoria: 'botiquin', prioridad: 'media', descripcion: 'No tocar animales. En caso de mordedura, buscar atención médica inmediata.' },
+      { tarea: 'Protector solar FPS 50+', categoria: 'botiquin', prioridad: 'media', descripcion: 'El sol tropical es más intenso. Reaplicar cada 2 horas.' },
+    ],
+    'mexico': [
+      { tarea: 'Cuidado con alimentos en puestos callejeros', categoria: 'botiquin', prioridad: 'alta', descripcion: 'Alta incidencia de diarrea del viajero. Priorizar alimentos cocidos y calientes.' },
+      { tarea: 'Llevar suero oral de rehidratación', categoria: 'botiquin', prioridad: 'alta', descripcion: 'Fundamental si viajas con niños. La deshidratación es el principal riesgo.' },
+    ],
+    'chile': [
+      { tarea: 'Protector solar FPS 50+', categoria: 'botiquin', prioridad: 'alta', descripcion: 'El índice UV en Chile puede ser muy alto, especialmente en el norte (Atacama) y sur (Patagonia). Reaplicar cada 2 horas.' },
+      { tarea: 'Ropa para cambios bruscos de temperatura', categoria: 'botiquin', prioridad: 'media', descripcion: 'Las noches pueden ser frías incluso en verano, especialmente en la Patagonia y desierto de Atacama.' },
+    ],
+    // Aliases de slugs anteriores (compatibilidad)
+    'brasil-nordeste':             [
       { tarea: 'Vacuna fiebre amarilla (con certificado)', categoria: 'vacunas', prioridad: 'alta', descripcion: 'Requerida para ingreso a algunas zonas. Aplicar con al menos 10 días de anticipación.' },
       { tarea: 'Ropa de manga larga para amanecer/atardecer', categoria: 'botiquin', prioridad: 'alta', descripcion: 'Protección extra contra mosquitos transmisores de dengue.' },
     ],

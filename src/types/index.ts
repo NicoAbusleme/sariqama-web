@@ -68,7 +68,10 @@ export interface Destino {
   slug: string
   nombre: string
   pais: string
+  pais_flag: string           // emoji bandera del país
+  continente: string          // 'Centroamérica' | 'Sudamérica'
   region: string
+  ciudades: string[]          // ciudades o zonas seleccionables
   riesgos: RiesgoDestino
   vacunas_recomendadas: string[]
   vacunas_requeridas: string[]
