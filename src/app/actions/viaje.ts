@@ -38,6 +38,46 @@ export async function crearViaje(data: {
   redirect(`/viaje/${viaje.id}`)
 }
 
+export async function guardarSintomas(data: {
+  viaje_id: string
+  viajero_id?: string
+  viajero_nombre?: string
+  sintomas: string[]
+  semaforo: string
+  fiebre: boolean
+  dias_sintomas: number
+  titulo: string
+  exposiciones: string[]
+  acciones: string[]
+}) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'No autorizado' }
+
+  const { data: viaje } = await supabase.from('viajes').select('familia_id').eq('id', data.viaje_id).single()
+  if (!viaje) return { error: 'Viaje no encontrado' }
+  const { data: familia } = await supabase.from('familias').select('id').eq('user_id', user.id).single()
+  if (!familia || viaje.familia_id !== familia.id) return { error: 'No autorizado' }
+
+  const { error } = await supabase.from('sintomas_log').insert({
+    viaje_id:        data.viaje_id,
+    viajero_id:      data.viajero_id ?? null,
+    viajero_nombre:  data.viajero_nombre ?? null,
+    sintomas:        data.sintomas,
+    semaforo:        data.semaforo,
+    fiebre:          data.fiebre,
+    dias_sintomas:   data.dias_sintomas,
+    titulo:          data.titulo,
+    exposiciones:    data.exposiciones,
+    acciones:        data.acciones,
+  })
+
+  if (error) return { error: error.message }
+
+  revalidatePath(`/viaje/${data.viaje_id}/sintomas`)
+  return { ok: true }
+}
+
 export async function toggleChecklistItem(itemId: string, completado: boolean, viajeId: string) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
