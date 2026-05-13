@@ -1,169 +1,124 @@
-import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
-import { Leaf, Plus, MapPin, CheckCircle, AlertTriangle, LogOut, Users } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import Link from 'next/link'
-import { cerrarSesion } from '@/app/actions/auth'
+import { createClient } from "@/lib/supabase/server"
+import { redirect } from "next/navigation"
+import { Plus, MapPin, CheckCircle, AlertTriangle, Stethoscope, ChevronRight } from "lucide-react"
+import Link from "next/link"
+import { cerrarSesion } from "@/app/actions/auth"
+import { Badge } from "@/components/ui/badge"
 
 export default async function DashboardPage() {
   const supabase = await createClient()
-
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
+  if (!user) redirect("/login")
 
   const { data: familia } = await supabase
-    .from('familias')
-    .select('*')
-    .eq('user_id', user.id)
-    .single()
-
-  if (!familia) redirect('/onboarding')
+    .from("familias").select("*").eq("user_id", user.id).single()
+  if (!familia) redirect("/onboarding")
 
   const { data: viajeros } = await supabase
-    .from('viajeros')
-    .select('*')
-    .eq('familia_id', familia.id)
-    .order('edad', { ascending: false })
+    .from("viajeros").select("*").eq("familia_id", familia.id).order("edad", { ascending: false })
 
   const { data: viajes } = await supabase
-    .from('viajes')
-    .select('*')
-    .eq('familia_id', familia.id)
-    .gte('fecha_regreso', new Date().toISOString().split('T')[0])
-    .order('fecha_salida', { ascending: true })
+    .from("viajes").select("*").eq("familia_id", familia.id)
+    .gte("fecha_regreso", new Date().toISOString().split("T")[0])
+    .order("fecha_salida", { ascending: true })
 
-  const tieneViajeros = viajeros && viajeros.length > 0
   const tieneViajes = viajes && viajes.length > 0
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Navbar */}
-      <header className="bg-white border-b border-slate-100 sticky top-0 z-50">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Leaf className="h-5 w-5 text-teal-600" />
-            <span className="font-bold text-lg text-slate-900">SARIQAMA</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="text-sm text-slate-500 hidden sm:block">
-              {familia.nombre}
-            </span>
+    <div className="min-h-screen bg-[#F0FDF9]">
+      {/* Header con gradiente */}
+      <header className="bg-gradient-to-br from-teal-600 to-teal-800 px-5 pt-12 pb-8">
+        <div className="max-w-2xl mx-auto">
+          <div className="flex items-start justify-between mb-6">
+            <div>
+              <p className="text-teal-200 text-sm mb-1">Buenos días,</p>
+              <h1 className="text-2xl font-semibold text-white"
+                style={{ fontFamily: "var(--font-fraunces)" }}>
+                {familia.nombre} 👋
+              </h1>
+            </div>
             <form action={cerrarSesion}>
-              <button
-                type="submit"
-                className="p-2 text-slate-400 hover:text-slate-600 transition-colors"
-                title="Cerrar sesión"
-              >
-                <LogOut className="h-4 w-4" />
+              <button type="submit"
+                className="w-10 h-10 rounded-2xl flex items-center justify-center text-lg"
+                style={{ background: "rgba(255,255,255,0.15)" }}
+                title="Cerrar sesión">
+                👤
               </button>
             </form>
           </div>
+
+          {/* Viajeros pills */}
+          {viajeros && viajeros.length > 0 && (
+            <div className="flex gap-2 flex-wrap">
+              {viajeros.map(v => (
+                <span key={v.id}
+                  className="px-3 py-1 rounded-full text-xs font-medium text-white/90 border border-white/20"
+                  style={{ background: "rgba(255,255,255,0.12)" }}>
+                  {v.nombre} · {v.edad}a
+                </span>
+              ))}
+            </div>
+          )}
         </div>
       </header>
 
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
+      <main className="max-w-2xl mx-auto px-5 pb-28 -mt-4">
 
-        {/* Saludo */}
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold text-slate-900 mb-1">
-            Hola, {familia.nombre} 👋
-          </h1>
-          <p className="text-slate-500">
-            {tieneViajes
-              ? `Tienes ${viajes!.length} viaje${viajes!.length > 1 ? 's' : ''} próximo${viajes!.length > 1 ? 's' : ''}`
-              : '¿Cuándo es tu próximo viaje?'}
-          </p>
-        </div>
-
-        {/* Integrantes de la familia */}
-        {tieneViajeros && (
-          <div className="mb-6">
-            <div className="flex items-center gap-2 mb-3">
-              <Users className="h-4 w-4 text-slate-400" />
-              <span className="text-sm font-medium text-slate-600">Tu familia</span>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {viajeros!.map(v => (
-                <Badge
-                  key={v.id}
-                  variant="secondary"
-                  className="px-3 py-1 bg-teal-50 text-teal-700 border-teal-100"
-                >
-                  {v.nombre} · {v.edad} años
-                </Badge>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Sin viajes — estado vacío */}
+        {/* Sin viajes */}
         {!tieneViajes && (
-          <Card className="mb-6 border-dashed border-2 border-slate-200 bg-white">
-            <CardContent className="flex flex-col items-center justify-center py-16 text-center">
-              <MapPin className="h-12 w-12 text-slate-300 mb-4" />
-              <h3 className="font-semibold text-slate-700 mb-2">
-                Aún no tienes viajes registrados
-              </h3>
-              <p className="text-sm text-slate-400 max-w-sm mb-6">
-                Crea tu primer viaje para obtener tu checklist sanitario personalizado
-                y la información de riesgos de tu destino.
-              </p>
-              <Link href="/viaje/nuevo">
-                <Button className="bg-teal-600 hover:bg-teal-700 text-white">
-                  <Plus className="mr-2 h-4 w-4" />
-                  Crear mi primer viaje
-                </Button>
-              </Link>
-            </CardContent>
-          </Card>
+          <div className="bg-white rounded-3xl border border-dashed border-slate-200 p-10 text-center mb-5">
+            <div className="text-5xl mb-4">✈️</div>
+            <h3 className="font-semibold text-slate-800 mb-2"
+              style={{ fontFamily: "var(--font-fraunces)" }}>
+              ¿A dónde viajan?
+            </h3>
+            <p className="text-sm text-slate-400 max-w-xs mx-auto mb-6">
+              Crea tu primer viaje para obtener el checklist sanitario y los riesgos de tu destino.
+            </p>
+            <Link href="/viaje/nuevo">
+              <button className="inline-flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white font-semibold px-6 py-3 rounded-2xl text-sm transition-colors">
+                <Plus className="h-4 w-4" />
+                Crear mi primer viaje
+              </button>
+            </Link>
+          </div>
         )}
 
         {/* Viajes próximos */}
         {tieneViajes && (
-          <div className="mb-6">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-sm font-medium text-slate-600">Viajes próximos</span>
+          <div className="mb-5">
+            <div className="flex items-center justify-between mb-3 px-1">
+              <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Viajes próximos</span>
               <Link href="/viaje/nuevo">
-                <Button size="sm" variant="outline" className="h-8 text-xs">
-                  <Plus className="mr-1 h-3 w-3" /> Nuevo viaje
-                </Button>
+                <span className="text-xs text-teal-600 font-semibold flex items-center gap-1">
+                  <Plus className="h-3 w-3" /> Nuevo
+                </span>
               </Link>
             </div>
             <div className="flex flex-col gap-3">
               {viajes!.map(v => {
-                const diasRestantes = Math.ceil(
-                  (new Date(v.fecha_salida).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
-                )
+                const dias = Math.ceil((new Date(v.fecha_salida).getTime() - new Date().getTime()) / 86400000)
                 return (
                   <Link key={v.id} href={`/viaje/${v.id}`}>
-                    <Card className="hover:border-teal-200 hover:shadow-sm transition-all cursor-pointer">
-                      <CardContent className="flex items-center justify-between py-4 px-5">
-                        <div className="flex items-center gap-4">
-                          <div className="p-2 bg-teal-50 rounded-lg">
-                            <MapPin className="h-5 w-5 text-teal-600" />
-                          </div>
-                          <div>
-                            <p className="font-semibold text-slate-900">{v.destino_nombre}</p>
-                            <p className="text-sm text-slate-500">
-                              {new Date(v.fecha_salida).toLocaleDateString('es-CL', { day: 'numeric', month: 'long' })}
-                              {' → '}
-                              {new Date(v.fecha_regreso).toLocaleDateString('es-CL', { day: 'numeric', month: 'long' })}
-                            </p>
-                          </div>
-                        </div>
-                        <Badge className={
-                          diasRestantes <= 7
-                            ? 'bg-red-100 text-red-700 border-red-200'
-                            : diasRestantes <= 30
-                            ? 'bg-yellow-100 text-yellow-700 border-yellow-200'
-                            : 'bg-teal-100 text-teal-700 border-teal-200'
-                        }>
-                          {diasRestantes <= 0 ? 'Hoy' : `${diasRestantes}d`}
+                    <div className="bg-white rounded-2xl border border-slate-100 p-4 flex items-center gap-4 hover:border-teal-200 hover:shadow-sm transition-all">
+                      <div className="w-11 h-11 bg-teal-50 rounded-2xl flex items-center justify-center flex-shrink-0">
+                        <MapPin className="h-5 w-5 text-teal-600" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-semibold text-slate-900 text-sm truncate">{v.destino_nombre}</p>
+                        <p className="text-xs text-slate-400 mt-0.5">
+                          {new Date(v.fecha_salida).toLocaleDateString("es-CL", { day: "numeric", month: "short" })}
+                          {" → "}
+                          {new Date(v.fecha_regreso).toLocaleDateString("es-CL", { day: "numeric", month: "short" })}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Badge className={dias <= 7 ? "bg-red-100 text-red-700" : dias <= 30 ? "bg-amber-100 text-amber-700" : "bg-teal-100 text-teal-700"}>
+                          {dias <= 0 ? "Hoy" : `${dias}d`}
                         </Badge>
-                      </CardContent>
-                    </Card>
+                        <ChevronRight className="h-4 w-4 text-slate-300" />
+                      </div>
+                    </div>
                   </Link>
                 )
               })}
@@ -171,55 +126,55 @@ export default async function DashboardPage() {
           </div>
         )}
 
-        {/* Acceso rápido */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <Card className="hover:border-teal-200 transition-colors cursor-pointer">
-            <CardHeader className="pb-2">
-              <div className="p-2 bg-green-50 rounded-lg w-fit mb-2">
-                <CheckCircle className="h-5 w-5 text-green-600" />
+        {/* Quick actions */}
+        <div className="px-1 mb-3">
+          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Accesos rápidos</span>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          {[
+            { href: "/viaje/nuevo",      bg: "bg-teal-50",   icon: "✈️",  titulo: "Nuevo viaje",       sub: "Planifica tu salud" },
+            { href: "/viaje",            bg: "bg-amber-50",  icon: "🌡️", titulo: "Síntomas",           sub: "Evaluación rápida" },
+            { href: "/viaje",            bg: "bg-green-50",  icon: "✅",  titulo: "Checklist",          sub: "Preparación pre-viaje" },
+            { href: "/teleorientacion",  bg: "bg-blue-50",   icon: "👨‍⚕️", titulo: "Orientación",       sub: "Habla con un médico" },
+          ].map(a => (
+            <Link key={a.titulo} href={a.href}>
+              <div className="bg-white rounded-2xl border border-slate-100 p-4 hover:border-teal-200 hover:shadow-sm transition-all cursor-pointer">
+                <div className={`w-11 h-11 ${a.bg} rounded-2xl flex items-center justify-center text-xl mb-3`}>
+                  {a.icon}
+                </div>
+                <p className="font-semibold text-slate-900 text-sm">{a.titulo}</p>
+                <p className="text-xs text-slate-400 mt-0.5">{a.sub}</p>
               </div>
-              <CardTitle className="text-base">Checklist pre-viaje</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-slate-500">
-                Lista sanitaria personalizada para tu familia y destino.
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="hover:border-teal-200 transition-colors cursor-pointer">
-            <CardHeader className="pb-2">
-              <div className="p-2 bg-yellow-50 rounded-lg w-fit mb-2">
-                <AlertTriangle className="h-5 w-5 text-yellow-600" />
-              </div>
-              <CardTitle className="text-base">Evaluar síntomas</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-slate-500">
-                Semáforo clínico durante y después del viaje.
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="hover:border-teal-200 transition-colors cursor-pointer">
-            <CardHeader className="pb-2">
-              <div className="p-2 bg-teal-50 rounded-lg w-fit mb-2">
-                <MapPin className="h-5 w-5 text-teal-600" />
-              </div>
-              <CardTitle className="text-base">Riesgos por destino</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-slate-500">
-                Dengue, malaria, vacunas y más según tu destino.
-              </p>
-            </CardContent>
-          </Card>
+            </Link>
+          ))}
         </div>
 
-        <p className="text-xs text-slate-400 text-center mt-10 leading-relaxed">
+        <p className="text-[11px] text-slate-400 text-center mt-8 leading-relaxed px-4">
           SARIQAMA entrega orientación sanitaria. No reemplaza evaluación médica profesional.
         </p>
       </main>
+
+      {/* Bottom nav */}
+      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 z-50">
+        <div className="max-w-2xl mx-auto flex justify-around items-center py-2 px-4">
+          {[
+            { href: "/dashboard",       icon: "🏠",  label: "Inicio",    active: true },
+            { href: "/viaje/nuevo",     icon: "✈️",  label: "Viaje",     active: false },
+            { href: "/viaje",           icon: "🌡️", label: "Síntomas",  active: false },
+            { href: "/perfil",          icon: "👤",  label: "Perfil",    active: false },
+          ].map(n => (
+            <Link key={n.href} href={n.href}
+              className="flex flex-col items-center gap-1 py-1 px-3">
+              <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg ${n.active ? "bg-teal-100" : ""}`}>
+                {n.icon}
+              </div>
+              <span className={`text-[10px] font-medium ${n.active ? "text-teal-600" : "text-slate-400"}`}>
+                {n.label}
+              </span>
+            </Link>
+          ))}
+        </div>
+      </nav>
     </div>
   )
 }

@@ -1,71 +1,44 @@
-import Link from "next/link";
-import { Shield, MapPin, CheckCircle, Stethoscope, ChevronRight, Leaf } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import Link from "next/link"
+import { ChevronRight, Shield, MapPin, CheckCircle, Stethoscope } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
-// Colores SARIQAMA: teal-600 (#0d9488) como primario
 const BENEFICIOS = [
-  {
-    icon: MapPin,
-    titulo: "Riesgos por destino",
-    descripcion:
-      "Información actualizada sobre dengue, malaria, agua y vacunas según adonde viajes.",
-  },
-  {
-    icon: CheckCircle,
-    titulo: "Checklist sanitario familiar",
-    descripcion:
-      "Lista personalizada según tu familia, destino y fechas. Sin olvidar nada importante.",
-  },
-  {
-    icon: Shield,
-    titulo: "Evaluador de síntomas",
-    descripcion:
-      "Semáforo clínico durante y después del viaje. Para adultos y niños por separado.",
-  },
-  {
-    icon: Stethoscope,
-    titulo: "Orientación profesional",
-    descripcion:
-      "Teleorientación con especialistas en medicina del viajero cuando lo necesitas.",
-  },
-];
+  { icon: MapPin,       bg: "bg-teal-50",   color: "text-teal-600",  titulo: "Riesgos por destino",     desc: "Dengue, malaria, vacunas y más según adonde viajes." },
+  { icon: CheckCircle,  bg: "bg-green-50",  color: "text-green-600", titulo: "Checklist sanitario",     desc: "Lista personalizada según tu familia, destino y fechas." },
+  { icon: Shield,       bg: "bg-amber-50",  color: "text-amber-600", titulo: "Evaluador de síntomas",   desc: "Semáforo clínico para adultos y niños por separado." },
+  { icon: Stethoscope,  bg: "bg-teal-50",   color: "text-teal-600",  titulo: "Orientación profesional", desc: "Teleorientación con especialistas en medicina del viajero." },
+]
 
-const DESTINOS_DESTACADOS = [
-  { nombre: "Brasil", emoji: "🇧🇷", riesgo: "Dengue alto" },
-  { nombre: "Caribe", emoji: "🏝️", riesgo: "Malaria moderado" },
-  { nombre: "Costa Rica", emoji: "🇨🇷", riesgo: "Dengue alto" },
-  { nombre: "México", emoji: "🇲🇽", riesgo: "Diarrea del viajero" },
-];
+const DESTINOS = [
+  { emoji: "🇧🇷", nombre: "Brasil",       riesgo: "Dengue muy alto",    chip: "bg-red-100 text-red-700" },
+  { emoji: "🏝️", nombre: "Caribe",        riesgo: "Malaria moderado",   chip: "bg-yellow-100 text-yellow-700" },
+  { emoji: "🇨🇷", nombre: "Costa Rica",   riesgo: "Dengue alto",        chip: "bg-orange-100 text-orange-700" },
+  { emoji: "🇲🇽", nombre: "México",       riesgo: "Diarrea del viajero",chip: "bg-yellow-100 text-yellow-700" },
+]
+
+const STATS = [
+  { num: "4", lbl: "Destinos" },
+  { num: "CDC", lbl: "Fuente clínica" },
+  { num: "24/7", lbl: "Disponible" },
+]
 
 export default function LandingPage() {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-[#F0FDF9]">
+
       {/* NAVBAR */}
-      <header className="border-b border-slate-100 bg-white/80 backdrop-blur sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Leaf className="h-6 w-6 text-teal-600" />
-            <span className="font-bold text-xl text-slate-900 tracking-tight">
-              SARIQAMA
-            </span>
-          </div>
-          <nav className="hidden md:flex items-center gap-6 text-sm text-slate-600">
-            <Link href="#como-funciona" className="hover:text-teal-600 transition-colors">
-              Cómo funciona
-            </Link>
-            <Link href="#destinos" className="hover:text-teal-600 transition-colors">
-              Destinos
-            </Link>
-          </nav>
+      <header className="bg-white/80 backdrop-blur border-b border-slate-100 sticky top-0 z-50">
+        <div className="max-w-5xl mx-auto px-5 h-16 flex items-center justify-between">
+          <span className="text-xl font-bold text-slate-900 tracking-tight"
+            style={{ fontFamily: "var(--font-fraunces)" }}>
+            SARIQAMA
+          </span>
           <div className="flex items-center gap-3">
             <Link href="/login">
-              <Button variant="ghost" size="sm">
-                Iniciar sesión
-              </Button>
+              <Button variant="ghost" size="sm" className="text-slate-600">Iniciar sesión</Button>
             </Link>
             <Link href="/registro">
-              <Button size="sm" className="bg-teal-600 hover:bg-teal-700 text-white">
+              <Button size="sm" className="bg-teal-600 hover:bg-teal-700 text-white rounded-xl">
                 Empezar gratis
               </Button>
             </Link>
@@ -74,143 +47,155 @@ export default function LandingPage() {
       </header>
 
       <main className="flex-1">
+
         {/* HERO */}
-        <section className="bg-gradient-to-b from-teal-50 to-white py-20 sm:py-28">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
-            <Badge className="mb-6 bg-teal-100 text-teal-700 border-teal-200 hover:bg-teal-100">
-              🌿 Salud del viajero para familias
-            </Badge>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 leading-tight tracking-tight mb-6">
-              Prepara la salud de tu familia{" "}
-              <span className="text-teal-600">antes de viajar</span>
-            </h1>
-            <p className="text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto mb-10 leading-relaxed">
-              Checklist sanitario, riesgos por destino y orientación médica
-              personalizada. Diseñado para familias que viajan con niños a
-              destinos tropicales.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/registro">
-                <Button
-                  size="lg"
-                  className="bg-teal-600 hover:bg-teal-700 text-white px-8 h-12 text-base"
-                >
-                  Crear mi viaje gratis
-                  <ChevronRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
-              <Link href="#como-funciona">
-                <Button variant="outline" size="lg" className="px-8 h-12 text-base">
-                  Cómo funciona
-                </Button>
-              </Link>
-            </div>
-            <p className="mt-4 text-sm text-slate-400">
-              Sin tarjeta de crédito · Orientación, no diagnóstico
-            </p>
-          </div>
-        </section>
+        <section className="bg-gradient-to-br from-teal-600 via-teal-700 to-teal-900 px-5 py-20 sm:py-28 text-center relative overflow-hidden">
+          {/* Decoración fondo */}
+          <div className="absolute inset-0 opacity-10"
+            style={{ backgroundImage: "radial-gradient(circle at 20% 80%, #fff 1px, transparent 1px), radial-gradient(circle at 80% 20%, #fff 1px, transparent 1px)", backgroundSize: "60px 60px" }} />
 
-        {/* BENEFICIOS */}
-        <section id="como-funciona" className="py-20 bg-white">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6">
-            <div className="text-center mb-14">
-              <h2 className="text-3xl font-bold text-slate-900 mb-4">
-                Todo lo que necesitas antes, durante y después del viaje
-              </h2>
-              <p className="text-slate-500 max-w-xl mx-auto">
-                Información clínica validada, adaptada a tu familia y destino.
-              </p>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-              {BENEFICIOS.map((b) => (
-                <div
-                  key={b.titulo}
-                  className="flex flex-col items-start p-6 rounded-2xl border border-slate-100 hover:border-teal-100 hover:shadow-sm transition-all"
-                >
-                  <div className="p-3 bg-teal-50 rounded-xl mb-4">
-                    <b.icon className="h-6 w-6 text-teal-600" />
-                  </div>
-                  <h3 className="font-semibold text-slate-900 mb-2">{b.titulo}</h3>
-                  <p className="text-sm text-slate-500 leading-relaxed">
-                    {b.descripcion}
-                  </p>
-                </div>
-              ))}
-            </div>
+          {/* Logo mark */}
+          <div className="relative z-10 inline-flex items-center justify-center w-20 h-20 rounded-3xl mb-6 text-4xl border border-white/25"
+            style={{ background: "rgba(255,255,255,0.15)", backdropFilter: "blur(8px)" }}>
+            🌴
           </div>
-        </section>
 
-        {/* DESTINOS PILOTO */}
-        <section id="destinos" className="py-20 bg-slate-50">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6">
-            <div className="text-center mb-14">
-              <h2 className="text-3xl font-bold text-slate-900 mb-4">
-                Destinos cubiertos
-              </h2>
-              <p className="text-slate-500">
-                Información actualizada basada en CDC Yellow Book 2026.
-              </p>
-            </div>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              {DESTINOS_DESTACADOS.map((d) => (
-                <div
-                  key={d.nombre}
-                  className="bg-white rounded-2xl p-6 text-center border border-slate-100 hover:border-teal-200 hover:shadow-sm transition-all"
-                >
-                  <div className="text-4xl mb-3">{d.emoji}</div>
-                  <div className="font-semibold text-slate-900 mb-1">{d.nombre}</div>
-                  <div className="text-xs text-slate-400">{d.riesgo}</div>
-                </div>
-              ))}
-            </div>
+          <h1 className="relative z-10 text-4xl sm:text-5xl lg:text-6xl font-semibold text-white tracking-tight mb-4 leading-tight"
+            style={{ fontFamily: "var(--font-fraunces)" }}>
+            SARIQAMA
+          </h1>
+          <p className="relative z-10 text-white/75 text-sm tracking-widest font-light mb-6 uppercase">
+            Smart Tropical Health Protection
+          </p>
+
+          {/* Pills */}
+          <div className="relative z-10 flex gap-2 flex-wrap justify-center mb-8">
+            {["Travel Health", "AI Guidance", "Prevention", "Vaccines"].map(p => (
+              <span key={p} className="px-4 py-1.5 rounded-full text-xs font-medium text-white/90 border border-white/20"
+                style={{ background: "rgba(255,255,255,0.12)" }}>
+                {p}
+              </span>
+            ))}
           </div>
-        </section>
 
-        {/* DISCLAIMER CLÍNICO */}
-        <section className="py-10 bg-white border-t border-slate-100">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
-            <p className="text-sm text-slate-400 leading-relaxed">
-              <strong className="text-slate-500">Aviso importante:</strong>{" "}
-              SARIQAMA entrega orientación sanitaria basada en fuentes clínicas
-              validadas. No reemplaza una evaluación médica profesional. Ante
-              signos de alarma, busca atención médica de inmediato.
-            </p>
+          {/* Stats */}
+          <div className="relative z-10 flex gap-8 justify-center mb-10">
+            {STATS.map(s => (
+              <div key={s.lbl} className="text-center">
+                <div className="text-xl font-semibold text-white">{s.num}</div>
+                <div className="text-xs text-white/60 mt-0.5">{s.lbl}</div>
+              </div>
+            ))}
           </div>
-        </section>
 
-        {/* CTA FINAL */}
-        <section className="py-20 bg-teal-600">
-          <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
-            <h2 className="text-3xl font-bold text-white mb-4">
-              ¿Cuándo sale tu próximo viaje?
-            </h2>
-            <p className="text-teal-100 mb-8 text-lg">
-              Crea el perfil de tu familia y obtén tu checklist sanitario en minutos.
-            </p>
+          {/* CTA */}
+          <div className="relative z-10 flex flex-col sm:flex-row gap-3 justify-center">
             <Link href="/registro">
-              <Button
-                size="lg"
-                className="bg-white text-teal-700 hover:bg-teal-50 px-8 h-12 text-base font-semibold"
-              >
-                Empezar gratis
+              <Button size="lg" className="bg-amber-400 hover:bg-amber-300 text-slate-900 font-semibold px-8 h-13 rounded-2xl text-base w-full sm:w-auto">
+                Crear mi viaje gratis
                 <ChevronRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+            <Link href="/login">
+              <Button size="lg" variant="ghost"
+                className="text-white/80 hover:text-white hover:bg-white/10 rounded-2xl text-sm w-full sm:w-auto">
+                ¿Ya tienes cuenta? Inicia sesión
               </Button>
             </Link>
           </div>
         </section>
+
+        {/* BENEFICIOS */}
+        <section className="py-20 px-5">
+          <div className="max-w-5xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-semibold text-slate-900 mb-3"
+                style={{ fontFamily: "var(--font-fraunces)" }}>
+                Todo lo que necesitas antes, durante y después
+              </h2>
+              <p className="text-slate-500 max-w-xl mx-auto text-sm leading-relaxed">
+                Información clínica validada basada en CDC Yellow Book 2026, adaptada a tu familia y destino.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              {BENEFICIOS.map(b => (
+                <div key={b.titulo}
+                  className="bg-white rounded-2xl border border-slate-100 p-6 hover:border-teal-200 hover:shadow-sm transition-all">
+                  <div className={`w-11 h-11 ${b.bg} rounded-2xl flex items-center justify-center mb-4`}>
+                    <b.icon className={`h-5 w-5 ${b.color}`} />
+                  </div>
+                  <h3 className="font-semibold text-slate-900 mb-1.5 text-[15px]">{b.titulo}</h3>
+                  <p className="text-sm text-slate-500 leading-relaxed">{b.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* DESTINOS */}
+        <section className="py-16 px-5 bg-white">
+          <div className="max-w-5xl mx-auto">
+            <div className="text-center mb-10">
+              <h2 className="text-3xl font-semibold text-slate-900 mb-3"
+                style={{ fontFamily: "var(--font-fraunces)" }}>
+                Destinos cubiertos
+              </h2>
+              <p className="text-slate-500 text-sm">Información actualizada — CDC Yellow Book 2026</p>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              {DESTINOS.map(d => (
+                <div key={d.nombre}
+                  className="bg-[#F0FDF9] rounded-2xl p-5 text-center border border-teal-100 hover:border-teal-300 hover:shadow-sm transition-all">
+                  <div className="text-4xl mb-3">{d.emoji}</div>
+                  <div className="font-semibold text-slate-900 mb-2 text-sm">{d.nombre}</div>
+                  <span className={`text-[11px] font-semibold px-2.5 py-1 rounded-full ${d.chip}`}>
+                    {d.riesgo}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* CTA FINAL */}
+        <section className="py-20 px-5 bg-gradient-to-br from-teal-600 to-teal-900 text-center">
+          <h2 className="text-3xl font-semibold text-white mb-3"
+            style={{ fontFamily: "var(--font-fraunces)" }}>
+            ¿Cuándo sale tu próximo viaje?
+          </h2>
+          <p className="text-teal-100 mb-8 text-sm max-w-md mx-auto">
+            Crea el perfil de tu familia y obtén tu checklist sanitario en minutos.
+          </p>
+          <Link href="/registro">
+            <Button size="lg"
+              className="bg-amber-400 hover:bg-amber-300 text-slate-900 font-semibold px-8 h-13 rounded-2xl text-base">
+              Empezar gratis
+              <ChevronRight className="ml-2 h-4 w-4" />
+            </Button>
+          </Link>
+        </section>
+
+        {/* DISCLAIMER */}
+        <section className="py-8 px-5 bg-white border-t border-slate-100">
+          <p className="text-center text-xs text-slate-400 max-w-2xl mx-auto leading-relaxed">
+            <strong className="text-slate-500">Aviso importante:</strong>{" "}
+            SARIQAMA entrega orientación sanitaria basada en fuentes clínicas validadas.
+            No reemplaza una evaluación médica profesional.
+            Ante signos de alarma, busca atención médica de inmediato.
+          </p>
+        </section>
       </main>
 
       {/* FOOTER */}
-      <footer className="bg-slate-900 text-slate-400 py-10">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row justify-between items-center gap-4 text-sm">
-          <div className="flex items-center gap-2">
-            <Leaf className="h-4 w-4 text-teal-400" />
-            <span className="text-white font-semibold">SARIQAMA</span>
-          </div>
-          <p>© 2026 SARIQAMA. Orientación sanitaria, no diagnóstico médico.</p>
+      <footer className="bg-slate-900 py-8 px-5">
+        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3 text-sm">
+          <span className="font-semibold text-white"
+            style={{ fontFamily: "var(--font-fraunces)" }}>
+            SARIQAMA
+          </span>
+          <p className="text-slate-400 text-xs">© 2026 SARIQAMA · Orientación sanitaria, no diagnóstico médico.</p>
         </div>
       </footer>
     </div>
-  );
+  )
 }
