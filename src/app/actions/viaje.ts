@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
+import { revalidatePath } from 'next/cache'
 
 export async function crearViaje(data: {
   destino_slug: string
@@ -35,6 +36,29 @@ export async function crearViaje(data: {
   }
 
   redirect(`/viaje/${viaje.id}`)
+}
+
+export async function toggleChecklistItem(itemId: string, completado: boolean, viajeId: string) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'No autorizado' }
+
+  // Verify ownership via viaje → familia
+  const { data: viaje } = await supabase.from('viajes').select('familia_id').eq('id', viajeId).single()
+  if (!viaje) return { error: 'Viaje no encontrado' }
+  const { data: familia } = await supabase.from('familias').select('id').eq('user_id', user.id).single()
+  if (!familia || viaje.familia_id !== familia.id) return { error: 'No autorizado' }
+
+  const { error } = await supabase
+    .from('checklist_items')
+    .update({ completado })
+    .eq('id', itemId)
+
+  if (error) return { error: error.message }
+
+  revalidatePath(`/viaje/${viajeId}/checklist`)
+  revalidatePath(`/viaje/${viajeId}`)
+  return { ok: true }
 }
 
 function generarChecklist(destino_slug: string, tipo: string) {
