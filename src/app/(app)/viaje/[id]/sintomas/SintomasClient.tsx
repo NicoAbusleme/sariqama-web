@@ -163,7 +163,7 @@ export function SintomasClient({ viajeId, viajeros }: Props) {
       </div>
       <div className="flex flex-col gap-2.5">
         {viajeros.map(v => (
-          <button key={v.id} onClick={() => setViajeroId(v.id)}
+          <button key={v.id} onClick={() => { setViajeroId(v.id); setModoInvitado(false) }}
             className={cn('w-full bg-white rounded-2xl border p-4 text-left transition-all',
               viajeroId === v.id ? 'border-teal-400 ring-2 ring-teal-100 shadow-sm' : 'border-slate-100 hover:border-teal-200')}>
             <div className="flex items-center gap-3">
