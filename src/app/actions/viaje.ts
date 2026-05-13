@@ -38,6 +38,25 @@ export async function crearViaje(data: {
   redirect(`/viaje/${viaje.id}`)
 }
 
+export async function eliminarViaje(viajeId: string) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'No autorizado' }
+
+  const { data: viaje } = await supabase.from('viajes').select('familia_id').eq('id', viajeId).single()
+  if (!viaje) return { error: 'Viaje no encontrado' }
+  const { data: familia } = await supabase.from('familias').select('id').eq('user_id', user.id).single()
+  if (!familia || viaje.familia_id !== familia.id) return { error: 'No autorizado' }
+
+  // Eliminar registros hijos primero
+  await supabase.from('sintomas_log').delete().eq('viaje_id', viajeId)
+  await supabase.from('checklist_items').delete().eq('viaje_id', viajeId)
+  const { error } = await supabase.from('viajes').delete().eq('id', viajeId)
+
+  if (error) return { error: error.message }
+  redirect('/dashboard')
+}
+
 export async function guardarSintomas(data: {
   viaje_id: string
   viajero_id?: string

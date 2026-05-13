@@ -4,6 +4,7 @@ import { ChevronLeft, CheckCircle, Shield, Stethoscope, BookOpen, ChevronRight, 
 import Link from 'next/link'
 import { getDestinoBySlug } from '@/lib/content/destinos'
 import { RiskChip } from '@/components/ui/risk-chip'
+import { EliminarViajeBtn } from './EliminarViajeBtn'
 import type { NivelRiesgo } from '@/types'
 
 const RIESGOS_INFO = [
@@ -196,6 +197,11 @@ export default async function DetalleViajePage({ params }: { params: Promise<{ i
           Fuente: CDC Yellow Book 2026 · {destino?.revisado_at && `Revisado ${destino.revisado_at}`}<br />
           SARIQAMA entrega orientación sanitaria. No reemplaza evaluación médica profesional.
         </p>
+
+        {/* Eliminar viaje */}
+        <div className="mt-6">
+          <EliminarViajeBtn viajeId={id} />
+        </div>
       </main>
     </div>
   )
