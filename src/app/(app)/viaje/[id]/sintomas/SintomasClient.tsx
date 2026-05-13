@@ -64,6 +64,7 @@ export function SintomasClient({ viajeId, viajeros }: Props) {
   const [exposiciones, setExposiciones] = useState<Set<string>>(new Set())
   const [resultado, setResultado]     = useState<ReturnType<typeof evaluarSemaforo> | null>(null)
   const [guardado, setGuardado]       = useState<'idle' | 'guardando' | 'ok' | 'error'>('idle')
+  const [errorMsg, setErrorMsg]       = useState<string | null>(null)
   const [, startTransition]           = useTransition()
 
   const viajeroSel      = viajeros.find(v => v.id === viajeroId)
@@ -126,7 +127,12 @@ export function SintomasClient({ viajeId, viajeros }: Props) {
         exposiciones:   Array.from(exposiciones),
         acciones:       res.acciones,
       })
-      setGuardado(r?.error ? 'error' : 'ok')
+      if (r?.error) {
+        setGuardado('error')
+        setErrorMsg(r.error)
+      } else {
+        setGuardado('ok')
+      }
     })
   }
 
@@ -317,7 +323,9 @@ export function SintomasClient({ viajeId, viajeros }: Props) {
             <span className="ml-auto text-xs text-slate-400">
               {guardado === 'guardando' && '⏳ Guardando...'}
               {guardado === 'ok'        && '✅ Guardado'}
-              {guardado === 'error'     && '⚠️ Error al guardar'}
+              {guardado === 'error'     && (
+                <span title={errorMsg ?? ''} className="text-red-500">⚠️ Error al guardar</span>
+              )}
             </span>
           </div>
           <h2 className={cn('text-2xl font-semibold mb-2', meta.text)} style={{ fontFamily: 'var(--font-fraunces)' }}>

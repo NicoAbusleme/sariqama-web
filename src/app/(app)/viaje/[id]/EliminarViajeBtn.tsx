@@ -18,7 +18,7 @@ export function EliminarViajeBtn({ viajeId }: { viajeId: string }) {
     return (
       <button
         onClick={() => setConfirmar(true)}
-        className="flex items-center gap-2 text-sm text-slate-400 hover:text-red-500 transition-colors mx-auto"
+        className="w-full flex items-center justify-center gap-2 bg-red-50 hover:bg-red-100 border border-red-200 text-red-600 font-semibold text-sm rounded-2xl py-3.5 transition-colors"
       >
         <Trash2 className="h-4 w-4" />
         Eliminar viaje
