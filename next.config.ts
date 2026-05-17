@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // @react-pdf/renderer usa canvas (nativo) — excluir del bundle de webpack
+  serverExternalPackages: ['@react-pdf/renderer'],
 };
 
 export default nextConfig;

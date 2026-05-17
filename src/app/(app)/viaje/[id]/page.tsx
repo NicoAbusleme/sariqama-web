@@ -26,8 +26,12 @@ export default async function DetalleViajePage({ params }: { params: Promise<{ i
   const { data: viaje } = await supabase.from('viajes').select('*').eq('id', id).single()
   if (!viaje) notFound()
 
-  const { data: familia } = await supabase.from('familias').select('id').eq('user_id', user.id).single()
+  const { data: familia } = await supabase
+    .from('familias').select('id, plan').eq('user_id', user.id).single()
   if (!familia || viaje.familia_id !== familia.id) redirect('/dashboard')
+
+  const userPlan: string = (familia as { id: string; plan?: string }).plan ?? 'gratis'
+  const puedeDescargarPDF = userPlan === 'preparacion' || userPlan === 'acompanamiento'
 
   const { data: checklist } = await supabase
     .from('checklist_items').select('*').eq('viaje_id', id).order('prioridad')
@@ -198,6 +202,41 @@ export default async function DetalleViajePage({ params }: { params: Promise<{ i
             <p className="text-xs font-semibold text-amber-700 mb-1">👶 Consideraciones para niños</p>
             <p className="text-xs text-amber-600 leading-relaxed">{destino.riesgos.notas_pediatricas}</p>
           </div>
+        )}
+
+        {/* Botón reporte PDF */}
+        {puedeDescargarPDF ? (
+          <a
+            href={`/api/reporte/${id}`}
+            download
+            className="flex items-center justify-between bg-white rounded-2xl border border-slate-100 p-4 hover:border-teal-200 hover:shadow-sm transition-all mb-4 group"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-11 h-11 bg-teal-50 rounded-2xl flex items-center justify-center text-xl group-hover:bg-teal-100 transition-colors">
+                📄
+              </div>
+              <div>
+                <p className="font-semibold text-slate-900 text-sm">Descargar reporte PDF</p>
+                <p className="text-xs text-slate-400 mt-0.5">Reporte familiar completo de salud</p>
+              </div>
+            </div>
+            <BookOpen className="h-4 w-4 text-teal-500" />
+          </a>
+        ) : (
+          <Link href="/precios">
+            <div className="flex items-center justify-between bg-teal-50 rounded-2xl border border-teal-100 p-4 hover:border-teal-300 transition-all mb-4">
+              <div className="flex items-center gap-3">
+                <div className="w-11 h-11 bg-teal-100 rounded-2xl flex items-center justify-center text-xl">
+                  📄
+                </div>
+                <div>
+                  <p className="font-semibold text-teal-800 text-sm">Reporte PDF familiar</p>
+                  <p className="text-xs text-teal-600 mt-0.5">Disponible en Preparación Total</p>
+                </div>
+              </div>
+              <Shield className="h-4 w-4 text-teal-500" />
+            </div>
+          </Link>
         )}
 
         {/* Teleorientación CTA */}
