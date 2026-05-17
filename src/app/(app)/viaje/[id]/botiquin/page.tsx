@@ -4,6 +4,7 @@ import { ChevronLeft } from 'lucide-react'
 import Link from 'next/link'
 import { getDestinoBySlug } from '@/lib/content/destinos'
 import { FlagImg } from '@/components/ui/flag-img'
+import { PlanGate } from '@/components/ui/plan-gate'
 
 // ─── Tipos ───────────────────────────────────────────────────────────────────
 interface BotiquinItem {
@@ -117,8 +118,11 @@ export default async function BotiquinPage({ params }: { params: Promise<{ id: s
   const { data: viaje } = await supabase.from('viajes').select('*').eq('id', id).single()
   if (!viaje) notFound()
 
-  const { data: familia } = await supabase.from('familias').select('id').eq('user_id', user.id).single()
+  const { data: familia } = await supabase
+    .from('familias').select('id, plan').eq('user_id', user.id).single()
   if (!familia || viaje.familia_id !== familia.id) redirect('/dashboard')
+
+  const userPlan: string = familia.plan ?? 'gratis'
 
   // ¿Hay niños en la familia?
   const { data: viajeros } = await supabase
@@ -207,6 +211,12 @@ export default async function BotiquinPage({ params }: { params: Promise<{ id: s
       </header>
 
       <main className="max-w-2xl mx-auto px-5 py-5 pb-28">
+        <PlanGate
+          userPlan={userPlan}
+          requiredPlan="preparacion"
+          feature="Botiquín familiar personalizado"
+          description="Arma el botiquín perfecto para tu destino, con sección pediátrica si viajas con niños."
+        >
 
         {/* Tip intro */}
         <div className="bg-teal-50 border border-teal-100 rounded-2xl px-4 py-3 mb-5 flex items-start gap-2">
@@ -288,6 +298,8 @@ export default async function BotiquinPage({ params }: { params: Promise<{ id: s
           Contenido basado en recomendaciones CDC y OPS para viajeros.
           No reemplaza prescripción médica. Ante signos de alarma, busca atención inmediata.
         </p>
+
+        </PlanGate>
       </main>
     </div>
   )

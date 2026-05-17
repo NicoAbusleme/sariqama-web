@@ -6,6 +6,7 @@ import { SintomasClient } from './SintomasClient'
 import { HistorialCard } from './HistorialCard'
 import { getDestinoBySlug } from '@/lib/content/destinos'
 import { FlagImg } from '@/components/ui/flag-img'
+import { PlanGate } from '@/components/ui/plan-gate'
 
 export default async function SintomasPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -16,8 +17,11 @@ export default async function SintomasPage({ params }: { params: Promise<{ id: s
   const { data: viaje } = await supabase.from('viajes').select('*').eq('id', id).single()
   if (!viaje) notFound()
 
-  const { data: familia } = await supabase.from('familias').select('id').eq('user_id', user.id).single()
+  const { data: familia } = await supabase
+    .from('familias').select('id, plan').eq('user_id', user.id).single()
   if (!familia || viaje.familia_id !== familia.id) redirect('/dashboard')
+
+  const userPlan: string = familia.plan ?? 'gratis'
 
   const { data: viajeros } = await supabase
     .from('viajeros').select('id, nombre, edad, es_nino, condiciones')
@@ -64,6 +68,12 @@ export default async function SintomasPage({ params }: { params: Promise<{ id: s
       </header>
 
       <main className="max-w-2xl mx-auto px-5 py-5 pb-28">
+        <PlanGate
+          userPlan={userPlan}
+          requiredPlan="acompanamiento"
+          feature="Evaluador de síntomas clínico"
+          description="Triaje determinístico basado en criterios CDC para adultos y niños, con historial de evaluaciones."
+        >
 
         {/* Aviso clínico */}
         <div className="bg-amber-50 border border-amber-100 rounded-2xl px-4 py-3 mb-5 flex items-start gap-2">
@@ -113,6 +123,7 @@ export default async function SintomasPage({ params }: { params: Promise<{ id: s
           </div>
         )}
 
+        </PlanGate>
       </main>
     </div>
   )

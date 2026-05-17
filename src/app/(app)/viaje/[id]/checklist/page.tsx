@@ -5,6 +5,10 @@ import Link from 'next/link'
 import { ChecklistClient } from './ChecklistClient'
 import { getDestinoBySlug } from '@/lib/content/destinos'
 import { FlagImg } from '@/components/ui/flag-img'
+import { PlanBanner } from '@/components/ui/plan-gate'
+
+// Categorías visibles en el plan gratuito
+const CATEGORIAS_GRATIS = ['documentos', 'vacunas']
 
 export default async function ChecklistPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -15,8 +19,12 @@ export default async function ChecklistPage({ params }: { params: Promise<{ id: 
   const { data: viaje } = await supabase.from('viajes').select('*').eq('id', id).single()
   if (!viaje) notFound()
 
-  const { data: familia } = await supabase.from('familias').select('id').eq('user_id', user.id).single()
+  const { data: familia } = await supabase
+    .from('familias').select('id, plan').eq('user_id', user.id).single()
   if (!familia || viaje.familia_id !== familia.id) redirect('/dashboard')
+
+  const userPlan: string = familia.plan ?? 'gratis'
+  const isPaid = userPlan === 'preparacion' || userPlan === 'acompanamiento'
 
   const { data: checklist } = await supabase
     .from('checklist_items')
@@ -24,8 +32,15 @@ export default async function ChecklistPage({ params }: { params: Promise<{ id: 
     .eq('viaje_id', id)
     .order('prioridad')
 
-  const items = checklist ?? []
-  const completados = items.filter(i => i.completado).length
+  const allItems = checklist ?? []
+
+  // Separar items libres y bloqueados
+  const freeItems   = allItems.filter(i => CATEGORIAS_GRATIS.includes(i.categoria))
+  const lockedItems = allItems.filter(i => !CATEGORIAS_GRATIS.includes(i.categoria))
+  const visibleItems = isPaid ? allItems : freeItems
+
+  const completados = visibleItems.filter(i => i.completado).length
+  const total       = visibleItems.length
 
   const destino = getDestinoBySlug(viaje.destino_slug)
   const flagCode = destino?.pais_code ?? 'un'
@@ -54,17 +69,16 @@ export default async function ChecklistPage({ params }: { params: Promise<{ id: 
                 <p className="text-teal-200 text-sm">{viaje.destino_nombre}</p>
               </div>
             </div>
-            {/* Mini progress ring / badge */}
             <div className="bg-white/10 rounded-2xl px-4 py-2 text-center">
               <p className="text-2xl font-bold text-white">{completados}</p>
-              <p className="text-teal-200 text-xs">de {items.length}</p>
+              <p className="text-teal-200 text-xs">de {total}</p>
             </div>
           </div>
         </div>
       </header>
 
       <main className="max-w-2xl mx-auto px-5 py-5 pb-28">
-        {items.length === 0 ? (
+        {allItems.length === 0 ? (
           <div className="text-center py-16">
             <p className="text-4xl mb-3">📋</p>
             <p className="text-slate-500 text-sm">No hay items en el checklist.</p>
@@ -73,7 +87,17 @@ export default async function ChecklistPage({ params }: { params: Promise<{ id: 
             </Link>
           </div>
         ) : (
-          <ChecklistClient items={items} viajeId={id} />
+          <>
+            {/* Items visibles (siempre se muestran los de documentos y vacunas) */}
+            <ChecklistClient items={visibleItems} viajeId={id} />
+
+            {/* Banner de upgrade si el usuario está en plan gratis y hay items bloqueados */}
+            {!isPaid && lockedItems.length > 0 && (
+              <div className="mt-2">
+                <PlanBanner requiredPlan="preparacion" lockedCount={lockedItems.length} />
+              </div>
+            )}
+          </>
         )}
       </main>
     </div>
