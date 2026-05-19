@@ -98,8 +98,16 @@ export default async function PerfilPage() {
                       <p className="font-semibold text-slate-900 text-sm">{v.nombre}{v.apellido ? ` ${v.apellido}` : ''}</p>
                       <p className="text-xs text-slate-400">
                         {v.edad} años{' '}
-                        {v.es_nino && (
-                          <span className="text-xs">👶</span>
+                        {v.es_nino && <span className="text-xs">👶</span>}
+                        {v.genero && v.genero !== 'no_indicado' && (
+                          <span className="ml-1 text-slate-300">·</span>
+                        )}
+                        {v.genero && v.genero !== 'no_indicado' && (
+                          <span className="ml-1 capitalize">
+                            {v.genero === 'no_binario' ? 'No binario'
+                              : v.genero === 'genero_fluido' ? 'Género fluido'
+                              : v.genero}
+                          </span>
                         )}
                       </p>
                     </div>

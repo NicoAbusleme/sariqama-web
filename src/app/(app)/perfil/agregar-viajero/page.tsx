@@ -32,6 +32,22 @@ const VIH_CARGA_VIRAL_OPTS = [
   { id: 'desconocida',  label: 'Desconocida / No sé' },
 ]
 
+const SEXO_OPTS = [
+  { id: 'femenino',    label: 'Femenino' },
+  { id: 'masculino',   label: 'Masculino' },
+  { id: 'intersex',    label: 'Intersex' },
+  { id: 'no_indicado', label: 'Prefiero no indicar' },
+]
+
+const GENERO_OPTS = [
+  { id: 'mujer',         label: 'Mujer' },
+  { id: 'hombre',        label: 'Hombre' },
+  { id: 'no_binario',    label: 'No binario' },
+  { id: 'genero_fluido', label: 'Género fluido' },
+  { id: 'otro',          label: 'Otro' },
+  { id: 'no_indicado',   label: 'Prefiero no indicar' },
+]
+
 /** Calcula semanas de embarazo a partir de FUM en una fecha objetivo */
 function calcularSemanas(fum: string, fecha: Date): number | null {
   if (!fum) return null
@@ -76,6 +92,8 @@ export default function AgregarViajeroPage() {
   const [nombre, setNombre] = useState('')
   const [apellido, setApellido] = useState('')
   const [edad, setEdad] = useState('')
+  const [sexo, setSexo] = useState('')
+  const [genero, setGenero] = useState('')
   const [condiciones, setCondiciones] = useState<string[]>([])
   const [inmunosupresionTipo, setInmunosupresionTipo] = useState('')
   const [vihCargaViral, setVihCargaViral] = useState('')
@@ -106,6 +124,8 @@ export default function AgregarViajeroPage() {
       nombre: nombre.trim(),
       apellido: apellido.trim() || undefined,
       edad: parseInt(edad),
+      sexo: sexo || undefined,
+      genero: genero || undefined,
       condiciones: condiciones.length > 0 ? condiciones : ['ninguna'],
       inmunosupresion_tipo: condiciones.includes('inmunosupresion') ? inmunosupresionTipo || undefined : undefined,
       vih_carga_viral: (condiciones.includes('inmunosupresion') && inmunosupresionTipo === 'vih') ? vihCargaViral || undefined : undefined,
@@ -186,6 +206,54 @@ export default function AgregarViajeroPage() {
               placeholder="Ej: 35"
               className="h-11 bg-slate-50"
             />
+          </div>
+
+          {/* Sexo biológico */}
+          <div className="mb-5">
+            <label className="text-xs font-medium text-slate-600 mb-1.5 block">
+              Sexo biológico
+              <span className="text-slate-400 font-normal ml-1">(usado para recomendaciones médicas)</span>
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {SEXO_OPTS.map(o => (
+                <button
+                  key={o.id}
+                  type="button"
+                  onClick={() => setSexo(prev => prev === o.id ? '' : o.id)}
+                  className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
+                    sexo === o.id
+                      ? 'bg-teal-600 text-white border-teal-600'
+                      : 'bg-slate-50 text-slate-600 border-slate-200 hover:border-teal-300'
+                  }`}
+                >
+                  {o.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Identidad de género */}
+          <div className="mb-6">
+            <label className="text-xs font-medium text-slate-600 mb-1.5 block">
+              Identidad de género
+              <span className="text-slate-400 font-normal ml-1">(opcional)</span>
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {GENERO_OPTS.map(o => (
+                <button
+                  key={o.id}
+                  type="button"
+                  onClick={() => setGenero(prev => prev === o.id ? '' : o.id)}
+                  className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
+                    genero === o.id
+                      ? 'bg-violet-600 text-white border-violet-600'
+                      : 'bg-slate-50 text-slate-600 border-slate-200 hover:border-violet-300'
+                  }`}
+                >
+                  {o.label}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Condiciones */}

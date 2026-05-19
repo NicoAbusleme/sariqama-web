@@ -32,10 +32,28 @@ const VIH_CARGA_VIRAL_OPTS = [
   { id: 'desconocida',  label: 'Desconocida / No sé' },
 ]
 
+const SEXO_OPTS = [
+  { id: 'femenino',    label: 'Femenino' },
+  { id: 'masculino',   label: 'Masculino' },
+  { id: 'intersex',    label: 'Intersex' },
+  { id: 'no_indicado', label: 'Prefiero no indicar' },
+]
+
+const GENERO_OPTS = [
+  { id: 'mujer',           label: 'Mujer' },
+  { id: 'hombre',          label: 'Hombre' },
+  { id: 'no_binario',      label: 'No binario' },
+  { id: 'genero_fluido',   label: 'Género fluido' },
+  { id: 'otro',            label: 'Otro' },
+  { id: 'no_indicado',     label: 'Prefiero no indicar' },
+]
+
 interface Viajero {
   nombre: string
   apellido: string
   edad: string
+  sexo: string
+  genero: string
   condiciones: string[]
   inmunosupresion_tipo: string
   vih_carga_viral: string
@@ -46,6 +64,8 @@ const viajeroVacio = (): Viajero => ({
   nombre: '',
   apellido: '',
   edad: '',
+  sexo: '',
+  genero: '',
   condiciones: [],
   inmunosupresion_tipo: '',
   vih_carga_viral: '',
@@ -146,6 +166,8 @@ export default function OnboardingPage() {
       nombre: v.nombre.trim(),
       apellido: v.apellido.trim() || undefined,
       edad: parseInt(v.edad),
+      sexo: v.sexo || undefined,
+      genero: v.genero || undefined,
       condiciones: v.condiciones.length > 0 ? v.condiciones : ['ninguna'],
       inmunosupresion_tipo: v.condiciones.includes('inmunosupresion') ? v.inmunosupresion_tipo || undefined : undefined,
       vih_carga_viral: (v.condiciones.includes('inmunosupresion') && v.inmunosupresion_tipo === 'vih') ? v.vih_carga_viral || undefined : undefined,
@@ -245,6 +267,54 @@ export default function OnboardingPage() {
                           placeholder="35"
                           className="h-10 bg-white"
                         />
+                      </div>
+
+                      {/* Sexo biológico */}
+                      <div className="col-span-2">
+                        <label className="text-xs font-medium text-slate-600 mb-2 block">
+                          Sexo biológico
+                          <span className="text-slate-400 font-normal ml-1">(usado para recomendaciones médicas)</span>
+                        </label>
+                        <div className="flex flex-wrap gap-2">
+                          {SEXO_OPTS.map(o => (
+                            <button
+                              key={o.id}
+                              type="button"
+                              onClick={() => actualizarViajero(i, 'sexo', v.sexo === o.id ? '' : o.id)}
+                              className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
+                                v.sexo === o.id
+                                  ? 'bg-teal-600 text-white border-teal-600'
+                                  : 'bg-white text-slate-600 border-slate-200 hover:border-teal-300'
+                              }`}
+                            >
+                              {o.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Identidad de género */}
+                      <div className="col-span-2">
+                        <label className="text-xs font-medium text-slate-600 mb-2 block">
+                          Identidad de género
+                          <span className="text-slate-400 font-normal ml-1">(opcional)</span>
+                        </label>
+                        <div className="flex flex-wrap gap-2">
+                          {GENERO_OPTS.map(o => (
+                            <button
+                              key={o.id}
+                              type="button"
+                              onClick={() => actualizarViajero(i, 'genero', v.genero === o.id ? '' : o.id)}
+                              className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
+                                v.genero === o.id
+                                  ? 'bg-violet-600 text-white border-violet-600'
+                                  : 'bg-white text-slate-600 border-slate-200 hover:border-violet-300'
+                              }`}
+                            >
+                              {o.label}
+                            </button>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   </div>

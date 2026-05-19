@@ -7,6 +7,8 @@ export async function agregarViajeros(viajeros: {
   nombre: string
   apellido?: string
   edad: number
+  sexo?: string
+  genero?: string
   condiciones: string[]
   inmunosupresion_tipo?: string
   vih_carga_viral?: string
@@ -31,6 +33,8 @@ export async function agregarViajeros(viajeros: {
     apellido: v.apellido || null,
     edad: v.edad,
     es_nino: v.edad < 18,
+    sexo: v.sexo || null,
+    genero: v.genero || null,
     condiciones: v.condiciones,
     inmunosupresion_tipo: v.inmunosupresion_tipo || null,
     vih_carga_viral: v.vih_carga_viral || null,
@@ -48,6 +52,8 @@ export async function agregarUnViajero(data: {
   nombre: string
   apellido?: string
   edad: number
+  sexo?: string
+  genero?: string
   condiciones: string[]
   inmunosupresion_tipo?: string
   vih_carga_viral?: string
@@ -72,6 +78,8 @@ export async function agregarUnViajero(data: {
     apellido: data.apellido || null,
     edad: data.edad,
     es_nino: data.edad < 18,
+    sexo: data.sexo || null,
+    genero: data.genero || null,
     condiciones: data.condiciones,
     inmunosupresion_tipo: data.inmunosupresion_tipo || null,
     vih_carga_viral: data.vih_carga_viral || null,
