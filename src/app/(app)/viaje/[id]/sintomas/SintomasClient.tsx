@@ -442,7 +442,7 @@ export function SintomasClient({ viajeId, viajeros }: Props) {
                 <p className="font-bold text-slate-900 text-sm">Hablar con un especialista</p>
                 <p className="text-amber-900 text-xs mt-0.5">Teleorientación con médico del viajero</p>
               </div>
-              <span className="text-2xl">👨‍⚕️</span>
+              <span className="text-2xl">👩‍⚕️</span>
             </div>
           </Link>
         )}

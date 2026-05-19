@@ -246,7 +246,7 @@ export default async function DetalleViajePage({ params }: { params: Promise<{ i
               <p className="font-semibold text-white text-sm">¿Tienes dudas médicas?</p>
               <p className="text-teal-200 text-xs mt-0.5">Habla con un especialista en medicina del viajero</p>
             </div>
-            <div className="text-2xl">👨‍⚕️</div>
+            <div className="text-2xl">👩‍⚕️</div>
           </div>
         </Link>
 

@@ -289,7 +289,7 @@ export default async function BotiquinPage({ params }: { params: Promise<{ id: s
               <p className="font-semibold text-white text-sm">¿Dudas sobre qué llevar?</p>
               <p className="text-teal-200 text-xs mt-0.5">Habla con un especialista en medicina del viajero</p>
             </div>
-            <div className="text-2xl">👨‍⚕️</div>
+            <div className="text-2xl">👩‍⚕️</div>
           </div>
         </Link>
 

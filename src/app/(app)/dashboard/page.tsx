@@ -139,7 +139,7 @@ export default async function DashboardPage() {
               { href: "/viaje/nuevo",                                                          bg: "bg-teal-50",   icon: "✈️",  titulo: "Nuevo viaje",  sub: "Planifica tu salud" },
               { href: primerViaje ? `/viaje/${primerViaje.id}/sintomas` : "/viaje/nuevo",      bg: "bg-amber-50",  icon: "🌡️", titulo: "Síntomas",      sub: primerViaje ? primerViaje.destino_nombre : "Crea un viaje primero" },
               { href: primerViaje ? `/viaje/${primerViaje.id}/checklist` : "/viaje/nuevo",     bg: "bg-green-50",  icon: "✅",  titulo: "Checklist",     sub: primerViaje ? primerViaje.destino_nombre : "Crea un viaje primero" },
-              { href: "/teleorientacion",                                                       bg: "bg-blue-50",   icon: "👨‍⚕️", titulo: "Orientación",  sub: "Habla con un médico" },
+              { href: "/teleorientacion",                                                       bg: "bg-blue-50",   icon: "👩‍⚕️", titulo: "Orientación",  sub: "Habla con un médico" },
             ]
           })().map(a => (
             <Link key={a.titulo} href={a.href}>

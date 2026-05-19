@@ -28,7 +28,7 @@ export default async function TeleorientacionPage() {
           </Link>
           <div className="flex items-center gap-3 mb-3">
             <div className="w-12 h-12 rounded-2xl bg-white/15 flex items-center justify-center text-2xl">
-              👨‍⚕️
+              👩‍⚕️
             </div>
             <div>
               <h1 className="text-xl font-semibold text-white"
