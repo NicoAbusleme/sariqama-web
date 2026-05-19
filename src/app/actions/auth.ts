@@ -1,6 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
 
 export async function registrar(formData: FormData) {
@@ -83,7 +84,11 @@ export async function eliminarCuenta(): Promise<{ error?: string }> {
     await supabase.from('familias').delete().eq('id', familia.id)
   }
 
-  // 7. Cerrar sesión
+  // 7. Eliminar el usuario de Supabase Auth (requiere service role)
+  const adminClient = createAdminClient()
+  await adminClient.auth.admin.deleteUser(user.id)
+
+  // 8. Cerrar sesión (por si acaso)
   await supabase.auth.signOut()
 
   redirect('/')
