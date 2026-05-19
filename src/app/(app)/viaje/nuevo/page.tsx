@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { ChevronRight, MapPin, Calendar, Compass, Loader2, ChevronLeft, Plus, X, ChevronDown } from 'lucide-react'
+import { ChevronRight, MapPin, Calendar, Compass, Loader2, ChevronLeft, Plus, X, ChevronDown, Shield } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Progress } from '@/components/ui/progress'
@@ -123,7 +123,11 @@ export default function NuevoViajePage() {
   // Step 3
   const [tipos, setTipos] = useState<TipoViaje[]>([])
 
-  const totalPasos = 3
+  // Step 4
+  const [seguroViaje, setSeguroViaje] = useState<'si' | 'no' | 'no_decidido' | ''>('')
+  const [seguroCompania, setSeguroCompania] = useState('')
+
+  const totalPasos = 4
   const progreso = (paso / totalPasos) * 100
   const destino = DESTINOS_PILOTO.find(d => d.slug === destinoSlug)
   const hoy = new Date().toISOString().split('T')[0]
@@ -158,15 +162,17 @@ export default function NuevoViajePage() {
     setLoading(true)
     setError(null)
     const result = await crearViaje({
-      destino_slug:   destinoSlug,
-      destino_nombre: destinoNombre,
-      fecha_salida:   fechaSalida,
-      fecha_regreso:  fechaRegreso,
-      tipo:           tipos[0],
+      destino_slug:    destinoSlug,
+      destino_nombre:  destinoNombre,
+      fecha_salida:    fechaSalida,
+      fecha_regreso:   fechaRegreso,
+      tipo:            tipos[0],
       tipos,
       escalas: escalas
         .filter(e => e.destino !== '')
         .map(({ destino, horas }) => ({ destino, horas })),
+      seguro_viaje:    seguroViaje || undefined,
+      seguro_compania: (seguroViaje === 'si' && seguroCompania.trim()) ? seguroCompania.trim() : undefined,
     })
     if (result?.error) { setError(result.error); setLoading(false) }
   }
@@ -505,17 +511,121 @@ export default function NuevoViajePage() {
             )}
           </div>
         )}
+
+        {/* ── PASO 4: Seguro de viaje ──────────────────────────────────── */}
+        {paso === 4 && (
+          <div>
+            <div className="mb-6">
+              <div className="w-11 h-11 bg-teal-50 rounded-2xl flex items-center justify-center mb-3">
+                <Shield className="h-5 w-5 text-teal-600" />
+              </div>
+              <h1 className="text-2xl font-semibold text-slate-900 mb-1"
+                style={{ fontFamily: 'var(--font-fraunces)' }}>
+                ¿Viajarán con seguro médico?
+              </h1>
+              <p className="text-sm text-slate-500">
+                El seguro de viaje es clave en destinos tropicales — cubre evacuaciones, hospitalizaciones y más.
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-3 mb-5">
+              {[
+                {
+                  id: 'si' as const,
+                  emoji: '✅',
+                  label: 'Sí, ya tenemos seguro',
+                  desc: 'Cubiertos ante cualquier emergencia médica',
+                  color: 'border-teal-400 ring-2 ring-teal-100',
+                  colorInact: 'border-slate-100 hover:border-teal-200',
+                },
+                {
+                  id: 'no' as const,
+                  emoji: '❌',
+                  label: 'No, viajaremos sin seguro',
+                  desc: 'Viajan sin cobertura médica adicional',
+                  color: 'border-orange-300 ring-2 ring-orange-100',
+                  colorInact: 'border-slate-100 hover:border-orange-200',
+                },
+                {
+                  id: 'no_decidido' as const,
+                  emoji: '🤔',
+                  label: 'Aún no lo hemos decidido',
+                  desc: 'Lo evaluaremos antes del viaje',
+                  color: 'border-slate-400 ring-2 ring-slate-100',
+                  colorInact: 'border-slate-100 hover:border-slate-300',
+                },
+              ].map(op => (
+                <button
+                  key={op.id}
+                  onClick={() => { setSeguroViaje(op.id); if (op.id !== 'si') setSeguroCompania('') }}
+                  className={cn(
+                    'bg-white rounded-2xl border p-4 text-left transition-all flex items-start gap-4',
+                    seguroViaje === op.id ? op.color : op.colorInact
+                  )}
+                >
+                  <span className="text-2xl mt-0.5">{op.emoji}</span>
+                  <div>
+                    <p className="font-semibold text-slate-900 text-sm">{op.label}</p>
+                    <p className="text-xs text-slate-400 mt-0.5">{op.desc}</p>
+                  </div>
+                </button>
+              ))}
+            </div>
+
+            {/* Sub-campo: compañía aseguradora */}
+            {seguroViaje === 'si' && (
+              <div className="bg-teal-50 rounded-2xl border border-teal-100 p-4 mb-4">
+                <label className="text-xs font-semibold text-teal-700 mb-2 block">
+                  ¿Con qué compañía? <span className="font-normal text-teal-500">(opcional)</span>
+                </label>
+                <Input
+                  value={seguroCompania}
+                  onChange={e => setSeguroCompania(e.target.value)}
+                  placeholder="Ej: Assist Card, Mapfre, AXA…"
+                  className="h-10 bg-white border-teal-200"
+                />
+              </div>
+            )}
+
+            {/* Aviso cuando no tienen seguro */}
+            {seguroViaje === 'no' && (
+              <div className="bg-orange-50 rounded-2xl border border-orange-100 p-4 mb-4">
+                <p className="text-xs font-semibold text-orange-700 mb-1">⚠️ Considera contratar uno</p>
+                <p className="text-xs text-orange-600 leading-relaxed">
+                  En destinos tropicales, una hospitalización puede costar miles de dólares. Un seguro de viaje suele costar entre USD 30–80 para toda la familia.
+                </p>
+              </div>
+            )}
+
+            {/* Aviso cuando no han decidido */}
+            {seguroViaje === 'no_decidido' && (
+              <div className="bg-slate-50 rounded-2xl border border-slate-200 p-4 mb-4">
+                <p className="text-xs font-semibold text-slate-700 mb-1">💡 Te lo recordamos en el checklist</p>
+                <p className="text-xs text-slate-500 leading-relaxed">
+                  Contratar el seguro aparecerá como tarea prioritaria en tu checklist de preparación.
+                </p>
+              </div>
+            )}
+
+            {error && (
+              <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-600">
+                {error}
+              </div>
+            )}
+          </div>
+        )}
       </main>
 
-      {/* Botón fijo */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 p-4 z-50">
+      {/* Botón fijo — sube sobre el BottomNav */}
+      <div className="fixed bottom-[72px] left-0 right-0 bg-white border-t border-slate-100 p-4 z-30">
         <div className="max-w-2xl mx-auto">
           {paso < totalPasos ? (
             <Button
               onClick={() => setPaso(paso + 1)}
               disabled={
                 (paso === 1 && (!destinoSlug || !ciudad)) ||
-                (paso === 2 && (!fechaSalida || !fechaRegreso))
+                (paso === 2 && (!fechaSalida || !fechaRegreso)) ||
+                (paso === 3 && tipos.length === 0)
               }
               className="w-full h-13 bg-teal-600 hover:bg-teal-700 text-white rounded-2xl font-semibold text-base">
               Continuar
@@ -524,7 +634,7 @@ export default function NuevoViajePage() {
           ) : (
             <Button
               onClick={handleSubmit}
-              disabled={tipos.length === 0 || loading}
+              disabled={loading}
               className="w-full h-13 bg-amber-400 hover:bg-amber-300 text-slate-900 rounded-2xl font-semibold text-base">
               {loading
                 ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Creando viaje...</>

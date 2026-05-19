@@ -12,6 +12,8 @@ export async function crearViaje(data: {
   tipo: string          // primer tipo seleccionado (compat)
   tipos: string[]       // todos los tipos seleccionados
   escalas: { destino: string; horas: number }[]
+  seguro_viaje?: string   // 'si' | 'no' | 'no_decidido'
+  seguro_compania?: string
 }) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -24,14 +26,16 @@ export async function crearViaje(data: {
   const { data: viaje, error } = await supabase
     .from('viajes')
     .insert({
-      familia_id:    familia.id,
-      destino_slug:  data.destino_slug,
-      destino_nombre: data.destino_nombre,
-      fecha_salida:  data.fecha_salida,
-      fecha_regreso: data.fecha_regreso,
-      tipo:          data.tipo,
-      tipos:         data.tipos,
-      escalas:       data.escalas,
+      familia_id:      familia.id,
+      destino_slug:    data.destino_slug,
+      destino_nombre:  data.destino_nombre,
+      fecha_salida:    data.fecha_salida,
+      fecha_regreso:   data.fecha_regreso,
+      tipo:            data.tipo,
+      tipos:           data.tipos,
+      escalas:         data.escalas,
+      seguro_viaje:    data.seguro_viaje ?? null,
+      seguro_compania: data.seguro_compania ?? null,
     })
     .select('id')
     .single()
