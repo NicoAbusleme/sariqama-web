@@ -5,6 +5,7 @@ import { Users, ChevronRight, LogOut } from 'lucide-react'
 import { FlagImg } from '@/components/ui/flag-img'
 import { getDestinoBySlug } from '@/lib/content/destinos'
 import { cerrarSesion } from '@/app/actions/auth'
+import { EliminarCuentaBtn } from './EliminarCuentaBtn'
 
 const CONDICION_META: Record<string, { label: string; color: string }> = {
   alergia:         { label: 'Alergias',        color: 'bg-orange-50 text-orange-600 border-orange-100' },
@@ -186,6 +187,11 @@ export default async function PerfilPage() {
                 Cerrar sesión
               </button>
             </form>
+          </div>
+
+          {/* Zona de peligro */}
+          <div className="mt-3">
+            <EliminarCuentaBtn />
           </div>
         </section>
 
