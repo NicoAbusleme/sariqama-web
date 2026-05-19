@@ -1,6 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
 
 export async function agregarViajeros(viajeros: {
@@ -13,22 +14,35 @@ export async function agregarViajeros(viajeros: {
   inmunosupresion_tipo?: string
   vih_carga_viral?: string
   embarazo_fum?: string
-}[]) {
+}[], nombreFamilia?: string) {
   const supabase = await createClient()
+  const adminClient = createAdminClient()
 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { error: 'No autorizado' }
 
-  const { data: familia } = await supabase
+  let { data: familia } = await supabase
     .from('familias')
     .select('id')
     .eq('user_id', user.id)
     .single()
 
-  if (!familia) return { error: 'Familia no encontrada' }
+  // Si no existe la familia (registro incompleto), la creamos con el nombre provisto
+  if (!familia) {
+    if (!nombreFamilia?.trim()) return { error: 'Ingresa el nombre de tu familia para continuar' }
+    const { data: nueva, error: createError } = await adminClient
+      .from('familias')
+      .insert({ user_id: user.id, nombre: nombreFamilia.trim(), plan: 'gratis' })
+      .select('id')
+      .single()
+    if (createError || !nueva) return { error: createError?.message ?? 'No se pudo crear la familia' }
+    familia = nueva
+  }
+
+  const familiaId = familia!.id
 
   const registros = viajeros.map(v => ({
-    familia_id: familia.id,
+    familia_id: familiaId,
     nombre: v.nombre,
     apellido: v.apellido || null,
     edad: v.edad,

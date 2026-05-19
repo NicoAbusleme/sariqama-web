@@ -113,6 +113,7 @@ function PreviewEmbarazo({ fum }: { fum: string }) {
 
 export default function OnboardingPage() {
   const [paso, setPaso] = useState(1)
+  const [nombreFamilia, setNombreFamilia] = useState('')
   const [viajeros, setViajeros] = useState<Viajero[]>([viajeroVacio()])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -155,7 +156,8 @@ export default function OnboardingPage() {
   }
 
   function validarPaso1() {
-    return viajeros.every(v => v.nombre.trim() && v.edad.trim() && parseInt(v.edad) >= 0)
+    return nombreFamilia.trim().length > 0 &&
+      viajeros.every(v => v.nombre.trim() && v.edad.trim() && parseInt(v.edad) >= 0)
   }
 
   async function finalizar() {
@@ -174,7 +176,7 @@ export default function OnboardingPage() {
       embarazo_fum: v.condiciones.includes('embarazo') ? v.embarazo_fum || undefined : undefined,
     }))
 
-    const result = await agregarViajeros(datos)
+    const result = await agregarViajeros(datos, nombreFamilia)
     if (result?.error) {
       setError(result.error)
       setLoading(false)
@@ -213,6 +215,20 @@ export default function OnboardingPage() {
                   <h2 className="font-bold text-slate-900 text-lg">¿Quiénes viajan?</h2>
                   <p className="text-sm text-slate-500">Agrega a cada integrante de tu familia</p>
                 </div>
+              </div>
+
+              {/* Nombre de la familia */}
+              <div className="mb-5">
+                <label className="text-xs font-medium text-slate-600 mb-1 block">
+                  Nombre de la familia
+                  <span className="text-slate-400 font-normal ml-1">(ej: Familia García)</span>
+                </label>
+                <Input
+                  value={nombreFamilia}
+                  onChange={e => setNombreFamilia(e.target.value)}
+                  placeholder="Familia García"
+                  className="h-10 bg-white"
+                />
               </div>
 
               <div className="flex flex-col gap-4">
