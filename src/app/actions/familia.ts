@@ -5,8 +5,12 @@ import { redirect } from 'next/navigation'
 
 export async function agregarViajeros(viajeros: {
   nombre: string
+  apellido?: string
   edad: number
   condiciones: string[]
+  inmunosupresion_tipo?: string
+  vih_carga_viral?: string
+  embarazo_fum?: string
 }[]) {
   const supabase = await createClient()
 
@@ -24,9 +28,13 @@ export async function agregarViajeros(viajeros: {
   const registros = viajeros.map(v => ({
     familia_id: familia.id,
     nombre: v.nombre,
+    apellido: v.apellido || null,
     edad: v.edad,
     es_nino: v.edad < 18,
     condiciones: v.condiciones,
+    inmunosupresion_tipo: v.inmunosupresion_tipo || null,
+    vih_carga_viral: v.vih_carga_viral || null,
+    embarazo_fum: v.embarazo_fum || null,
   }))
 
   const { error } = await supabase.from('viajeros').insert(registros)
@@ -38,8 +46,12 @@ export async function agregarViajeros(viajeros: {
 
 export async function agregarUnViajero(data: {
   nombre: string
+  apellido?: string
   edad: number
   condiciones: string[]
+  inmunosupresion_tipo?: string
+  vih_carga_viral?: string
+  embarazo_fum?: string
 }): Promise<{ error?: string }> {
   const supabase = await createClient()
 
@@ -57,9 +69,13 @@ export async function agregarUnViajero(data: {
   const { error } = await supabase.from('viajeros').insert({
     familia_id: familia.id,
     nombre: data.nombre,
+    apellido: data.apellido || null,
     edad: data.edad,
     es_nino: data.edad < 18,
     condiciones: data.condiciones,
+    inmunosupresion_tipo: data.inmunosupresion_tipo || null,
+    vih_carga_viral: data.vih_carga_viral || null,
+    embarazo_fum: data.embarazo_fum || null,
   })
 
   if (error) return { error: error.message }

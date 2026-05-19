@@ -1,12 +1,20 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect, notFound } from 'next/navigation'
-import { ChevronLeft, CheckCircle, Shield, Stethoscope, BookOpen, ChevronRight, MapPin } from 'lucide-react'
+import { ChevronLeft, CheckCircle, Shield, Stethoscope, BookOpen, ChevronRight, MapPin, AlertTriangle, XCircle } from 'lucide-react'
 import Link from 'next/link'
 import { getDestinoBySlug } from '@/lib/content/destinos'
 import { FlagImg } from '@/components/ui/flag-img'
 import { RiskChip } from '@/components/ui/risk-chip'
 import { EliminarViajeBtn } from './EliminarViajeBtn'
 import type { NivelRiesgo } from '@/types'
+
+function calcularSemanasEmbarazo(fum: string, fechaViaje: string): number | null {
+  if (!fum || !fechaViaje) return null
+  const fumDate = new Date(fum)
+  const viajeDate = new Date(fechaViaje)
+  if (isNaN(fumDate.getTime()) || isNaN(viajeDate.getTime())) return null
+  return Math.floor((viajeDate.getTime() - fumDate.getTime()) / (1000 * 60 * 60 * 24 * 7))
+}
 
 const RIESGOS_INFO = [
   { key: 'dengue',          label: '🦟 Dengue',                icono: '🦟' },
@@ -35,6 +43,22 @@ export default async function DetalleViajePage({ params }: { params: Promise<{ i
 
   const { data: checklist } = await supabase
     .from('checklist_items').select('*').eq('viaje_id', id).order('prioridad')
+
+  const { data: viajeros } = await supabase
+    .from('viajeros').select('nombre, condiciones, embarazo_fum').eq('familia_id', familia.id)
+
+  // Calcular avisos de embarazo según fecha de salida del viaje
+  type AvisoEmbarazo = { nombre: string; semanas: number; nivel: 'advertencia' | 'critico' }
+  const avisosEmbarazo: AvisoEmbarazo[] = (viajeros ?? [])
+    .filter(v => Array.isArray(v.condiciones) && v.condiciones.includes('embarazo') && v.embarazo_fum)
+    .map(v => {
+      const semanas = calcularSemanasEmbarazo(v.embarazo_fum, viaje.fecha_salida)
+      if (semanas === null) return null
+      if (semanas >= 36) return { nombre: v.nombre, semanas, nivel: 'critico' as const }
+      if (semanas >= 28) return { nombre: v.nombre, semanas, nivel: 'advertencia' as const }
+      return null
+    })
+    .filter((x): x is AvisoEmbarazo => x !== null)
 
   const destino = getDestinoBySlug(viaje.destino_slug)
   const completados = checklist?.filter(i => i.completado).length ?? 0
@@ -203,6 +227,37 @@ export default async function DetalleViajePage({ params }: { params: Promise<{ i
             <p className="text-xs text-amber-600 leading-relaxed">{destino.riesgos.notas_pediatricas}</p>
           </div>
         )}
+
+        {/* Avisos de embarazo */}
+        {avisosEmbarazo.map(aviso => aviso.nivel === 'critico' ? (
+          <div key={aviso.nombre} className="bg-red-50 rounded-2xl border border-red-200 p-4 mb-4">
+            <div className="flex items-start gap-3">
+              <XCircle className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-bold text-red-700 mb-1">
+                  ⚠️ {aviso.nombre} no debería viajar — Semana {aviso.semanas} de embarazo
+                </p>
+                <p className="text-xs text-red-600 leading-relaxed">
+                  Con {aviso.semanas} semanas al momento del viaje, la mayoría de las aerolíneas <strong>no permitirán el embarque</strong>. Se recomienda enfáticamente no realizar este viaje. Consulta con tu médico y la aerolínea antes de planificar.
+                </p>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div key={aviso.nombre} className="bg-amber-50 rounded-2xl border border-amber-200 p-4 mb-4">
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="h-5 w-5 text-amber-500 flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-bold text-amber-700 mb-1">
+                  {aviso.nombre} — Semana {aviso.semanas} de embarazo al inicio del viaje
+                </p>
+                <p className="text-xs text-amber-700 leading-relaxed">
+                  A partir de la semana 28 muchas aerolíneas exigen un <strong>certificado médico</strong> que acredite que el embarazo es de bajo riesgo y la fecha probable de parto. Consulta con tu médico y la aerolínea con anticipación.
+                </p>
+              </div>
+            </div>
+          </div>
+        ))}
 
         {/* Botón reporte PDF */}
         {puedeDescargarPDF ? (

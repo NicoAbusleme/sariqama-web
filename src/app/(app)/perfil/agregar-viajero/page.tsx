@@ -3,32 +3,96 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ChevronLeft, Loader2 } from 'lucide-react'
+import { ChevronLeft, Loader2, AlertTriangle, XCircle } from 'lucide-react'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { agregarUnViajero } from '@/app/actions/familia'
 
 const CONDICIONES = [
-  { id: 'alergia',         label: 'Alergias' },
-  { id: 'asma',           label: 'Asma' },
-  { id: 'diabetes',       label: 'Diabetes' },
-  { id: 'cardiopatia',    label: 'Cardiopatía' },
-  { id: 'inmunosupresion', label: 'Inmunosupresión' },
-  { id: 'embarazo',       label: 'Embarazo' },
+  { id: 'alergia',          label: 'Alergias' },
+  { id: 'asma',             label: 'Asma' },
+  { id: 'diabetes',         label: 'Diabetes' },
+  { id: 'cardiopatia',      label: 'Cardiopatía' },
+  { id: 'inmunosupresion',  label: 'Inmunosupresión' },
+  { id: 'embarazo',         label: 'Embarazo' },
 ]
+
+const INMUNOSUPRESION_TIPOS = [
+  { id: 'vih',         label: 'VIH/SIDA' },
+  { id: 'cancer',      label: 'Cáncer activo' },
+  { id: 'trasplante',  label: 'Trasplante de órgano' },
+  { id: 'autoinmune',  label: 'Enfermedad autoinmune' },
+  { id: 'corticoides', label: 'Corticoides crónicos' },
+  { id: 'otro',        label: 'Otra causa' },
+]
+
+const VIH_CARGA_VIRAL_OPTS = [
+  { id: 'indetectable', label: 'Indetectable' },
+  { id: 'detectable',   label: 'Detectable' },
+  { id: 'desconocida',  label: 'Desconocida / No sé' },
+]
+
+/** Calcula semanas de embarazo a partir de FUM en una fecha objetivo */
+function calcularSemanas(fum: string, fecha: Date): number | null {
+  if (!fum) return null
+  const fumDate = new Date(fum)
+  if (isNaN(fumDate.getTime())) return null
+  return Math.floor((fecha.getTime() - fumDate.getTime()) / (1000 * 60 * 60 * 24 * 7))
+}
+
+function PreviewEmbarazo({ fum }: { fum: string }) {
+  const semanas = calcularSemanas(fum, new Date())
+  if (semanas === null || semanas < 0) return null
+
+  if (semanas >= 36) {
+    return (
+      <div className="mt-2 flex items-start gap-2 p-2.5 rounded-lg bg-red-50 border border-red-200">
+        <XCircle className="h-4 w-4 text-red-500 flex-shrink-0 mt-0.5" />
+        <p className="text-xs text-red-700 leading-snug">
+          <strong>Semana {semanas} actualmente.</strong> Con ≥36 semanas en la fecha del viaje, muchas aerolíneas no permitirán el embarque. Se recomienda no viajar.
+        </p>
+      </div>
+    )
+  }
+  if (semanas >= 28) {
+    return (
+      <div className="mt-2 flex items-start gap-2 p-2.5 rounded-lg bg-amber-50 border border-amber-200">
+        <AlertTriangle className="h-4 w-4 text-amber-500 flex-shrink-0 mt-0.5" />
+        <p className="text-xs text-amber-700 leading-snug">
+          <strong>Semana {semanas} actualmente.</strong> A partir de semana 28 se requiere certificado médico para volar. Consulta con tu médico y la aerolínea.
+        </p>
+      </div>
+    )
+  }
+  return (
+    <p className="mt-1.5 text-xs text-slate-400">
+      Semana {semanas} actualmente · El aviso exacto se mostrará según la fecha de tu viaje.
+    </p>
+  )
+}
 
 export default function AgregarViajeroPage() {
   const router = useRouter()
   const [nombre, setNombre] = useState('')
+  const [apellido, setApellido] = useState('')
   const [edad, setEdad] = useState('')
   const [condiciones, setCondiciones] = useState<string[]>([])
+  const [inmunosupresionTipo, setInmunosupresionTipo] = useState('')
+  const [vihCargaViral, setVihCargaViral] = useState('')
+  const [embarazoFum, setEmbarazoFum] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   function toggleCondicion(id: string) {
-    setCondiciones(prev =>
-      prev.includes(id) ? prev.filter(c => c !== id) : [...prev, id]
-    )
+    setCondiciones(prev => {
+      const tenia = prev.includes(id)
+      if (tenia) {
+        if (id === 'inmunosupresion') { setInmunosupresionTipo(''); setVihCargaViral('') }
+        if (id === 'embarazo') setEmbarazoFum('')
+        return prev.filter(c => c !== id)
+      }
+      return [...prev, id]
+    })
   }
 
   const isValid = nombre.trim().length > 0 && edad.trim().length > 0 && parseInt(edad) >= 0
@@ -40,8 +104,12 @@ export default function AgregarViajeroPage() {
 
     const result = await agregarUnViajero({
       nombre: nombre.trim(),
+      apellido: apellido.trim() || undefined,
       edad: parseInt(edad),
-      condiciones,
+      condiciones: condiciones.length > 0 ? condiciones : ['ninguna'],
+      inmunosupresion_tipo: condiciones.includes('inmunosupresion') ? inmunosupresionTipo || undefined : undefined,
+      vih_carga_viral: (condiciones.includes('inmunosupresion') && inmunosupresionTipo === 'vih') ? vihCargaViral || undefined : undefined,
+      embarazo_fum: condiciones.includes('embarazo') ? embarazoFum || undefined : undefined,
     })
 
     if (result?.error) {
@@ -50,8 +118,6 @@ export default function AgregarViajeroPage() {
       return
     }
 
-    // Si no hay error, la server action ya redirigió a /perfil
-    // Pero como es client component, forzamos el push por si acaso
     router.push('/perfil')
   }
 
@@ -76,10 +142,11 @@ export default function AgregarViajeroPage() {
         </div>
       </header>
 
-      <main className="max-w-2xl mx-auto px-5 pt-5 pb-28">
+      <main className="max-w-2xl mx-auto px-5 pt-5 pb-32">
         <div className="bg-white rounded-2xl border border-slate-100 p-6">
+
           {/* Nombre */}
-          <div className="mb-5">
+          <div className="mb-4">
             <label className="text-xs font-medium text-slate-600 mb-1.5 block">
               Nombre
             </label>
@@ -89,6 +156,19 @@ export default function AgregarViajeroPage() {
               placeholder="Ej: María"
               className="h-11 bg-slate-50"
               autoFocus
+            />
+          </div>
+
+          {/* Apellido */}
+          <div className="mb-4">
+            <label className="text-xs font-medium text-slate-600 mb-1.5 block">
+              Apellido <span className="text-slate-400 font-normal">(opcional)</span>
+            </label>
+            <Input
+              value={apellido}
+              onChange={e => setApellido(e.target.value)}
+              placeholder="Ej: González"
+              className="h-11 bg-slate-50"
             />
           </div>
 
@@ -128,6 +208,91 @@ export default function AgregarViajeroPage() {
                 </label>
               ))}
             </div>
+
+            {/* Sub-sección: Inmunosupresión */}
+            {condiciones.includes('inmunosupresion') && (
+              <div className="mt-4 ml-1 pl-3 border-l-2 border-teal-200">
+                <p className="text-xs font-semibold text-slate-600 mb-2">
+                  Motivo de inmunosupresión
+                </p>
+                <div className="flex flex-col gap-1.5">
+                  {INMUNOSUPRESION_TIPOS.map(t => (
+                    <label
+                      key={t.id}
+                      className={`flex items-center gap-2.5 p-2.5 rounded-xl border cursor-pointer transition-all text-sm ${
+                        inmunosupresionTipo === t.id
+                          ? 'border-teal-400 bg-teal-50 text-teal-800 font-medium'
+                          : 'border-slate-100 hover:border-teal-200 text-slate-700'
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="inmuno_tipo"
+                        value={t.id}
+                        checked={inmunosupresionTipo === t.id}
+                        onChange={() => {
+                          setInmunosupresionTipo(t.id)
+                          if (t.id !== 'vih') setVihCargaViral('')
+                        }}
+                        className="accent-teal-600"
+                      />
+                      {t.label}
+                    </label>
+                  ))}
+                </div>
+
+                {/* Sub-sub-sección: VIH carga viral */}
+                {inmunosupresionTipo === 'vih' && (
+                  <div className="mt-3 ml-1 pl-3 border-l-2 border-amber-200">
+                    <p className="text-xs font-semibold text-slate-600 mb-2">
+                      Carga viral actual
+                    </p>
+                    <div className="flex flex-col gap-1.5">
+                      {VIH_CARGA_VIRAL_OPTS.map(o => (
+                        <label
+                          key={o.id}
+                          className={`flex items-center gap-2.5 p-2.5 rounded-xl border cursor-pointer transition-all text-sm ${
+                            vihCargaViral === o.id
+                              ? 'border-amber-400 bg-amber-50 text-amber-800 font-medium'
+                              : 'border-slate-100 hover:border-amber-200 text-slate-700'
+                          }`}
+                        >
+                          <input
+                            type="radio"
+                            name="vih_cv"
+                            value={o.id}
+                            checked={vihCargaViral === o.id}
+                            onChange={() => setVihCargaViral(o.id)}
+                            className="accent-amber-600"
+                          />
+                          {o.label}
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Sub-sección: Embarazo */}
+            {condiciones.includes('embarazo') && (
+              <div className="mt-4 ml-1 pl-3 border-l-2 border-pink-200">
+                <p className="text-xs font-semibold text-slate-600 mb-1">
+                  Fecha de última menstruación (FUM)
+                </p>
+                <p className="text-xs text-slate-400 mb-2">
+                  Nos permite calcular las semanas de embarazo para la fecha del viaje.
+                </p>
+                <Input
+                  type="date"
+                  value={embarazoFum}
+                  max={new Date().toISOString().split('T')[0]}
+                  onChange={e => setEmbarazoFum(e.target.value)}
+                  className="h-11 bg-white"
+                />
+                {embarazoFum && <PreviewEmbarazo fum={embarazoFum} />}
+              </div>
+            )}
           </div>
 
           {error && (

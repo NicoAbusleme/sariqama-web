@@ -95,7 +95,7 @@ export default async function PerfilPage() {
                       </span>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-slate-900 text-sm">{v.nombre}</p>
+                      <p className="font-semibold text-slate-900 text-sm">{v.nombre}{v.apellido ? ` ${v.apellido}` : ''}</p>
                       <p className="text-xs text-slate-400">
                         {v.edad} años{' '}
                         {v.es_nino && (
