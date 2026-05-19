@@ -6,6 +6,7 @@ import { redirect } from 'next/navigation'
 
 export async function registrar(formData: FormData) {
   const supabase = await createClient()
+  const adminClient = createAdminClient()
 
   const email = formData.get('email') as string
   const password = formData.get('password') as string
@@ -17,15 +18,18 @@ export async function registrar(formData: FormData) {
     return { error: error.message }
   }
 
-  if (data.user) {
-    // Crear el registro de familia
-    const { error: familiaError } = await supabase
-      .from('familias')
-      .insert({ user_id: data.user.id, nombre: nombreFamilia })
+  // data.user puede ser null si el email ya existe como usuario no confirmado
+  if (!data.user) {
+    return { error: 'No se pudo crear la cuenta. Si ya tienes una cuenta, inicia sesión.' }
+  }
 
-    if (familiaError) {
-      return { error: familiaError.message }
-    }
+  // Usamos el admin client para garantizar el insert sin importar el estado de la sesión o RLS
+  const { error: familiaError } = await adminClient
+    .from('familias')
+    .insert({ user_id: data.user.id, nombre: nombreFamilia })
+
+  if (familiaError) {
+    return { error: familiaError.message }
   }
 
   redirect('/onboarding')
