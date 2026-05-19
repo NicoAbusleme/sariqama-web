@@ -371,8 +371,8 @@ export default function AgregarViajeroPage() {
         </div>
       </main>
 
-      {/* Fixed bottom button */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 px-5 py-4 z-10">
+      {/* Fixed bottom button — sube sobre el BottomNav (z-40, ~72px) */}
+      <div className="fixed bottom-[72px] left-0 right-0 bg-white border-t border-slate-100 px-5 py-4 z-30">
         <div className="max-w-2xl mx-auto">
           <button
             onClick={handleGuardar}
