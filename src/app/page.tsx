@@ -468,11 +468,21 @@ export default function LandingPage() {
                   <Link href="/registro" className="text-slate-500 hover:text-white transition-colors text-xs">Registrarse</Link>
                 </div>
               </div>
+              <div>
+                <p className="text-slate-400 font-semibold text-xs uppercase tracking-wider mb-3">Legal</p>
+                <div className="flex flex-col gap-1.5">
+                  <Link href="/terminos" className="text-slate-500 hover:text-white transition-colors text-xs">Términos y Condiciones</Link>
+                  <Link href="/terminos#privacidad" className="text-slate-500 hover:text-white transition-colors text-xs">Política de privacidad</Link>
+                </div>
+              </div>
             </div>
           </div>
           <div className="border-t border-slate-800 pt-6 flex flex-col sm:flex-row justify-between items-center gap-2">
             <p className="text-slate-500 text-xs">© 2026 SARIQAMA · Orientación sanitaria, no diagnóstico médico.</p>
-            <p className="text-slate-600 text-xs">Fuente clínica: CDC Yellow Book 2026</p>
+            <div className="flex items-center gap-4">
+              <Link href="/terminos" className="text-slate-600 hover:text-slate-400 text-xs transition-colors">Términos y Condiciones</Link>
+              <p className="text-slate-600 text-xs">Fuente clínica: CDC Yellow Book 2026</p>
+            </div>
           </div>
         </div>
       </footer>

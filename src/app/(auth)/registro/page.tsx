@@ -10,6 +10,7 @@ import { registrar } from "@/app/actions/auth"
 export default function RegistroPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [aceptaTerminos, setAceptaTerminos] = useState(false)
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -69,11 +70,28 @@ export default function RegistroPage() {
               </div>
             ))}
 
-            <p className="text-[11px] text-slate-400 leading-relaxed">
-              Al registrarte aceptas que SARIQAMA entrega <strong>orientación sanitaria</strong> y no reemplaza una evaluación médica profesional.
+            {/* Aceptación de Términos y Condiciones */}
+            <label className="flex items-start gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={aceptaTerminos}
+                onChange={e => setAceptaTerminos(e.target.checked)}
+                className="mt-0.5 h-4 w-4 rounded border-slate-300 text-teal-600 accent-teal-600 flex-shrink-0"
+              />
+              <span className="text-[11px] text-slate-500 leading-relaxed">
+                He leído y acepto los{" "}
+                <a href="/terminos" target="_blank" className="text-teal-600 font-semibold hover:underline">
+                  Términos y Condiciones
+                </a>{" "}
+                y el tratamiento de mis datos personales conforme a la Ley N° 19.628.
+              </span>
+            </label>
+
+            <p className="text-[11px] text-slate-400 leading-relaxed -mt-1">
+              SARIQAMA entrega <strong>orientación sanitaria</strong> y no reemplaza una evaluación médica profesional.
             </p>
 
-            <Button type="submit" disabled={loading}
+            <Button type="submit" disabled={loading || !aceptaTerminos}
               className="w-full h-12 bg-teal-600 hover:bg-teal-700 text-white rounded-2xl font-semibold mt-1 text-sm">
               {loading
                 ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Creando cuenta...</>
