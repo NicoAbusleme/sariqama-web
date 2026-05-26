@@ -336,7 +336,7 @@ export default function LandingPage() {
             <p className="text-center text-xs text-slate-400 mt-8 max-w-md mx-auto leading-relaxed">
               🧪 <strong className="text-slate-500">Programa piloto activo.</strong>{" "}
               Los planes pagados se activan manualmente. Contáctanos en{" "}
-              <a href="mailto:hola@sariqama.com" className="text-teal-600 hover:underline">hola@sariqama.com</a>{" "}
+              <a href="mailto:contacto@sariqama.com" className="text-teal-600 hover:underline">contacto@sariqama.com</a>{" "}
               y te respondemos en menos de 24 horas.
             </p>
           </div>
@@ -417,7 +417,7 @@ export default function LandingPage() {
                   <ChevronRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
-              <a href="mailto:hola@sariqama.com">
+              <a href="mailto:contacto@sariqama.com">
                 <Button size="lg" variant="ghost"
                   className="text-white/80 hover:text-white hover:bg-white/10 rounded-2xl text-sm w-full sm:w-auto">
                   Contactar al equipo
@@ -463,7 +463,7 @@ export default function LandingPage() {
               <div>
                 <p className="text-slate-400 font-semibold text-xs uppercase tracking-wider mb-3">Contacto</p>
                 <div className="flex flex-col gap-1.5">
-                  <a href="mailto:hola@sariqama.com" className="text-slate-500 hover:text-white transition-colors text-xs">hola@sariqama.com</a>
+                  <a href="mailto:contacto@sariqama.com" className="text-slate-500 hover:text-white transition-colors text-xs">contacto@sariqama.com</a>
                   <Link href="/login" className="text-slate-500 hover:text-white transition-colors text-xs">Iniciar sesión</Link>
                   <Link href="/registro" className="text-slate-500 hover:text-white transition-colors text-xs">Registrarse</Link>
                 </div>

@@ -18,7 +18,7 @@ const URGENCIAS = [
   { id: 'urgente', label: 'Urgente (hoy)',     color: 'border-red-200 bg-red-50 text-red-700',       dot: 'bg-red-400' },
 ]
 
-const MAILTO_BASE = 'hola@sariqama.com'
+const MAILTO_BASE = 'contacto@sariqama.com'
 
 export function TeleorientacionClient() {
   const [motivo,   setMotivo]   = useState('')

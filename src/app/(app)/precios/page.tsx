@@ -72,7 +72,7 @@ const PLANES = [
   },
 ]
 
-const MAILTO = 'mailto:hola@sariqama.com?subject=Solicitar%20acceso%20SARIQAMA&body=Hola%2C%20me%20interesa%20conocer%20m%C3%A1s%20sobre%20los%20planes%20de%20SARIQAMA.'
+const MAILTO = 'mailto:contacto@sariqama.com?subject=Solicitar%20acceso%20SARIQAMA&body=Hola%2C%20me%20interesa%20conocer%20m%C3%A1s%20sobre%20los%20planes%20de%20SARIQAMA.'
 
 export default async function PreciosPage() {
   const supabase = await createClient()
@@ -207,7 +207,7 @@ export default async function PreciosPage() {
           </h2>
           <div className="space-y-4">
             {[
-              { q: '¿Cómo activo un plan pagado?', a: 'Durante el piloto, envíanos un email a hola@sariqama.com y activamos tu plan manualmente en menos de 24 horas.' },
+              { q: '¿Cómo activo un plan pagado?', a: 'Durante el piloto, envíanos un email a contacto@sariqama.com y activamos tu plan manualmente en menos de 24 horas.' },
               { q: '¿El precio es por familia o por persona?', a: 'Por familia. Todos los viajeros de tu perfil familiar quedan cubiertos con un solo plan.' },
               { q: '¿Puedo cambiar de plan?', a: 'Sí. El plan se aplica a tu cuenta y puede actualizarse en cualquier momento.' },
             ].map(({ q, a }) => (
@@ -224,7 +224,7 @@ export default async function PreciosPage() {
           <p className="text-xs text-slate-400 mb-2">¿Tienes dudas? Contáctanos directamente.</p>
           <a href={MAILTO}
             className="text-teal-600 text-sm font-semibold hover:underline">
-            hola@sariqama.com
+            contacto@sariqama.com
           </a>
         </div>
 

@@ -170,8 +170,8 @@ export default function TerminosPage() {
               {[
                 { d: 'Acceso', t: 'Consultar los datos que tenemos almacenados sobre tu familia en cualquier momento.' },
                 { d: 'Rectificación', t: 'Modificar datos incorrectos o desactualizados directamente desde tu perfil.' },
-                { d: 'Eliminación', t: 'Eliminar completamente tu cuenta y todos los datos asociados desde la opción "Eliminar mi cuenta" en tu perfil, o solicitándolo a hola@sariqama.com.' },
-                { d: 'Portabilidad', t: 'Solicitar una copia de tus datos en formato legible enviando un correo a hola@sariqama.com.' },
+                { d: 'Eliminación', t: 'Eliminar completamente tu cuenta y todos los datos asociados desde la opción "Eliminar mi cuenta" en tu perfil, o solicitándolo a contacto@sariqama.com.' },
+                { d: 'Portabilidad', t: 'Solicitar una copia de tus datos en formato legible enviando un correo a contacto@sariqama.com.' },
                 { d: 'Oposición', t: 'Oponerte al uso de tus datos para fines distintos a los esenciales del servicio.' },
               ].map(({ d, t }) => (
                 <li key={d} className="flex items-start gap-2 text-sm text-slate-600">
@@ -234,8 +234,8 @@ export default function TerminosPage() {
             </p>
             <div className="mt-3 p-4 bg-teal-50 border border-teal-100 rounded-xl">
               <p className="text-sm font-semibold text-teal-800">SARIQAMA</p>
-              <a href="mailto:hola@sariqama.com" className="text-sm text-teal-600 hover:text-teal-700 transition-colors">
-                hola@sariqama.com
+              <a href="mailto:contacto@sariqama.com" className="text-sm text-teal-600 hover:text-teal-700 transition-colors">
+                contacto@sariqama.com
               </a>
             </div>
           </section>

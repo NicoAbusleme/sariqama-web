@@ -586,7 +586,7 @@ export function ReportePDF({ data }: { data: ReporteData }) {
         <View style={s.footer} fixed>
           <Text style={s.footerTexto}>
             <Text style={s.footerBold}>SARIQAMA</Text>
-            {'  ·  '}sariqama.com{'  ·  '}hola@sariqama.com
+            {'  ·  '}sariqama.com{'  ·  '}contacto@sariqama.com
           </Text>
           <Text
             style={s.pageNumber}
