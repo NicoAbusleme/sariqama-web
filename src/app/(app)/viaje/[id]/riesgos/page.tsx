@@ -1,12 +1,14 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect, notFound } from 'next/navigation'
-import { ChevronLeft } from 'lucide-react'
+import { ChevronLeft, Radio } from 'lucide-react'
 import Link from 'next/link'
 import { getDestinoBySlug } from '@/lib/content/destinos'
 import { FlagImg } from '@/components/ui/flag-img'
 import { getEscalaInfo, NIVEL_SALUD_META, VISA_META } from '@/lib/content/escalas'
 import { RiskChip } from '@/components/ui/risk-chip'
+import { fetchTugoAdvisory } from '@/lib/tugo/client'
 import type { NivelRiesgo } from '@/types'
+import type { TugoAdvisory, AdvisoryLevel } from '@/lib/tugo/types'
 
 const RIESGOS_DETALLE = [
   { key: 'dengue',           label: 'Dengue',               icono: '🦟', tip: 'Transmitido por mosquitos Aedes. Activo durante el día. Usar repelente DEET 30%+ o Icaridina.' },
@@ -18,6 +20,75 @@ const RIESGOS_DETALLE = [
   { key: 'sol_calor',        label: 'Sol y calor',         icono: '☀️', tip: 'FPS 50+, hidratación constante, evitar exposición entre 10:00-16:00 hrs.' },
   { key: 'seguridad_acuatica', label: 'Seguridad acuática', icono: '🌊', tip: 'Respetar banderas de playa, no nadar solo y supervisar niños constantemente.' },
 ]
+
+// ── TuGo advisory helpers ────────────────────────────────────────────────
+
+const ADVISORY_META: Record<AdvisoryLevel, {
+  bg: string; border: string; badge: string; dot: string; label: string
+}> = {
+  1: { bg: 'bg-green-50',  border: 'border-green-100',  badge: 'bg-green-100 text-green-700',  dot: 'bg-green-500',  label: 'Nivel 1' },
+  2: { bg: 'bg-amber-50',  border: 'border-amber-100',  badge: 'bg-amber-100 text-amber-700',  dot: 'bg-amber-500',  label: 'Nivel 2' },
+  3: { bg: 'bg-orange-50', border: 'border-orange-100', badge: 'bg-orange-100 text-orange-700', dot: 'bg-orange-500', label: 'Nivel 3' },
+  4: { bg: 'bg-red-50',    border: 'border-red-100',    badge: 'bg-red-100 text-red-700',    dot: 'bg-red-500',    label: 'Nivel 4' },
+}
+
+function TugoAdvisorySection({ advisory }: { advisory: TugoAdvisory }) {
+  const meta = ADVISORY_META[advisory.advisoryLevel]
+  const pubDate = advisory.publishedDate
+    ? new Date(advisory.publishedDate).toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric' })
+    : null
+
+  return (
+    <div className={`rounded-2xl border ${meta.border} ${meta.bg} overflow-hidden mb-5`}>
+      {/* Cabecera */}
+      <div className="flex items-center justify-between px-4 py-3 border-b border-inherit">
+        <div className="flex items-center gap-2">
+          <Radio className="h-3.5 w-3.5 text-slate-500 animate-pulse" />
+          <span className="text-xs font-bold text-slate-600 uppercase tracking-wide">Alerta de viaje en vivo</span>
+        </div>
+        <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full ${meta.badge}`}>
+          {meta.label} · {advisory.advisoryStateEs}
+        </span>
+      </div>
+
+      <div className="px-4 py-3 space-y-3">
+        {/* Texto principal de la alerta */}
+        {advisory.advisoryText && (
+          <p className="text-sm text-slate-700 leading-relaxed">{advisory.advisoryText}</p>
+        )}
+
+        {/* Actualizaciones recientes */}
+        {advisory.recentUpdates && advisory.recentUpdates.trim().length > 10 && (
+          <div className="bg-white/70 rounded-xl border border-white/80 px-3 py-2.5">
+            <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wide mb-1">🔄 Actualización reciente</p>
+            <p className="text-xs text-slate-600 leading-relaxed">{advisory.recentUpdates}</p>
+          </div>
+        )}
+
+        {/* Enfermedades activas */}
+        {advisory.diseases.length > 0 && (
+          <div>
+            <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wide mb-2">🦠 Información sanitaria activa</p>
+            <div className="space-y-2">
+              {advisory.diseases.map((d, i) => (
+                <div key={i} className="bg-white/70 rounded-xl border border-white/80 px-3 py-2.5">
+                  <p className="text-[11px] font-semibold text-slate-700 mb-0.5">{d.categoryEs}</p>
+                  <p className="text-xs text-slate-500 leading-relaxed line-clamp-3">{d.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Fuente y fecha */}
+        <p className="text-[10px] text-slate-400">
+          Fuente: TuGo Travel Advisory API · Gobierno de Canadá
+          {pubDate ? ` · Actualizado: ${pubDate}` : ''}
+        </p>
+      </div>
+    </div>
+  )
+}
 
 export default async function RiesgosPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -33,6 +104,9 @@ export default async function RiesgosPage({ params }: { params: Promise<{ id: st
 
   const destino = getDestinoBySlug(viaje.destino_slug)
   if (!destino) notFound()
+
+  // TuGo advisory (falla silenciosamente si la API key no está configurada)
+  const tugoAdvisory = await fetchTugoAdvisory(destino.pais_code)
 
   const flagCode = destino?.pais_code ?? 'un'
 
@@ -66,6 +140,9 @@ export default async function RiesgosPage({ params }: { params: Promise<{ id: st
             Información basada en <strong>CDC Yellow Book 2026</strong> · Revisado {destino.revisado_at}
           </p>
         </div>
+
+        {/* TuGo live advisory */}
+        {tugoAdvisory && <TugoAdvisorySection advisory={tugoAdvisory} />}
 
         {/* Riesgos */}
         <div className="flex flex-col gap-3 mb-5">
