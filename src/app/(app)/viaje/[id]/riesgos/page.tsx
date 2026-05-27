@@ -14,12 +14,12 @@ import type { TugoAdvisory, AdvisoryLevel } from '@/lib/tugo/types'
 import type { CdcNotice, CdcAlertLevel } from '@/lib/cdc/types'
 
 const RIESGOS_DETALLE = [
-  { key: 'dengue',             label: 'Dengue',               icono: '🦟', tip: 'Transmitido por mosquitos Aedes. Activo durante el día. Usar repelente DEET 30%+ o Icaridina.' },
-  { key: 'malaria',            label: 'Malaria',              icono: '🦠', tip: 'Consulta con médico sobre profilaxis según zona específica del destino.' },
-  { key: 'fiebre_amarilla',    label: 'Fiebre amarilla',      icono: '💛', tip: 'Existe vacuna. Puede ser requerida para ingresar a algunos países.' },
-  { key: 'diarrea_viajero',    label: 'Diarrea del viajero',  icono: '💧', tip: 'Evita agua del grifo, hielo y alimentos crudos. Lleva suero oral.' },
-  { key: 'agua_alimentos',     label: 'Agua y alimentos',     icono: '🚰', tip: 'Solo agua embotellada o hervida. Frutas y vegetales cocidos o pelados.' },
-  { key: 'rabia_animales',     label: 'Rabia y animales',     icono: '🐾', tip: 'No tocar animales callejeros. Ante mordedura, buscar atención médica urgente.' },
+  { key: 'dengue',             label: 'Dengue',               icono: '🦟', tip: 'Transmitido por mosquitos Aedes. Activo durante el día. Usar repelente DEET 30%+. La Picaridina (Icaridina) es igualmente eficaz, pero no está disponible en Chile.' },
+  { key: 'malaria',            label: 'Malaria',              icono: '🦠', tip: 'Transmitido por mosquito Anopheles, principalmente nocturno. Usar repelente DEET 30%+ desde el atardecer. Consulta con médico sobre profilaxis antipalúdica según la zona específica del destino.' },
+  { key: 'fiebre_amarilla',    label: 'Fiebre amarilla',      icono: '💛', tip: 'Existe vacuna. Puede ser requerida para ingresar a algunos países. Consulta con médico con al menos 4 semanas de anticipación.' },
+  { key: 'diarrea_viajero',    label: 'Diarrea del viajero',  icono: '💧', tip: 'Evita agua del grifo, hielo y alimentos crudos. Lleva suero oral. Lávate las manos frecuentemente.' },
+  { key: 'agua_alimentos',     label: 'Agua y alimentos',     icono: '🚰', tip: 'Solo agua embotellada o hervida. Frutas y vegetales cocidos o pelados. Evita puestos de comida callejera en zonas de riesgo alto.' },
+  { key: 'rabia_animales',     label: 'Rabia y animales',     icono: '🐾', tip: 'No tocar animales callejeros. Ante mordedura, buscar atención médica urgente: la profilaxis post-exposición debe iniciarse pronto.' },
   { key: 'sol_calor',          label: 'Sol y calor',          icono: '☀️', tip: 'FPS 50+, hidratación constante, evitar exposición entre 10:00-16:00 hrs.' },
   { key: 'seguridad_acuatica', label: 'Seguridad acuática',   icono: '🌊', tip: 'Respetar banderas de playa, no nadar solo y supervisar niños constantemente.' },
 ]
@@ -61,9 +61,10 @@ function TugoContent({ advisory }: { advisory: TugoAdvisory }) {
           ))}
         </div>
       )}
-      <p className="text-[10px] text-slate-400">
+      <p className="text-[10px] text-slate-400 leading-relaxed">
         Fuente: TuGo Travel Advisory API · Gobierno de Canadá
-        {pubDate ? ` · Actualizado: ${pubDate}` : ''}
+        {pubDate ? ` · Actualizado: ${pubDate}` : ''}<br />
+        <span className="italic">Este nivel refleja el riesgo general de seguridad del destino. Los riesgos sanitarios específicos (dengue, malaria, etc.) son independientes y se detallan más abajo.</span>
       </p>
     </div>
   )
@@ -124,13 +125,16 @@ export default async function RiesgosPage({ params }: { params: Promise<{ id: st
   const { data: familia } = await supabase.from('familias').select('id').eq('user_id', user.id).single()
   if (!familia || viaje.familia_id !== familia.id) redirect('/dashboard')
 
-  // Viajeros — solo necesitamos alergia_huevo para el aviso de fiebre amarilla
+  // Viajeros — campos necesarios para los avisos personalizados
   const { data: viajeros } = await supabase
     .from('viajeros')
-    .select('alergia_huevo')
+    .select('edad, condiciones, alergia_huevo')
     .eq('familia_id', familia.id)
 
-  const hayAlergicoHuevo = viajeros?.some(v => v.alergia_huevo) ?? false
+  const hayAlergicoHuevo  = viajeros?.some(v => v.alergia_huevo) ?? false
+  const hayMayorSesenta   = viajeros?.some(v => v.edad >= 60) ?? false
+  const hayInmunosuprimido = viajeros?.some(v => Array.isArray(v.condiciones) && v.condiciones.includes('inmunosupresion')) ?? false
+  const hayNinos          = viajeros?.some(v => v.edad < 18) ?? false
 
   const destino = getDestinoBySlug(viaje.destino_slug)
   if (!destino) notFound()
@@ -158,6 +162,14 @@ export default async function RiesgosPage({ params }: { params: Promise<{ id: st
 
   const tieneRiesgoFiebreAmarilla = (destino.riesgos.fiebre_amarilla as NivelRiesgo) !== 'no_aplica'
   const alertaAlergiaFiebreAmarilla = hayAlergicoHuevo && tieneRiesgoFiebreAmarilla
+
+  // Concordancia Fix 5: si TuGo es nivel 1 (bajo riesgo general) pero hay riesgos sanitarios altos propios
+  const NIVELES_ORDENADOS: NivelRiesgo[] = ['no_aplica', 'bajo', 'moderado', 'alto', 'muy_alto']
+  const nivelMax = (['dengue', 'malaria', 'fiebre_amarilla', 'diarrea_viajero'] as const)
+    .map(k => destino.riesgos[k] as NivelRiesgo)
+    .reduce((max, n) => NIVELES_ORDENADOS.indexOf(n) > NIVELES_ORDENADOS.indexOf(max) ? n : max, 'no_aplica' as NivelRiesgo)
+  const alertaSanitariaVsTugo = tugoAdvisory?.advisoryLevel === 1
+    && (nivelMax === 'alto' || nivelMax === 'muy_alto')
 
   return (
     <div className="min-h-screen bg-[#F0FDF9]">
@@ -218,6 +230,21 @@ export default async function RiesgosPage({ params }: { params: Promise<{ id: st
           >
             <CdcContent notices={cdcNotices} />
           </CollapsibleSection>
+        )}
+
+        {/* ── Aviso concordancia: TuGo nivel 1 pero riesgos sanitarios altos ── */}
+        {alertaSanitariaVsTugo && (
+          <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-orange-50 border border-orange-300 mb-4">
+            <AlertTriangle className="h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="text-sm font-semibold text-orange-800 leading-snug mb-1">
+                ⚠️ Riesgo sanitario independiente del nivel de alerta general
+              </p>
+              <p className="text-xs text-orange-700 leading-relaxed">
+                El nivel de alerta de viaje (Nivel 1 – Precaución normal) refleja el <strong>riesgo de seguridad general</strong>, no el riesgo de enfermedades infecciosas. Este destino tiene riesgos sanitarios <strong>{nivelMax === 'muy_alto' ? 'muy altos' : 'altos'}</strong> (dengue, malaria u otros) que requieren medidas preventivas específicas independientemente del nivel de alerta.
+              </p>
+            </div>
+          </div>
         )}
 
         {/* ── Riesgos ── */}
@@ -285,6 +312,36 @@ export default async function RiesgosPage({ params }: { params: Promise<{ id: st
               </div>
             )}
 
+            {/* Aviso: mayores de 60 años + fiebre amarilla */}
+            {hayMayorSesenta && tieneRiesgoFiebreAmarilla && (
+              <div className="flex items-start gap-3 p-3.5 rounded-xl bg-amber-50 border border-amber-300">
+                <AlertTriangle className="h-5 w-5 text-amber-500 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm font-semibold text-amber-800 leading-snug mb-1">
+                    ⚠️ Mayores de 60 años — evaluación médica previa para fiebre amarilla
+                  </p>
+                  <p className="text-xs text-amber-700 leading-relaxed">
+                    Los adultos mayores de 60 años tienen mayor riesgo de efectos adversos graves con la vacuna de fiebre amarilla. Un <strong>médico especialista</strong> debe evaluar si la vacuna es segura según el estado de salud individual antes de administrarla.
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Aviso: inmunosupresión + vacunas vivas atenuadas */}
+            {hayInmunosuprimido && (
+              <div className="flex items-start gap-3 p-3.5 rounded-xl bg-red-50 border border-red-300">
+                <AlertTriangle className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm font-semibold text-red-800 leading-snug mb-1">
+                    ⚠️ Inmunosupresión — precaución con vacunas vivas atenuadas
+                  </p>
+                  <p className="text-xs text-red-700 leading-relaxed">
+                    Las personas inmunosuprimidas <strong>no pueden recibir vacunas vivas atenuadas</strong> (fiebre amarilla, sarampión, varicela). Es imprescindible consultar con el <strong>médico tratante</strong> para evaluar riesgos, alternativas y medidas compensatorias de protección.
+                  </p>
+                </div>
+              </div>
+            )}
+
             {destino.vacunas_requeridas.length > 0 && (
               <div>
                 <p className="text-xs font-semibold text-red-600 mb-2 uppercase tracking-wide">Requeridas ⚠️</p>
@@ -309,15 +366,44 @@ export default async function RiesgosPage({ params }: { params: Promise<{ id: st
           </div>
         </CollapsibleSection>
 
-        {/* ── Notas pediátricas ── */}
-        {destino.riesgos.notas_pediatricas && (
+        {/* ── Para familias con niños ── */}
+        {(destino.riesgos.notas_pediatricas || hayNinos) && (
           <CollapsibleSection
             title="Para familias con niños"
             icon="👶"
             accentClass="border-amber-300"
             defaultOpen={true}
           >
-            <p className="text-sm text-amber-800 leading-relaxed mt-2">{destino.riesgos.notas_pediatricas}</p>
+            <div className="mt-2 space-y-3">
+              {/* Notas específicas del destino */}
+              {destino.riesgos.notas_pediatricas && (
+                <p className="text-sm text-amber-800 leading-relaxed">{destino.riesgos.notas_pediatricas}</p>
+              )}
+
+              {/* Cuidados generales para niños viajeros */}
+              {hayNinos && (
+                <div className="bg-amber-50 rounded-xl border border-amber-100 p-3.5 space-y-2">
+                  <p className="text-[11px] font-bold text-amber-700 uppercase tracking-wide">
+                    🧒 Seguridad general para niños viajeros
+                  </p>
+                  <div className="flex flex-col gap-2">
+                    {[
+                      { icon: '🏊', text: 'Supervisión constante en piscinas, playas y ríos. El ahogamiento es la principal causa de muerte accidental en niños viajeros — nunca dejarlos sin vigilancia, aunque sepan nadar.' },
+                      { icon: '☀️', text: 'Protector solar FPS 50+ y reposición cada 2 h. En menores de 6 meses, evitar exposición directa al sol.' },
+                      { icon: '🦟', text: 'Repelente DEET al 10–30% desde los 2 meses de edad. En bebés, aplicar en ropa, no en piel.' },
+                      { icon: '🤕', text: 'Calzado cerrado en zonas de aventura, selva y playas rocosas para evitar cortes y picaduras en pies.' },
+                      { icon: '💧', text: 'Ante diarrea o vómitos, iniciar rehidratación oral inmediata. Los niños se deshidratan más rápido que los adultos.' },
+                      { icon: '🏥', text: 'Guardar número de emergencias locales, seguro de viaje y el centro de salud más cercano desde el primer día.' },
+                    ].map((item, i) => (
+                      <div key={i} className="flex items-start gap-2">
+                        <span className="text-base flex-shrink-0">{item.icon}</span>
+                        <p className="text-xs text-amber-800 leading-relaxed">{item.text}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           </CollapsibleSection>
         )}
 

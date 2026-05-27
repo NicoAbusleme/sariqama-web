@@ -153,7 +153,7 @@ export const DESTINOS_PILOTO: Destino[] = [
       sol_calor: 'alto',
       seguridad_acuatica: 'moderado',
       notas_pediatricas:
-        'Dengue especialmente relevante en niños. Uso estricto de repelente DEET o Icaridina desde los 2 meses.',
+        'Dengue especialmente relevante en niños: puede evolucionar rápido. Uso estricto de repelente DEET 10–30% desde los 2 meses (aplicar en ropa en lactantes). La Picaridina (Icaridina) es alternativa, pero no está disponible en Chile.',
     },
     vacunas_recomendadas: [
       'Fiebre amarilla',
