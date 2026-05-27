@@ -61,13 +61,13 @@ export function BottomNav({ primerViajeId }: BottomNavProps) {
             className="flex flex-col items-center gap-0.5 py-1 px-3">
             <div className={cn(
               'w-10 h-10 rounded-xl flex items-center justify-center text-lg transition-colors',
-              active ? 'bg-teal-100' : ''
+              active ? 'bg-[#E0F5F2]' : ''
             )}>
               {icon}
             </div>
             <span className={cn(
               'text-[10px] font-medium',
-              active ? 'text-teal-600' : 'text-slate-400'
+              active ? 'text-[#2D9E8C]' : 'text-slate-400'
             )}>
               {label}
             </span>

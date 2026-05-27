@@ -82,7 +82,7 @@ export default async function ChecklistPage({ params }: { params: Promise<{ id: 
           <div className="text-center py-16">
             <p className="text-4xl mb-3">📋</p>
             <p className="text-slate-500 text-sm">No hay items en el checklist.</p>
-            <Link href={`/viaje/${id}`} className="text-teal-600 text-sm font-semibold mt-2 inline-block">
+            <Link href={`/viaje/${id}`} className="text-[#2D9E8C] text-sm font-semibold mt-2 inline-block">
               Volver al viaje
             </Link>
           </div>

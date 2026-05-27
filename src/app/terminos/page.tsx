@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Leaf } from 'lucide-react'
+import Image from 'next/image'
 
 export const metadata = {
   title: 'Términos y Condiciones · SARIQAMA',
@@ -12,13 +12,10 @@ export default function TerminosPage() {
       {/* Header */}
       <header className="bg-white border-b border-slate-100 sticky top-0 z-50">
         <div className="max-w-3xl mx-auto px-5 h-14 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <Leaf className="h-5 w-5 text-teal-600" />
-            <span className="font-bold text-slate-900" style={{ fontFamily: 'var(--font-fraunces)' }}>
-              SARIQAMA
-            </span>
+          <Link href="/" className="flex items-center">
+            <Image src="/logo.jpeg" alt="SARIQAMA" width={120} height={36} className="h-8 w-auto object-contain" />
           </Link>
-          <Link href="/registro" className="text-sm text-teal-600 font-semibold hover:text-teal-700 transition-colors">
+          <Link href="/registro" className="text-sm text-[#2D9E8C] font-semibold hover:text-[#237F70] transition-colors">
             Crear cuenta →
           </Link>
         </div>
@@ -27,7 +24,7 @@ export default function TerminosPage() {
       <main className="max-w-3xl mx-auto px-5 py-12 pb-20">
         {/* Título */}
         <div className="mb-10">
-          <p className="text-xs font-semibold text-teal-600 uppercase tracking-widest mb-2">Legal</p>
+          <p className="text-xs font-semibold text-[#D4A338] uppercase tracking-widest mb-2">Legal</p>
           <h1 className="text-3xl font-bold text-slate-900 mb-2" style={{ fontFamily: 'var(--font-fraunces)' }}>
             Términos y Condiciones
           </h1>
@@ -81,7 +78,7 @@ export default function TerminosPage() {
                 'Reporte familiar PDF descargable',
               ].map((item, i) => (
                 <li key={i} className="flex items-start gap-2 text-sm text-slate-600">
-                  <span className="text-teal-500 mt-0.5 flex-shrink-0">✓</span>
+                  <span className="text-[#2D9E8C] mt-0.5 flex-shrink-0">✓</span>
                   {item}
                 </li>
               ))}
@@ -135,7 +132,7 @@ export default function TerminosPage() {
                 'Comunicar actualizaciones relevantes del servicio (con posibilidad de baja)',
               ].map((item, i) => (
                 <li key={i} className="flex items-start gap-2 text-sm text-slate-600">
-                  <span className="text-teal-500 mt-0.5 flex-shrink-0">✓</span>
+                  <span className="text-[#2D9E8C] mt-0.5 flex-shrink-0">✓</span>
                   {item}
                 </li>
               ))}
@@ -175,7 +172,7 @@ export default function TerminosPage() {
                 { d: 'Oposición', t: 'Oponerte al uso de tus datos para fines distintos a los esenciales del servicio.' },
               ].map(({ d, t }) => (
                 <li key={d} className="flex items-start gap-2 text-sm text-slate-600">
-                  <span className="text-teal-500 mt-0.5 flex-shrink-0">✓</span>
+                  <span className="text-[#2D9E8C] mt-0.5 flex-shrink-0">✓</span>
                   <span><strong>{d}:</strong> {t}</span>
                 </li>
               ))}
@@ -232,9 +229,9 @@ export default function TerminosPage() {
             <p className="text-sm text-slate-600 leading-relaxed">
               Para ejercer tus derechos, hacer consultas sobre privacidad o reportar algún problema relacionado con el tratamiento de tus datos, puedes contactarnos en:
             </p>
-            <div className="mt-3 p-4 bg-teal-50 border border-teal-100 rounded-xl">
-              <p className="text-sm font-semibold text-teal-800">SARIQAMA</p>
-              <a href="mailto:contacto@sariqama.com" className="text-sm text-teal-600 hover:text-teal-700 transition-colors">
+            <div className="mt-3 p-4 bg-[#E0F5F2] border border-[#2D9E8C]/20 rounded-xl">
+              <p className="text-sm font-semibold text-[#1A3D5C]">SARIQAMA</p>
+              <a href="mailto:contacto@sariqama.com" className="text-sm text-[#2D9E8C] hover:text-[#237F70] transition-colors">
                 contacto@sariqama.com
               </a>
             </div>
@@ -246,7 +243,7 @@ export default function TerminosPage() {
       {/* Footer mínimo */}
       <footer className="border-t border-slate-200 py-6 px-5 text-center">
         <p className="text-xs text-slate-400">© 2026 SARIQAMA · Orientación sanitaria, no diagnóstico médico.</p>
-        <Link href="/" className="text-xs text-teal-600 hover:text-teal-700 transition-colors mt-1 inline-block">
+        <Link href="/" className="text-xs text-[#2D9E8C] hover:text-[#237F70] transition-colors mt-1 inline-block">
           ← Volver al inicio
         </Link>
       </footer>

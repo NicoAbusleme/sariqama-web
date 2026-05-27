@@ -1,8 +1,9 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { usePathname } from "next/navigation"
-import { Leaf, Home, MapPin, Stethoscope, User } from "lucide-react"
+import { Home, MapPin, Stethoscope, User } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const NAV_ITEMS = [
@@ -20,12 +21,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       {/* Top bar */}
       <header className="bg-white border-b border-slate-100 sticky top-0 z-50">
         <div className="max-w-2xl mx-auto px-4 h-14 flex items-center justify-between">
-          <Link href="/dashboard" className="flex items-center gap-2">
-            <Leaf className="h-5 w-5 text-teal-600" />
-            <span className="font-bold text-lg text-slate-900 tracking-tight"
-              style={{ fontFamily: "var(--font-fraunces)" }}>
-              SARIQAMA
-            </span>
+          <Link href="/dashboard" className="flex items-center">
+            <Image src="/logo.jpeg" alt="SARIQAMA" width={120} height={36} className="h-9 w-auto object-contain" priority />
           </Link>
         </div>
       </header>
@@ -45,13 +42,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 className="flex flex-col items-center gap-1 py-1 px-3 rounded-xl transition-all">
                 <div className={cn(
                   "w-10 h-10 rounded-xl flex items-center justify-center transition-colors",
-                  active ? "bg-teal-100" : "bg-transparent"
+                  active ? "bg-[#E0F5F2]" : "bg-transparent"
                 )}>
-                  <Icon className={cn("h-5 w-5", active ? "text-teal-600" : "text-slate-400")} />
+                  <Icon className={cn("h-5 w-5", active ? "text-[#2D9E8C]" : "text-slate-400")} />
                 </div>
                 <span className={cn(
                   "text-[10px] font-medium",
-                  active ? "text-teal-600" : "text-slate-400"
+                  active ? "text-[#2D9E8C]" : "text-slate-400"
                 )}>{label}</span>
               </Link>
             )

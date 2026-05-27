@@ -86,7 +86,7 @@ export default async function DashboardPage() {
               Crea tu primer viaje para obtener el checklist sanitario y los riesgos de tu destino.
             </p>
             <Link href="/viaje/nuevo">
-              <button className="inline-flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white font-semibold px-6 py-3 rounded-2xl text-sm transition-colors">
+              <button className="inline-flex items-center gap-2 bg-[#2D9E8C] hover:bg-[#237F70] text-white font-semibold px-6 py-3 rounded-2xl text-sm transition-colors">
                 <Plus className="h-4 w-4" />
                 Crear mi primer viaje
               </button>
@@ -102,9 +102,9 @@ export default async function DashboardPage() {
                 const dias = Math.ceil((new Date(v.fecha_salida).getTime() - new Date().getTime()) / 86400000)
                 return (
                   <Link key={v.id} href={`/viaje/${v.id}`}>
-                    <div className="bg-white rounded-2xl border border-slate-100 p-4 flex items-center gap-4 hover:border-teal-200 hover:shadow-sm transition-all">
-                      <div className="w-11 h-11 bg-teal-50 rounded-2xl flex items-center justify-center flex-shrink-0">
-                        <MapPin className="h-5 w-5 text-teal-600" />
+                    <div className="bg-white rounded-2xl border border-slate-100 p-4 flex items-center gap-4 hover:border-[#2D9E8C]/30 hover:shadow-sm transition-all">
+                      <div className="w-11 h-11 bg-[#E0F5F2] rounded-2xl flex items-center justify-center flex-shrink-0">
+                        <MapPin className="h-5 w-5 text-[#2D9E8C]" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="font-semibold text-slate-900 text-sm truncate">{v.destino_nombre}</p>
@@ -115,7 +115,7 @@ export default async function DashboardPage() {
                         </p>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Badge className={dias <= 7 ? "bg-red-100 text-red-700" : dias <= 30 ? "bg-amber-100 text-amber-700" : "bg-teal-100 text-teal-700"}>
+                        <Badge className={dias <= 7 ? "bg-red-100 text-red-700" : dias <= 30 ? "bg-amber-100 text-amber-700" : "bg-[#E0F5F2] text-[#2D9E8C]"}>
                           {dias <= 0 ? "Hoy" : `${dias}d`}
                         </Badge>
                         <ChevronRight className="h-4 w-4 text-slate-300" />
@@ -136,14 +136,14 @@ export default async function DashboardPage() {
           {(() => {
             const primerViaje = viajes?.[0]
             return [
-              { href: "/viaje/nuevo",                                                          bg: "bg-teal-50",   icon: "✈️",  titulo: "Nuevo viaje",  sub: "Planifica tu salud" },
+              { href: "/viaje/nuevo",                                                          bg: "bg-[#E0F5F2]", icon: "✈️",  titulo: "Nuevo viaje",  sub: "Planifica tu salud" },
               { href: primerViaje ? `/viaje/${primerViaje.id}/sintomas` : "/viaje/nuevo",      bg: "bg-amber-50",  icon: "🌡️", titulo: "Síntomas",      sub: primerViaje ? primerViaje.destino_nombre : "Crea un viaje primero" },
               { href: primerViaje ? `/viaje/${primerViaje.id}/checklist` : "/viaje/nuevo",     bg: "bg-green-50",  icon: "✅",  titulo: "Checklist",     sub: primerViaje ? primerViaje.destino_nombre : "Crea un viaje primero" },
               { href: "/teleorientacion",                                                       bg: "bg-blue-50",   icon: "👩‍⚕️", titulo: "Orientación",  sub: "Habla con un médico" },
             ]
           })().map(a => (
             <Link key={a.titulo} href={a.href}>
-              <div className="bg-white rounded-2xl border border-slate-100 p-4 hover:border-teal-200 hover:shadow-sm transition-all cursor-pointer">
+              <div className="bg-white rounded-2xl border border-slate-100 p-4 hover:border-[#2D9E8C]/30 hover:shadow-sm transition-all cursor-pointer">
                 <div className={`w-11 h-11 ${a.bg} rounded-2xl flex items-center justify-center text-xl mb-3`}>
                   {a.icon}
                 </div>

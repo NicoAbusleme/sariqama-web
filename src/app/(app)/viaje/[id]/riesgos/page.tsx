@@ -100,7 +100,7 @@ function CdcContent({ notices }: { notices: CdcNotice[] }) {
             <div className="flex items-center gap-3 mt-2">
               <span className="text-[10px] text-slate-400">{notice.pubDateFormatted}</span>
               <a href={notice.link} target="_blank" rel="noopener noreferrer"
-                className="text-[10px] text-teal-600 font-semibold hover:underline">
+                className="text-[10px] text-[#2D9E8C] font-semibold hover:underline">
                 Ver alerta completa →
               </a>
             </div>
@@ -194,9 +194,9 @@ export default async function RiesgosPage({ params }: { params: Promise<{ id: st
       <main className="max-w-2xl mx-auto px-5 py-5 pb-28">
 
         {/* Fuente */}
-        <div className="bg-teal-50 border border-teal-100 rounded-2xl px-4 py-3 mb-4 flex items-center gap-2">
+        <div className="bg-[#E0F5F2] border border-[#2D9E8C]/20 rounded-2xl px-4 py-3 mb-4 flex items-center gap-2">
           <span className="text-sm">📋</span>
-          <p className="text-xs text-teal-700">
+          <p className="text-xs text-[#2D9E8C]">
             Información basada en <strong>CDC Yellow Book 2026</strong> · Revisado {destino.revisado_at}
           </p>
         </div>
@@ -253,7 +253,7 @@ export default async function RiesgosPage({ params }: { params: Promise<{ id: st
           icon="⚠️"
           count={riesgosActivos.length}
           countLabel="riesgos"
-          accentClass="border-teal-300"
+          accentClass="border-[#2D9E8C]/40"
           defaultOpen={true}
         >
           <div className="flex flex-col gap-3 mt-2">

@@ -152,12 +152,12 @@ export default async function DetalleViajePage({ params }: { params: Promise<{ i
         <div className="grid grid-cols-2 gap-3 mb-5">
           {[
             { href: `/viaje/${id}/checklist`,  emoji: '✅', label: 'Checklist',      sub: `${completados}/${totalItems} listos`,  bg: 'bg-green-50' },
-            { href: `/viaje/${id}/riesgos`,    emoji: '🗺️', label: 'Riesgos',        sub: 'Ver destino',                          bg: 'bg-teal-50' },
+            { href: `/viaje/${id}/riesgos`,    emoji: '🗺️', label: 'Riesgos',        sub: 'Ver destino',                          bg: 'bg-[#E0F5F2]' },
             { href: `/viaje/${id}/sintomas`,   emoji: '🌡️', label: 'Síntomas',       sub: 'Evaluar ahora',                        bg: 'bg-amber-50' },
             { href: `/viaje/${id}/botiquin`,   emoji: '💊',  label: 'Botiquín',       sub: 'Lo que llevar',                        bg: 'bg-blue-50' },
           ].map(a => (
             <Link key={a.href} href={a.href}>
-              <div className="bg-white rounded-2xl border border-slate-100 p-4 hover:border-teal-200 hover:shadow-sm transition-all">
+              <div className="bg-white rounded-2xl border border-slate-100 p-4 hover:border-[#2D9E8C]/30 hover:shadow-sm transition-all">
                 <div className={`w-11 h-11 ${a.bg} rounded-2xl flex items-center justify-center text-xl mb-3`}>
                   {a.emoji}
                 </div>
@@ -177,7 +177,7 @@ export default async function DetalleViajePage({ params }: { params: Promise<{ i
                 Riesgos del destino
               </h2>
               <Link href={`/viaje/${id}/riesgos`}
-                className="text-xs text-teal-600 font-semibold flex items-center gap-1">
+                className="text-xs text-[#2D9E8C] font-semibold flex items-center gap-1">
                 Ver todo <ChevronRight className="h-3 w-3" />
               </Link>
             </div>
@@ -269,7 +269,7 @@ export default async function DetalleViajePage({ params }: { params: Promise<{ i
           <a
             href={`/api/reporte/${id}`}
             download
-            className="flex items-center justify-between bg-white rounded-2xl border border-slate-100 p-4 hover:border-teal-200 hover:shadow-sm transition-all mb-4 group"
+            className="flex items-center justify-between bg-white rounded-2xl border border-slate-100 p-4 hover:border-[#2D9E8C]/30 hover:shadow-sm transition-all mb-4 group"
           >
             <div className="flex items-center gap-3">
               <div className="w-11 h-11 bg-teal-50 rounded-2xl flex items-center justify-center text-xl group-hover:bg-teal-100 transition-colors">
@@ -280,28 +280,28 @@ export default async function DetalleViajePage({ params }: { params: Promise<{ i
                 <p className="text-xs text-slate-400 mt-0.5">Reporte familiar completo de salud</p>
               </div>
             </div>
-            <BookOpen className="h-4 w-4 text-teal-500" />
+            <BookOpen className="h-4 w-4 text-[#2D9E8C]" />
           </a>
         ) : (
           <Link href="/precios">
-            <div className="flex items-center justify-between bg-teal-50 rounded-2xl border border-teal-100 p-4 hover:border-teal-300 transition-all mb-4">
+            <div className="flex items-center justify-between bg-[#E0F5F2] rounded-2xl border border-[#2D9E8C]/20 p-4 hover:border-teal-300 transition-all mb-4">
               <div className="flex items-center gap-3">
-                <div className="w-11 h-11 bg-teal-100 rounded-2xl flex items-center justify-center text-xl">
+                <div className="w-11 h-11 bg-[#E0F5F2] rounded-2xl flex items-center justify-center text-xl">
                   📄
                 </div>
                 <div>
-                  <p className="font-semibold text-teal-800 text-sm">Reporte PDF familiar</p>
-                  <p className="text-xs text-teal-600 mt-0.5">Disponible en Preparación Total</p>
+                  <p className="font-semibold text-[#1A3D5C] text-sm">Reporte PDF familiar</p>
+                  <p className="text-xs text-[#2D9E8C] mt-0.5">Disponible en Preparación Total</p>
                 </div>
               </div>
-              <Shield className="h-4 w-4 text-teal-500" />
+              <Shield className="h-4 w-4 text-[#2D9E8C]" />
             </div>
           </Link>
         )}
 
         {/* Teleorientación CTA */}
         <Link href="/teleorientacion">
-          <div className="bg-gradient-to-r from-[#1A3D5C] to-[#1F4D72] rounded-2xl p-5 flex items-center justify-between hover:from-teal-700 hover:to-teal-800 transition-all">
+          <div className="bg-gradient-to-r from-[#1A3D5C] to-[#1F4D72] rounded-2xl p-5 flex items-center justify-between hover:from-[#254E72] hover:to-[#1F4D72] transition-all">
             <div>
               <p className="font-semibold text-white text-sm">¿Tienes dudas médicas?</p>
               <p className="text-[#A8C5DA] text-xs mt-0.5">Habla con un especialista en medicina del viajero</p>

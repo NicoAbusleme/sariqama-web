@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Leaf, Plus, Trash2, Loader2, ChevronRight, Users, Heart, AlertTriangle, XCircle } from 'lucide-react'
+import { Plus, Trash2, Loader2, ChevronRight, Users, Heart, AlertTriangle, XCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -229,8 +229,7 @@ export default function OnboardingPage() {
 
         {/* Logo */}
         <div className="flex items-center justify-center gap-2 mb-8">
-          <Leaf className="h-6 w-6 text-teal-600" />
-          <span className="font-bold text-xl text-slate-900">SARIQAMA</span>
+          <img src="/logo.jpeg" alt="SARIQAMA" className="h-10 w-auto object-contain" />
         </div>
 
         {/* Progreso */}
@@ -248,8 +247,8 @@ export default function OnboardingPage() {
           {paso === 1 && (
             <div>
               <div className="flex items-center gap-3 mb-6">
-                <div className="p-2 bg-teal-50 rounded-xl">
-                  <Users className="h-5 w-5 text-teal-600" />
+                <div className="p-2 bg-[#E0F5F2] rounded-xl">
+                  <Users className="h-5 w-5 text-[#2D9E8C]" />
                 </div>
                 <div>
                   <h2 className="font-bold text-slate-900 text-lg">¿Quiénes viajan?</h2>
@@ -339,8 +338,8 @@ export default function OnboardingPage() {
                               onClick={() => actualizarViajero(i, 'sexo', v.sexo === o.id ? '' : o.id)}
                               className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
                                 v.sexo === o.id
-                                  ? 'bg-teal-600 text-white border-teal-600'
-                                  : 'bg-white text-slate-600 border-slate-200 hover:border-teal-300'
+                                  ? 'bg-[#2D9E8C] text-white border-[#2D9E8C]'
+                                  : 'bg-white text-slate-600 border-slate-200 hover:border-[#2D9E8C]/30'
                               }`}
                             >
                               {o.label}
@@ -379,7 +378,7 @@ export default function OnboardingPage() {
 
               <button
                 onClick={agregarIntegrante}
-                className="mt-3 flex items-center gap-2 text-sm text-teal-600 hover:text-teal-700 font-medium transition-colors"
+                className="mt-3 flex items-center gap-2 text-sm text-[#2D9E8C] hover:text-[#237F70] font-medium transition-colors"
               >
                 <Plus className="h-4 w-4" />
                 Agregar otro integrante
@@ -391,8 +390,8 @@ export default function OnboardingPage() {
           {paso === 2 && (
             <div>
               <div className="flex items-center gap-3 mb-6">
-                <div className="p-2 bg-teal-50 rounded-xl">
-                  <Heart className="h-5 w-5 text-teal-600" />
+                <div className="p-2 bg-[#E0F5F2] rounded-xl">
+                  <Heart className="h-5 w-5 text-[#2D9E8C]" />
                 </div>
                 <div>
                   <h2 className="font-bold text-slate-900 text-lg">Condiciones de salud</h2>
@@ -412,7 +411,7 @@ export default function OnboardingPage() {
                       {CONDICIONES.map(c => (
                         <label
                           key={c.id}
-                          className="flex items-center gap-2 p-2.5 rounded-lg border border-slate-100 hover:border-teal-200 hover:bg-teal-50 cursor-pointer transition-all"
+                          className="flex items-center gap-2 p-2.5 rounded-lg border border-slate-100 hover:border-[#2D9E8C]/30 hover:bg-[#E0F5F2] cursor-pointer transition-all"
                         >
                           <Checkbox
                             checked={v.condiciones.includes(c.id)}
@@ -425,7 +424,7 @@ export default function OnboardingPage() {
 
                     {/* Sub-sección: Inmunosupresión */}
                     {v.condiciones.includes('inmunosupresion') && (
-                      <div className="mt-3 ml-1 pl-3 border-l-2 border-teal-200">
+                      <div className="mt-3 ml-1 pl-3 border-l-2 border-[#2D9E8C]/30">
                         <p className="text-xs font-semibold text-slate-600 mb-2">
                           Motivo de inmunosupresión
                         </p>
@@ -435,8 +434,8 @@ export default function OnboardingPage() {
                               key={t.id}
                               className={`flex items-center gap-2.5 p-2 rounded-lg border cursor-pointer transition-all text-sm ${
                                 v.inmunosupresion_tipo === t.id
-                                  ? 'border-teal-400 bg-teal-50 text-teal-800 font-medium'
-                                  : 'border-slate-100 hover:border-teal-200 text-slate-700'
+                                  ? 'border-[#2D9E8C] bg-[#E0F5F2] text-[#1A3D5C] font-medium'
+                                  : 'border-slate-100 hover:border-[#2D9E8C]/30 text-slate-700'
                               }`}
                             >
                               <input
@@ -450,7 +449,7 @@ export default function OnboardingPage() {
                                   if (t.id !== 'vih') nuevos[i].vih_carga_viral = ''
                                   setViajeros(nuevos)
                                 }}
-                                className="accent-teal-600"
+                                className="accent-[#2D9E8C]"
                               />
                               {t.label}
                             </label>
@@ -628,7 +627,7 @@ export default function OnboardingPage() {
               <Button
                 onClick={() => setPaso(paso + 1)}
                 disabled={!validarPaso1()}
-                className="flex-1 h-11 bg-teal-600 hover:bg-teal-700 text-white"
+                className="flex-1 h-11 bg-[#2D9E8C] hover:bg-[#237F70] text-white"
               >
                 Continuar
                 <ChevronRight className="ml-2 h-4 w-4" />
@@ -637,7 +636,7 @@ export default function OnboardingPage() {
               <Button
                 onClick={finalizar}
                 disabled={loading}
-                className="flex-1 h-11 bg-teal-600 hover:bg-teal-700 text-white"
+                className="flex-1 h-11 bg-[#2D9E8C] hover:bg-[#237F70] text-white"
               >
                 {loading ? (
                   <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Guardando...</>

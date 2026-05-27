@@ -68,7 +68,7 @@ export function ChecklistClient({ items: initialItems, viajeId }: Props) {
       <div className="bg-white rounded-2xl border border-slate-100 p-4 mb-5">
         <div className="flex justify-between items-center mb-2">
           <span className="text-sm font-semibold text-slate-700">Progreso de preparación</span>
-          <span className="text-sm font-bold text-teal-600">{completados}/{total}</span>
+          <span className="text-sm font-bold text-[#2D9E8C]">{completados}/{total}</span>
         </div>
         <div className="w-full bg-slate-100 rounded-full h-3">
           <div
@@ -111,8 +111,8 @@ export function ChecklistClient({ items: initialItems, viajeId }: Props) {
                     className={cn(
                       'w-full bg-white rounded-xl border p-3.5 text-left transition-all',
                       item.completado
-                        ? 'border-teal-200 bg-teal-50/50'
-                        : 'border-slate-100 hover:border-teal-200'
+                        ? 'border-[#2D9E8C]/30 bg-[#E0F5F2]/50'
+                        : 'border-slate-100 hover:border-[#2D9E8C]/30'
                     )}
                   >
                     <div className="flex items-start gap-3">
@@ -120,7 +120,7 @@ export function ChecklistClient({ items: initialItems, viajeId }: Props) {
                       <div className={cn(
                         'w-5 h-5 rounded-full border-2 flex-shrink-0 mt-0.5 flex items-center justify-center transition-all',
                         item.completado
-                          ? 'border-teal-500 bg-teal-500'
+                          ? 'border-[#2D9E8C] bg-[#2D9E8C]'
                           : 'border-slate-300'
                       )}>
                         {item.completado && (

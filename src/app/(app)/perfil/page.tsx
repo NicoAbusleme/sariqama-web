@@ -54,7 +54,7 @@ export default async function PerfilPage() {
         <div className="max-w-2xl mx-auto flex flex-col items-center text-center">
           <div className="w-20 h-20 rounded-full bg-white flex items-center justify-center mb-3">
             <span
-              className="text-3xl font-bold text-teal-600"
+              className="text-3xl font-bold text-[#2D9E8C]"
               style={{ fontFamily: 'var(--font-fraunces)' }}
             >
               {inicial}
@@ -89,8 +89,8 @@ export default async function PerfilPage() {
                   className="bg-white rounded-2xl border border-slate-100 p-4"
                 >
                   <div className="flex items-center gap-3 mb-2">
-                    <div className="w-10 h-10 rounded-full bg-teal-100 flex items-center justify-center flex-shrink-0">
-                      <span className="text-sm font-bold text-teal-700">
+                    <div className="w-10 h-10 rounded-full bg-[#E0F5F2] flex items-center justify-center flex-shrink-0">
+                      <span className="text-sm font-bold text-[#2D9E8C]">
                         {(v.nombre as string).charAt(0).toUpperCase()}
                       </span>
                     </div>
@@ -134,7 +134,7 @@ export default async function PerfilPage() {
           </div>
 
           <Link href="/perfil/agregar-viajero">
-            <button className="mt-3 w-full border-2 border-dashed border-teal-300 rounded-2xl py-3 text-sm font-medium text-teal-600 hover:border-teal-400 hover:bg-teal-50 transition-colors cursor-pointer">
+            <button className="mt-3 w-full border-2 border-dashed border-[#2D9E8C]/40 rounded-2xl py-3 text-sm font-medium text-[#2D9E8C] hover:border-[#2D9E8C] hover:bg-[#E0F5F2] transition-colors cursor-pointer">
               + Agregar integrante
             </button>
           </Link>
@@ -151,7 +151,7 @@ export default async function PerfilPage() {
               <p className="text-3xl mb-3">✈️</p>
               <p className="text-sm text-slate-500 mb-4">Aún no tienes viajes registrados</p>
               <Link href="/viaje/nuevo">
-                <span className="inline-block text-sm font-semibold text-teal-600 hover:text-teal-700 transition-colors">
+                <span className="inline-block text-sm font-semibold text-[#2D9E8C] hover:text-[#2D9E8C] transition-colors">
                   Crear un viaje →
                 </span>
               </Link>
@@ -242,12 +242,12 @@ function ViajeCard({ viaje, today }: { viaje: ViajeRow; today: string }) {
     status === 'en_curso'
       ? { label: 'En curso', cls: 'bg-green-100 text-green-700' }
       : status === 'proximo'
-      ? { label: 'Próximo', cls: 'bg-teal-100 text-teal-700' }
+      ? { label: 'Próximo', cls: 'bg-[#E0F5F2] text-[#2D9E8C]' }
       : { label: 'Finalizado', cls: 'bg-slate-100 text-slate-400' }
 
   return (
     <Link href={`/viaje/${viaje.id}`}>
-      <div className="bg-white rounded-2xl border border-slate-100 p-4 flex items-center gap-3 hover:border-teal-200 hover:shadow-sm transition-all">
+      <div className="bg-white rounded-2xl border border-slate-100 p-4 flex items-center gap-3 hover:border-[#2D9E8C]/30 hover:shadow-sm transition-all">
         <FlagImg code={paisCode} size={28} className="rounded flex-shrink-0" />
         <div className="flex-1 min-w-0">
           <p className="font-semibold text-slate-900 text-sm truncate">{viaje.destino_nombre}</p>

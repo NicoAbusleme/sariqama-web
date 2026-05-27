@@ -249,8 +249,8 @@ export default function AgregarViajeroPage() {
                   onClick={() => setSexo(prev => prev === o.id ? '' : o.id)}
                   className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
                     sexo === o.id
-                      ? 'bg-teal-600 text-white border-teal-600'
-                      : 'bg-slate-50 text-slate-600 border-slate-200 hover:border-teal-300'
+                      ? 'bg-[#2D9E8C] text-white border-[#2D9E8C]'
+                      : 'bg-slate-50 text-slate-600 border-slate-200 hover:border-[#2D9E8C]/30'
                   }`}
                 >
                   {o.label}
@@ -293,7 +293,7 @@ export default function AgregarViajeroPage() {
               {CONDICIONES.map(c => (
                 <label
                   key={c.id}
-                  className="flex items-center gap-2 p-2.5 rounded-xl border border-slate-100 hover:border-teal-200 hover:bg-teal-50 cursor-pointer transition-all"
+                  className="flex items-center gap-2 p-2.5 rounded-xl border border-slate-100 hover:border-[#2D9E8C]/30 hover:bg-[#E0F5F2] cursor-pointer transition-all"
                 >
                   <Checkbox
                     checked={condiciones.includes(c.id)}
@@ -306,7 +306,7 @@ export default function AgregarViajeroPage() {
 
             {/* Sub-sección: Inmunosupresión */}
             {condiciones.includes('inmunosupresion') && (
-              <div className="mt-4 ml-1 pl-3 border-l-2 border-teal-200">
+              <div className="mt-4 ml-1 pl-3 border-l-2 border-[#2D9E8C]/30">
                 <p className="text-xs font-semibold text-slate-600 mb-2">
                   Motivo de inmunosupresión
                 </p>
@@ -316,8 +316,8 @@ export default function AgregarViajeroPage() {
                       key={t.id}
                       className={`flex items-center gap-2.5 p-2.5 rounded-xl border cursor-pointer transition-all text-sm ${
                         inmunosupresionTipo === t.id
-                          ? 'border-teal-400 bg-teal-50 text-teal-800 font-medium'
-                          : 'border-slate-100 hover:border-teal-200 text-slate-700'
+                          ? 'border-[#2D9E8C] bg-[#E0F5F2] text-[#1A3D5C] font-medium'
+                          : 'border-slate-100 hover:border-[#2D9E8C]/30 text-slate-700'
                       }`}
                     >
                       <input
@@ -329,7 +329,7 @@ export default function AgregarViajeroPage() {
                           setInmunosupresionTipo(t.id)
                           if (t.id !== 'vih') setVihCargaViral('')
                         }}
-                        className="accent-teal-600"
+                        className="accent-[#2D9E8C]"
                       />
                       {t.label}
                     </label>
@@ -479,7 +479,7 @@ export default function AgregarViajeroPage() {
           <button
             onClick={handleGuardar}
             disabled={!isValid || loading}
-            className="w-full h-12 bg-teal-600 hover:bg-teal-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-2xl flex items-center justify-center gap-2 transition-colors"
+            className="w-full h-12 bg-[#2D9E8C] hover:bg-[#237F70] disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-2xl flex items-center justify-center gap-2 transition-colors"
           >
             {loading ? (
               <>

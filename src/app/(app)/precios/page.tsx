@@ -32,11 +32,11 @@ const PLANES = [
     precio: 'USD 19–29',
     precioSub: 'por viaje',
     descripcion: 'Todo lo que necesitas para llegar preparado.',
-    color: 'border-teal-300 ring-2 ring-teal-200',
+    color: 'border-[#2D9E8C]/40 ring-2 ring-teal-200',
     headerBg: 'bg-gradient-to-br from-[#1A3D5C] to-[#1F4D72]',
     badge: 'Más popular',
     cta: 'Solicitar Preparación Total',
-    ctaStyle: 'bg-teal-600 hover:bg-teal-700 text-white',
+    ctaStyle: 'bg-[#2D9E8C] hover:bg-[#237F70] text-white',
     items: [
       { texto: 'Perfil de viaje familiar',        disponible: true },
       { texto: 'Riesgos generales del destino',   disponible: true },
@@ -163,10 +163,10 @@ export default async function PreciosPage() {
                     {plan.items.map(item => (
                       <li key={item.texto} className="flex items-center gap-2.5">
                         <span className={`w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 ${
-                          item.disponible ? 'bg-teal-100' : 'bg-slate-100'
+                          item.disponible ? 'bg-[#E0F5F2]' : 'bg-slate-100'
                         }`}>
                           {item.disponible ? (
-                            <Check className="h-2.5 w-2.5 text-teal-600" />
+                            <Check className="h-2.5 w-2.5 text-[#2D9E8C]" />
                           ) : (
                             <span className="w-1.5 h-0.5 bg-slate-300 rounded-full" />
                           )}
@@ -189,8 +189,8 @@ export default async function PreciosPage() {
                   )}
 
                   {esPlanActual && plan.id !== 'gratis' && (
-                    <div className="mt-4 bg-teal-50 rounded-xl px-4 py-2.5 text-center">
-                      <p className="text-xs text-teal-600 font-semibold">✓ Plan activo</p>
+                    <div className="mt-4 bg-[#E0F5F2] rounded-xl px-4 py-2.5 text-center">
+                      <p className="text-xs text-[#2D9E8C] font-semibold">✓ Plan activo</p>
                     </div>
                   )}
                 </div>
@@ -223,7 +223,7 @@ export default async function PreciosPage() {
         <div className="text-center">
           <p className="text-xs text-slate-400 mb-2">¿Tienes dudas? Contáctanos directamente.</p>
           <a href={MAILTO}
-            className="text-teal-600 text-sm font-semibold hover:underline">
+            className="text-[#2D9E8C] text-sm font-semibold hover:underline">
             contacto@sariqama.com
           </a>
         </div>

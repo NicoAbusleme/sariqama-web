@@ -65,7 +65,7 @@ export function HistorialCard({ reg, isFirst }: { reg: Registro; isFirst: boolea
               {reg.titulo ?? meta.label}
             </span>
             {isFirst && (
-              <span className="text-[10px] bg-teal-100 text-teal-700 font-bold px-2 py-0.5 rounded-full">
+              <span className="text-[10px] bg-[#E0F5F2] text-[#2D9E8C] font-bold px-2 py-0.5 rounded-full">
                 ÚLTIMO
               </span>
             )}

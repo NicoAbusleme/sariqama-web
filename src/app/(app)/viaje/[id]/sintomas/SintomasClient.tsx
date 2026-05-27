@@ -165,9 +165,9 @@ export function SintomasClient({ viajeId, viajeros }: Props) {
         {viajeros.map(v => (
           <button key={v.id} onClick={() => { setViajeroId(v.id); setModoInvitado(false) }}
             className={cn('w-full bg-white rounded-2xl border p-4 text-left transition-all',
-              viajeroId === v.id ? 'border-teal-400 ring-2 ring-teal-100 shadow-sm' : 'border-slate-100 hover:border-teal-200')}>
+              viajeroId === v.id ? 'border-teal-400 ring-2 ring-teal-100 shadow-sm' : 'border-slate-100 hover:border-[#2D9E8C]/30')}>
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-teal-50 flex items-center justify-center text-xl">
+              <div className="w-10 h-10 rounded-2xl bg-[#E0F5F2] flex items-center justify-center text-xl">
                 {v.es_nino ? '👶' : '🧑'}
               </div>
               <div>
@@ -175,7 +175,7 @@ export function SintomasClient({ viajeId, viajeros }: Props) {
                 <p className="text-xs text-slate-400">{v.edad} años · {v.es_nino ? 'Niño/a' : 'Adulto'}</p>
               </div>
               {viajeroId === v.id && (
-                <div className="ml-auto w-5 h-5 rounded-full bg-teal-500 flex items-center justify-center">
+                <div className="ml-auto w-5 h-5 rounded-full bg-[#2D9E8C] flex items-center justify-center">
                   <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
@@ -200,7 +200,7 @@ export function SintomasClient({ viajeId, viajeros }: Props) {
                 <p className="text-xs text-slate-400">Alguien que no está en tu lista</p>
               </div>
               {modoInvitado && (
-                <div className="ml-auto w-5 h-5 rounded-full bg-teal-500 flex items-center justify-center">
+                <div className="ml-auto w-5 h-5 rounded-full bg-[#2D9E8C] flex items-center justify-center">
                   <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
@@ -246,7 +246,7 @@ export function SintomasClient({ viajeId, viajeros }: Props) {
       </div>
       {(viajeroId || modoInvitado) && (
         <button onClick={() => setPaso(2)}
-          className="w-full bg-teal-600 hover:bg-teal-700 text-white rounded-2xl py-3.5 font-semibold text-sm transition-colors">
+          className="w-full bg-[#2D9E8C] hover:bg-[#237F70] text-white rounded-2xl py-3.5 font-semibold text-sm transition-colors">
           Continuar →
         </button>
       )}
@@ -269,12 +269,12 @@ export function SintomasClient({ viajeId, viajeros }: Props) {
             <div key={s.key}>
               <button onClick={() => toggleSintoma(s.key)}
                 className={cn('w-full rounded-2xl border p-4 text-left transition-all',
-                  sel ? 'bg-teal-50 border-teal-300 shadow-sm' : 'bg-white border-slate-100 hover:border-teal-200')}>
+                  sel ? 'bg-[#E0F5F2] border-[#2D9E8C]/40 shadow-sm' : 'bg-white border-slate-100 hover:border-[#2D9E8C]/30')}>
                 <div className="flex items-center gap-3">
                   <span className="text-xl">{s.emoji}</span>
-                  <span className={cn('text-sm font-medium flex-1', sel ? 'text-teal-800' : 'text-slate-700')}>{s.label}</span>
+                  <span className={cn('text-sm font-medium flex-1', sel ? 'text-[#1A3D5C]' : 'text-slate-700')}>{s.label}</span>
                   <div className={cn('w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-all',
-                    sel ? 'border-teal-500 bg-teal-500' : 'border-slate-300')}>
+                    sel ? 'border-[#2D9E8C] bg-[#2D9E8C]' : 'border-slate-300')}>
                     {sel && <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>}
                   </div>
                 </div>
@@ -302,7 +302,7 @@ export function SintomasClient({ viajeId, viajeros }: Props) {
         })}
       </div>
       <button onClick={() => setPaso(3)}
-        className="w-full bg-teal-600 hover:bg-teal-700 text-white rounded-2xl py-3.5 font-semibold text-sm transition-colors">
+        className="w-full bg-[#2D9E8C] hover:bg-[#237F70] text-white rounded-2xl py-3.5 font-semibold text-sm transition-colors">
         {sintomas.size === 0 ? 'No tengo síntomas →' : 'Continuar →'}
       </button>
       {viajeros.length > 0 && (
@@ -326,7 +326,7 @@ export function SintomasClient({ viajeId, viajeros }: Props) {
           {[{v:1,l:'1 día'},{v:2,l:'2 días'},{v:3,l:'3 días'},{v:4,l:'4+ días'}].map(op => (
             <button key={op.v} onClick={() => setDias(op.v)}
               className={cn('rounded-xl border py-2.5 text-sm font-medium transition-all',
-                diasSintomas === op.v ? 'bg-teal-500 border-teal-500 text-white' : 'bg-white border-slate-200 text-slate-600 hover:border-teal-300')}>
+                diasSintomas === op.v ? 'bg-[#2D9E8C] border-[#2D9E8C] text-white' : 'bg-white border-slate-200 text-slate-600 hover:border-[#2D9E8C]/40')}>
               {op.l}
             </button>
           ))}
@@ -464,7 +464,7 @@ export function SintomasClient({ viajeId, viajeros }: Props) {
           className="w-full border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 rounded-2xl py-3.5 font-medium text-sm transition-colors">
           ↩ Evaluar de nuevo
         </button>
-        <Link href={`/viaje/${viajeId}`} className="text-xs text-teal-600 font-semibold text-center block">
+        <Link href={`/viaje/${viajeId}`} className="text-xs text-[#2D9E8C] font-semibold text-center block">
           ← Volver al viaje
         </Link>
       </div>

@@ -21,7 +21,7 @@ export function CollapsibleSection({
   count,
   countLabel = 'items',
   defaultOpen = true,
-  accentClass = 'border-teal-200',
+  accentClass = 'border-[#2D9E8C]/40',
   children,
 }: CollapsibleSectionProps) {
   const [open, setOpen] = useState(defaultOpen)

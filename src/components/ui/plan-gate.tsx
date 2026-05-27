@@ -14,8 +14,8 @@ const PLAN_INFO = {
     precio: 'USD 19–29 / viaje',
     descripcion: 'Accede al checklist completo, botiquín específico y reporte familiar PDF.',
     gradiente: 'from-[#1A3D5C] to-[#1F4D72]',
-    badge: 'bg-teal-100 text-teal-700',
-    checkColor: 'bg-teal-100 text-teal-600',
+    badge: 'bg-[#E0F5F2] text-[#237F70]',
+    checkColor: 'bg-[#E0F5F2] text-[#2D9E8C]',
     items: [
       'Checklist detallado adulto/niño',
       'Botiquín específico por destino',

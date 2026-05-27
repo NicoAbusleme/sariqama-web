@@ -162,7 +162,7 @@ export default async function BotiquinPage({ params }: { params: Promise<{ id: s
     secciones.push({
       emoji: '🗺️',
       titulo: `Específico para ${destino.nombre}`,
-      color: 'bg-teal-50 border-teal-100',
+      color: 'bg-[#E0F5F2] border-[#2D9E8C]/20',
       items: extrasDestino,
     })
   }
@@ -219,9 +219,9 @@ export default async function BotiquinPage({ params }: { params: Promise<{ id: s
         >
 
         {/* Tip intro */}
-        <div className="bg-teal-50 border border-teal-100 rounded-2xl px-4 py-3 mb-5 flex items-start gap-2">
+        <div className="bg-[#E0F5F2] border border-[#2D9E8C]/20 rounded-2xl px-4 py-3 mb-5 flex items-start gap-2">
           <span className="text-base mt-0.5">✈️</span>
-          <p className="text-xs text-teal-700 leading-relaxed">
+          <p className="text-xs text-[#237F70] leading-relaxed">
             <strong>Tip de equipaje:</strong> Líquidos limitados a 100 ml en equipaje de mano.
             Llevar medicamentos en su envase original con prospecto. Consulta restricciones de tu aerolínea.
           </p>
@@ -284,7 +284,7 @@ export default async function BotiquinPage({ params }: { params: Promise<{ id: s
 
         {/* CTA médico */}
         <Link href="/teleorientacion">
-          <div className="mt-5 bg-gradient-to-r from-[#1A3D5C] to-[#1F4D72] rounded-2xl p-5 flex items-center justify-between hover:from-teal-700 hover:to-teal-800 transition-all">
+          <div className="mt-5 bg-gradient-to-r from-[#1A3D5C] to-[#1F4D72] rounded-2xl p-5 flex items-center justify-between hover:from-[#254E72] hover:to-[#1F4D72] transition-all">
             <div>
               <p className="font-semibold text-white text-sm">¿Dudas sobre qué llevar?</p>
               <p className="text-[#A8C5DA] text-xs mt-0.5">Habla con un especialista en medicina del viajero</p>

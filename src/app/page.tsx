@@ -17,8 +17,8 @@ const PASOS = [
     emoji: "✈️",
     titulo: "Crea tu viaje",
     desc: "Selecciona destino, fechas y tipo de viaje. SARIQAMA arma el perfil sanitario de tu familia.",
-    color: "text-teal-600",
-    bg: "bg-teal-50",
+    color: "text-[#2D9E8C]",
+    bg: "bg-[#E0F5F2]",
   },
   {
     num: "02",
@@ -72,10 +72,10 @@ const PLANES = [
     headerBg: "bg-gradient-to-br from-[#1A3D5C] to-[#1F4D72]",
     headerText: "text-white",
     badge: "Más popular",
-    borderClass: "border-teal-300 ring-2 ring-teal-200",
+    borderClass: "border-[#2D9E8C] ring-2 ring-[#2D9E8C]/30",
     cta: "Solicitar acceso",
     ctaHref: "/registro",
-    ctaStyle: "bg-teal-600 hover:bg-teal-700 text-white",
+    ctaStyle: "bg-[#2D9E8C] hover:bg-[#237F70] text-white",
     items: [
       { texto: "Perfil de viaje familiar",        ok: true },
       { texto: "Riesgos generales del destino",   ok: true },
@@ -147,10 +147,7 @@ export default function LandingPage() {
       {/* NAVBAR */}
       <header className="bg-white/80 backdrop-blur border-b border-slate-100 sticky top-0 z-50">
         <div className="max-w-5xl mx-auto px-5 h-16 flex items-center justify-between">
-          <span className="text-xl font-bold text-[#1A3D5C] tracking-tight"
-            style={{ fontFamily: "var(--font-fraunces)" }}>
-            SARIQAMA
-          </span>
+          <img src="/logo.jpeg" alt="SARIQAMA" className="h-9 w-auto object-contain" />
           <nav className="hidden sm:flex items-center gap-6 text-sm text-slate-500">
             <a href="#como-funciona" className="hover:text-slate-900 transition-colors">Cómo funciona</a>
             <a href="#planes" className="hover:text-slate-900 transition-colors">Planes</a>
@@ -161,7 +158,7 @@ export default function LandingPage() {
               <Button variant="ghost" size="sm" className="text-slate-600">Iniciar sesión</Button>
             </Link>
             <Link href="/registro">
-              <Button size="sm" className="bg-teal-600 hover:bg-teal-700 text-white rounded-xl">
+              <Button size="sm" className="bg-[#2D9E8C] hover:bg-[#237F70] text-white rounded-xl">
                 Empezar gratis
               </Button>
             </Link>
@@ -176,9 +173,9 @@ export default function LandingPage() {
           <div className="absolute inset-0 opacity-10"
             style={{ backgroundImage: "radial-gradient(circle at 20% 80%, #fff 1px, transparent 1px), radial-gradient(circle at 80% 20%, #fff 1px, transparent 1px)", backgroundSize: "60px 60px" }} />
 
-          <div className="relative z-10 inline-flex items-center justify-center w-20 h-20 rounded-3xl mb-6 text-4xl border border-white/25"
-            style={{ background: "rgba(255,255,255,0.15)", backdropFilter: "blur(8px)" }}>
-            🌴
+          <div className="relative z-10 inline-flex items-center justify-center rounded-2xl mb-6 px-6 py-3"
+            style={{ background: "rgba(255,255,255,0.95)", backdropFilter: "blur(8px)" }}>
+            <img src="/logo.jpeg" alt="SARIQAMA" className="h-16 w-auto object-contain" />
           </div>
 
           {/* Tagline gold — estilo logo */}
@@ -250,7 +247,7 @@ export default function LandingPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
               {PASOS.map((paso) => (
-                <div key={paso.num} className="bg-white rounded-2xl border border-slate-100 p-6 hover:border-teal-200 hover:shadow-sm transition-all">
+                <div key={paso.num} className="bg-white rounded-2xl border border-slate-100 p-6 hover:border-[#2D9E8C]/30 hover:shadow-sm transition-all">
                   <div className="flex items-center gap-3 mb-5">
                     <div className={`w-12 h-12 ${paso.bg} rounded-2xl flex items-center justify-center text-2xl`}>
                       {paso.emoji}
@@ -312,9 +309,9 @@ export default function LandingPage() {
                     <ul className="space-y-2.5">
                       {plan.items.map(item => (
                         <li key={item.texto} className="flex items-center gap-2.5">
-                          <span className={`w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 ${item.ok ? 'bg-teal-100' : 'bg-slate-100'}`}>
+                          <span className={`w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 ${item.ok ? 'bg-[#E0F5F2]' : 'bg-slate-100'}`}>
                             {item.ok ? (
-                              <Check className="h-2.5 w-2.5 text-teal-600" />
+                              <Check className="h-2.5 w-2.5 text-[#2D9E8C]" />
                             ) : (
                               <span className="w-1.5 h-0.5 bg-slate-300 rounded-full" />
                             )}
@@ -343,7 +340,7 @@ export default function LandingPage() {
             <p className="text-center text-xs text-slate-400 mt-8 max-w-md mx-auto leading-relaxed">
               🧪 <strong className="text-slate-500">Programa piloto activo.</strong>{" "}
               Los planes pagados se activan manualmente. Contáctanos en{" "}
-              <a href="mailto:contacto@sariqama.com" className="text-teal-600 hover:underline">contacto@sariqama.com</a>{" "}
+              <a href="mailto:contacto@sariqama.com" className="text-[#2D9E8C] hover:underline">contacto@sariqama.com</a>{" "}
               y te respondemos en menos de 24 horas.
             </p>
           </div>
@@ -363,7 +360,7 @@ export default function LandingPage() {
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
               {DESTINOS.map(d => (
                 <div key={d.nombre}
-                  className="bg-white rounded-2xl p-5 text-center border border-teal-100 hover:border-teal-300 hover:shadow-sm transition-all">
+                  className="bg-white rounded-2xl p-5 text-center border border-teal-100 hover:border-[#2D9E8C]/50 hover:shadow-sm transition-all">
                   <div className="flex justify-center mb-3">
                     <FlagImg code={d.code} size={52} className="rounded-md shadow-sm" />
                   </div>
@@ -390,7 +387,7 @@ export default function LandingPage() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
               {TESTIMONIOS.map((t, i) => (
-                <div key={i} className="bg-[#F7FFFE] rounded-2xl border border-teal-100 p-6">
+                <div key={i} className="bg-[#F7FFFE] rounded-2xl border border-[#2D9E8C]/20 p-6">
                   <p className="text-sm text-slate-600 leading-relaxed mb-5 italic">
                     &ldquo;{t.texto}&rdquo;
                   </p>
@@ -405,7 +402,7 @@ export default function LandingPage() {
         </section>
 
         {/* ── CTA FINAL ────────────────────────────────────────────────────── */}
-        <section className="py-24 px-5 bg-gradient-to-br from-teal-600 to-teal-900 text-center relative overflow-hidden">
+        <section className="py-24 px-5 bg-gradient-to-br from-[#1A3D5C] to-[#0A2238] text-center relative overflow-hidden">
           <div className="absolute inset-0 opacity-10"
             style={{ backgroundImage: "radial-gradient(circle at 30% 70%, #fff 1px, transparent 1px)", backgroundSize: "50px 50px" }} />
           <div className="relative z-10 max-w-2xl mx-auto">
