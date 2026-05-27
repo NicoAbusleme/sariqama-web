@@ -7,8 +7,10 @@ import { FlagImg } from '@/components/ui/flag-img'
 import { getEscalaInfo, NIVEL_SALUD_META, VISA_META } from '@/lib/content/escalas'
 import { RiskChip } from '@/components/ui/risk-chip'
 import { fetchTugoAdvisory } from '@/lib/tugo/client'
+import { fetchCdcNotices } from '@/lib/cdc/client'
 import type { NivelRiesgo } from '@/types'
 import type { TugoAdvisory, AdvisoryLevel } from '@/lib/tugo/types'
+import type { CdcNotice, CdcAlertLevel } from '@/lib/cdc/types'
 
 const RIESGOS_DETALLE = [
   { key: 'dengue',           label: 'Dengue',               icono: '🦟', tip: 'Transmitido por mosquitos Aedes. Activo durante el día. Usar repelente DEET 30%+ o Icaridina.' },
@@ -90,6 +92,68 @@ function TugoAdvisorySection({ advisory }: { advisory: TugoAdvisory }) {
   )
 }
 
+// ── CDC notices helpers ──────────────────────────────────────────────────
+
+const CDC_LEVEL_META: Record<CdcAlertLevel, {
+  bg: string; border: string; badge: string; dot: string; icon: string
+}> = {
+  1: { bg: 'bg-amber-50',  border: 'border-amber-100',  badge: 'bg-amber-100 text-amber-700',   dot: 'bg-amber-400',  icon: '🟡' },
+  2: { bg: 'bg-orange-50', border: 'border-orange-100', badge: 'bg-orange-100 text-orange-700', dot: 'bg-orange-500', icon: '🟠' },
+  3: { bg: 'bg-red-50',    border: 'border-red-100',    badge: 'bg-red-100 text-red-700',       dot: 'bg-red-500',    icon: '🔴' },
+}
+
+function CdcNoticesSection({ notices }: { notices: CdcNotice[] }) {
+  if (notices.length === 0) return null
+
+  return (
+    <div className="mb-5">
+      <div className="flex items-center gap-2 mb-3">
+        <span className="text-sm">🔔</span>
+        <h2 className="text-sm font-bold text-slate-700">Alertas activas · CDC</h2>
+        <span className="text-[10px] text-slate-400 ml-auto">Centers for Disease Control</span>
+      </div>
+      <div className="space-y-3">
+        {notices.map((notice, i) => {
+          const meta = CDC_LEVEL_META[notice.level]
+          return (
+            <div key={i} className={`rounded-2xl border ${meta.border} ${meta.bg} overflow-hidden`}>
+              <div className="flex items-start justify-between gap-3 px-4 py-3">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className={`inline-flex text-[10px] font-bold px-2 py-0.5 rounded-full ${meta.badge}`}>
+                      {meta.icon} Nivel {notice.level} — {notice.levelLabel}
+                    </span>
+                    {notice.isRegional && (
+                      <span className="text-[10px] text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full">Regional</span>
+                    )}
+                  </div>
+                  <p className="text-sm font-semibold text-slate-800 leading-snug">{notice.titleEs}</p>
+                  {notice.description && (
+                    <p className="text-xs text-slate-500 leading-relaxed mt-1 line-clamp-2">
+                      {notice.description}
+                    </p>
+                  )}
+                  <div className="flex items-center gap-3 mt-2">
+                    <span className="text-[10px] text-slate-400">{notice.pubDateFormatted}</span>
+                    <a
+                      href={notice.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[10px] text-teal-600 font-semibold hover:underline"
+                    >
+                      Ver alerta completa →
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
 export default async function RiesgosPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const supabase = await createClient()
@@ -105,8 +169,11 @@ export default async function RiesgosPage({ params }: { params: Promise<{ id: st
   const destino = getDestinoBySlug(viaje.destino_slug)
   if (!destino) notFound()
 
-  // TuGo advisory — nunca bloquea ni rompe el render
-  const tugoAdvisory = await fetchTugoAdvisory(destino.pais_code).catch(() => null)
+  // TuGo + CDC en paralelo — nunca bloquean ni rompen el render
+  const [tugoAdvisory, cdcNotices] = await Promise.all([
+    fetchTugoAdvisory(destino.pais_code).catch(() => null),
+    fetchCdcNotices(destino.pais_code).catch(() => []),
+  ])
 
   const flagCode = destino?.pais_code ?? 'un'
 
@@ -143,6 +210,9 @@ export default async function RiesgosPage({ params }: { params: Promise<{ id: st
 
         {/* TuGo live advisory */}
         {tugoAdvisory && <TugoAdvisorySection advisory={tugoAdvisory} />}
+
+        {/* CDC Travel Notices */}
+        <CdcNoticesSection notices={cdcNotices} />
 
         {/* Riesgos */}
         <div className="flex flex-col gap-3 mb-5">
