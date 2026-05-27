@@ -22,7 +22,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <header className="bg-white border-b border-slate-100 sticky top-0 z-50">
         <div className="max-w-2xl mx-auto px-4 h-14 flex items-center justify-between">
           <Link href="/dashboard" className="flex items-center">
-            <Image src="/logo.jpeg" alt="SARIQAMA" width={120} height={36} className="h-9 w-auto object-contain" priority />
+            <Image src="/logo.png" alt="SARIQAMA" width={120} height={36} className="h-9 w-auto object-contain" priority />
           </Link>
         </div>
       </header>

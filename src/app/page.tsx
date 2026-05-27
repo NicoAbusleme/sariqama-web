@@ -147,7 +147,7 @@ export default function LandingPage() {
       {/* NAVBAR */}
       <header className="bg-white/80 backdrop-blur border-b border-slate-100 sticky top-0 z-50">
         <div className="max-w-5xl mx-auto px-5 h-16 flex items-center justify-between">
-          <img src="/logo.jpeg" alt="SARIQAMA" className="h-9 w-auto object-contain" />
+          <img src="/logo.png" alt="SARIQAMA" className="h-9 w-auto object-contain" />
           <nav className="hidden sm:flex items-center gap-6 text-sm text-slate-500">
             <a href="#como-funciona" className="hover:text-slate-900 transition-colors">Cómo funciona</a>
             <a href="#planes" className="hover:text-slate-900 transition-colors">Planes</a>
@@ -175,7 +175,7 @@ export default function LandingPage() {
 
           <div className="relative z-10 inline-flex items-center justify-center rounded-2xl mb-6 px-6 py-3"
             style={{ background: "rgba(255,255,255,0.95)", backdropFilter: "blur(8px)" }}>
-            <img src="/logo.jpeg" alt="SARIQAMA" className="h-16 w-auto object-contain" />
+            <img src="/logo.png" alt="SARIQAMA" className="h-16 w-auto object-contain" />
           </div>
 
           {/* Tagline gold — estilo logo */}

@@ -229,7 +229,7 @@ export default function OnboardingPage() {
 
         {/* Logo */}
         <div className="flex items-center justify-center gap-2 mb-8">
-          <img src="/logo.jpeg" alt="SARIQAMA" className="h-10 w-auto object-contain" />
+          <img src="/logo.png" alt="SARIQAMA" className="h-10 w-auto object-contain" />
         </div>
 
         {/* Progreso */}

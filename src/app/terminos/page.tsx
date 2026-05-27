@@ -13,7 +13,7 @@ export default function TerminosPage() {
       <header className="bg-white border-b border-slate-100 sticky top-0 z-50">
         <div className="max-w-3xl mx-auto px-5 h-14 flex items-center justify-between">
           <Link href="/" className="flex items-center">
-            <Image src="/logo.jpeg" alt="SARIQAMA" width={120} height={36} className="h-8 w-auto object-contain" />
+            <Image src="/logo.png" alt="SARIQAMA" width={120} height={36} className="h-8 w-auto object-contain" />
           </Link>
           <Link href="/registro" className="text-sm text-[#2D9E8C] font-semibold hover:text-[#237F70] transition-colors">
             Crear cuenta →
