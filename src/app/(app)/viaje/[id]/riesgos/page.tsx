@@ -211,7 +211,7 @@ export default async function RiesgosPage({ params }: { params: Promise<{ id: st
 
         {/* ── Riesgos ── */}
         <CollapsibleSection
-          title="Riesgos sanitarios"
+          title="Riesgos habituales del destino"
           icon="⚠️"
           count={riesgosActivos.length}
           countLabel="riesgos"
