@@ -203,16 +203,21 @@ export default async function DetalleViajePage({ params }: { params: Promise<{ i
               💉 Vacunas recomendadas
             </h2>
             <div className="flex flex-wrap gap-2">
-              {destino.vacunas_recomendadas.map(v => (
-                <span key={v} className="text-xs bg-green-50 text-green-700 border border-green-100 px-3 py-1 rounded-full font-medium">
-                  {v}
-                </span>
-              ))}
               {destino.vacunas_requeridas.map(v => (
                 <span key={v} className="text-xs bg-red-50 text-red-700 border border-red-100 px-3 py-1 rounded-full font-semibold">
                   {v} ⚠️
                 </span>
               ))}
+              {(() => {
+                const requeridas = destino.vacunas_requeridas.map(v => v.toLowerCase())
+                return destino.vacunas_recomendadas
+                  .filter(v => !requeridas.some(r => r.includes(v.toLowerCase().split(' ')[0]) || v.toLowerCase().includes(r.split(' ')[0])))
+                  .map(v => (
+                    <span key={v} className="text-xs bg-green-50 text-green-700 border border-green-100 px-3 py-1 rounded-full font-medium">
+                      {v}
+                    </span>
+                  ))
+              })()}
             </div>
             <p className="text-xs text-slate-400 mt-3 leading-relaxed">
               Consulta con un profesional de salud con al menos 4-6 semanas de anticipación.

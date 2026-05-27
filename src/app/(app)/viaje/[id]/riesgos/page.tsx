@@ -15,7 +15,7 @@ import type { CdcNotice, CdcAlertLevel } from '@/lib/cdc/types'
 
 const RIESGOS_DETALLE = [
   { key: 'dengue',             label: 'Dengue',               icono: '🦟', tip: 'Transmitido por mosquitos Aedes. Activo durante el día. Usar repelente DEET 30%+. La Picaridina (Icaridina) es igualmente eficaz, pero no está disponible en Chile.' },
-  { key: 'malaria',            label: 'Malaria',              icono: '🦠', tip: 'Transmitido por mosquito Anopheles, principalmente nocturno. Usar repelente DEET 30%+ desde el atardecer. Consulta con médico sobre profilaxis antipalúdica según la zona específica del destino.' },
+  { key: 'malaria',            label: 'Malaria',              icono: '🪱', tip: 'Causada por el parásito Plasmodium, transmitido por mosquito Anopheles (nocturno). Usar repelente DEET 30%+ desde el atardecer. Consulta con médico sobre profilaxis antipalúdica según la zona específica del destino.' },
   { key: 'fiebre_amarilla',    label: 'Fiebre amarilla',      icono: '💛', tip: 'Existe vacuna. Puede ser requerida para ingresar a algunos países. Consulta con médico con al menos 4 semanas de anticipación.' },
   { key: 'diarrea_viajero',    label: 'Diarrea del viajero',  icono: '💧', tip: 'Evita agua del grifo, hielo y alimentos crudos. Lleva suero oral. Lávate las manos frecuentemente.' },
   { key: 'agua_alimentos',     label: 'Agua y alimentos',     icono: '🚰', tip: 'Solo agua embotellada o hervida. Frutas y vegetales cocidos o pelados. Evita puestos de comida callejera en zonas de riesgo alto.' },
@@ -352,14 +352,24 @@ export default async function RiesgosPage({ params }: { params: Promise<{ id: st
                 </div>
               </div>
             )}
-            <div>
-              <p className="text-xs font-semibold text-green-700 mb-2 uppercase tracking-wide">Recomendadas</p>
-              <div className="flex flex-wrap gap-2">
-                {destino.vacunas_recomendadas.map(v => (
-                  <span key={v} className="text-xs bg-green-50 text-green-700 border border-green-100 px-3 py-1.5 rounded-full font-medium">{v}</span>
-                ))}
-              </div>
-            </div>
+            {/* Recomendadas — excluir las que ya aparecen en requeridas para evitar duplicados */}
+            {(() => {
+              const requeridas = destino.vacunas_requeridas.map(v => v.toLowerCase())
+              const soloRecomendadas = destino.vacunas_recomendadas.filter(
+                v => !requeridas.some(r => r.includes(v.toLowerCase().split(' ')[0]) || v.toLowerCase().includes(r.split(' ')[0]))
+              )
+              if (soloRecomendadas.length === 0) return null
+              return (
+                <div>
+                  <p className="text-xs font-semibold text-green-700 mb-2 uppercase tracking-wide">Recomendadas</p>
+                  <div className="flex flex-wrap gap-2">
+                    {soloRecomendadas.map(v => (
+                      <span key={v} className="text-xs bg-green-50 text-green-700 border border-green-100 px-3 py-1.5 rounded-full font-medium">{v}</span>
+                    ))}
+                  </div>
+                </div>
+              )
+            })()}
             <p className="text-xs text-slate-400 leading-relaxed border-t border-slate-100 pt-3">
               ⚕️ Consulta con un médico especialista en medicina del viajero con <strong>al menos 4-6 semanas</strong> de anticipación.
             </p>
@@ -388,12 +398,12 @@ export default async function RiesgosPage({ params }: { params: Promise<{ id: st
                   </p>
                   <div className="flex flex-col gap-2">
                     {[
-                      { icon: '🏊', text: 'Supervisión constante en piscinas, playas y ríos. El ahogamiento es la principal causa de muerte accidental en niños viajeros — nunca dejarlos sin vigilancia, aunque sepan nadar.' },
-                      { icon: '☀️', text: 'Protector solar FPS 50+ y reposición cada 2 h. En menores de 6 meses, evitar exposición directa al sol.' },
-                      { icon: '🦟', text: 'Repelente DEET al 10–30% desde los 2 meses de edad. En bebés, aplicar en ropa, no en piel.' },
-                      { icon: '🤕', text: 'Calzado cerrado en zonas de aventura, selva y playas rocosas para evitar cortes y picaduras en pies.' },
-                      { icon: '💧', text: 'Ante diarrea o vómitos, iniciar rehidratación oral inmediata. Los niños se deshidratan más rápido que los adultos.' },
-                      { icon: '🏥', text: 'Guardar número de emergencias locales, seguro de viaje y el centro de salud más cercano desde el primer día.' },
+                      { icon: '🏊', text: 'Baño seguro: supervisión constante en piscinas, playas, ríos y bañeras. El ahogamiento es la principal causa de muerte accidental en niños viajeros — nunca dejarlos solos, aunque sepan nadar. Impedir que traguen agua de piscina, río o mar.' },
+                      { icon: '💧', text: 'Suero de rehidratación oral (SRO/SRI): llevar siempre en el botiquín. Ante diarrea o vómitos, iniciar de inmediato con pequeños sorbos frecuentes. Los niños pequeños se deshidratan mucho más rápido que los adultos. Si hay signos de alarma (decaimiento extremo, orina escasa, llanto sin lágrimas), buscar atención médica urgente.' },
+                      { icon: '☀️', text: 'Protector solar FPS 50+ y reposición cada 2 h. En menores de 6 meses evitar exposición directa al sol. Ropa manga larga y sombrero en horario pico (10:00–16:00).' },
+                      { icon: '🦟', text: 'Repelente DEET al 10–30% desde los 2 meses. En lactantes, aplicar en ropa, no en piel. No usar en manos ni zona de ojos.' },
+                      { icon: '🤕', text: 'Calzado cerrado en zonas de aventura, selva y playas rocosas. Evitar caminar descalzos en tierra húmeda o arena (riesgo de larva migrans y picaduras).' },
+                      { icon: '🏥', text: 'Guardar número de emergencias locales, seguro de viaje y centro de salud más cercano desde el primer día. El deterioro en niños puede ser más rápido que en adultos.' },
                     ].map((item, i) => (
                       <div key={i} className="flex items-start gap-2">
                         <span className="text-base flex-shrink-0">{item.icon}</span>
