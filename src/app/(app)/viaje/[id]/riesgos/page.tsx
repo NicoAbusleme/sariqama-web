@@ -15,7 +15,7 @@ import type { CdcNotice, CdcAlertLevel } from '@/lib/cdc/types'
 
 const RIESGOS_DETALLE = [
   { key: 'dengue',             label: 'Dengue',               icono: '🦟', tip: 'Transmitido por mosquitos Aedes. Activo durante el día. Usar repelente DEET 30%+. La Picaridina (Icaridina) es igualmente eficaz, pero no está disponible en Chile.' },
-  { key: 'malaria',            label: 'Malaria',              icono: '🪱', tip: 'Causada por el parásito Plasmodium, transmitido por mosquito Anopheles (nocturno). Usar repelente DEET 30%+ desde el atardecer. Consulta con médico sobre profilaxis antipalúdica según la zona específica del destino.' },
+  { key: 'malaria',            label: 'Malaria',              icono: '🦟🩸', tip:'Causada por el parásito Plasmodium, transmitido por mosquito Anopheles (nocturno). Usar repelente DEET 30%+ desde el atardecer. Consulta con médico sobre profilaxis antipalúdica según la zona específica del destino.' },
   { key: 'fiebre_amarilla',    label: 'Fiebre amarilla',      icono: '💛', tip: 'Existe vacuna. Puede ser requerida para ingresar a algunos países. Consulta con médico con al menos 4 semanas de anticipación.' },
   { key: 'diarrea_viajero',    label: 'Diarrea del viajero',  icono: '💧', tip: 'Evita agua del grifo, hielo y alimentos crudos. Lleva suero oral. Lávate las manos frecuentemente.' },
   { key: 'agua_alimentos',     label: 'Agua y alimentos',     icono: '🚰', tip: 'Solo agua embotellada o hervida. Frutas y vegetales cocidos o pelados. Evita puestos de comida callejera en zonas de riesgo alto.' },
