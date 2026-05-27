@@ -398,8 +398,9 @@ export default async function RiesgosPage({ params }: { params: Promise<{ id: st
                   </p>
                   <div className="flex flex-col gap-2">
                     {[
+                      { icon: '🚗', text: 'Sistema de Retención Infantil (SRI): verificar antes de viajar que el auto de alquiler o de terceros cuente con silla homologada según el peso y talla del niño. En muchos destinos no es obligatorio o no se ofrece por defecto — llevar la propia silla si es posible o solicitarla con anticipación.' },
                       { icon: '🏊', text: 'Baño seguro: supervisión constante en piscinas, playas, ríos y bañeras. El ahogamiento es la principal causa de muerte accidental en niños viajeros — nunca dejarlos solos, aunque sepan nadar. Impedir que traguen agua de piscina, río o mar.' },
-                      { icon: '💧', text: 'Suero de rehidratación oral (SRO/SRI): llevar siempre en el botiquín. Ante diarrea o vómitos, iniciar de inmediato con pequeños sorbos frecuentes. Los niños pequeños se deshidratan mucho más rápido que los adultos. Si hay signos de alarma (decaimiento extremo, orina escasa, llanto sin lágrimas), buscar atención médica urgente.' },
+                      { icon: '💧', text: 'Suero de rehidratación oral (SRO): llevar siempre en el botiquín. Ante diarrea o vómitos, iniciar de inmediato con pequeños sorbos frecuentes. Los niños pequeños se deshidratan mucho más rápido que los adultos. Si hay signos de alarma (decaimiento extremo, orina escasa, llanto sin lágrimas), buscar atención médica urgente.' },
                       { icon: '☀️', text: 'Protector solar FPS 50+ y reposición cada 2 h. En menores de 6 meses evitar exposición directa al sol. Ropa manga larga y sombrero en horario pico (10:00–16:00).' },
                       { icon: '🦟', text: 'Repelente DEET al 10–30% desde los 2 meses. En lactantes, aplicar en ropa, no en piel. No usar en manos ni zona de ojos.' },
                       { icon: '🤕', text: 'Calzado cerrado en zonas de aventura, selva y playas rocosas. Evitar caminar descalzos en tierra húmeda o arena (riesgo de larva migrans y picaduras).' },
