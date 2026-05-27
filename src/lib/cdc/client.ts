@@ -9,18 +9,29 @@ import type { CdcNotice, CdcAlertLevel } from './types'
 
 const CDC_RSS_URL = 'https://wwwnc.cdc.gov/travel/rss/notices.xml'
 
-// ── Palabras clave por destino (para matching directo en title/description) ─
+// ── Palabras clave por destino ────────────────────────────────────────────
+//
+// Regla de matching (en orden):
+//  1. País aparece en el TÍTULO → directo, siempre relevante
+//  2. País aparece en la DESCRIPCIÓN (Country List del CDC) → relevante
+//     (isRegional = true si el título usa una región, no el país directamente)
+//  3. Solo keyword regional sin mención del país → NO relevante
+//
+// Esto evita que "Global Dengue" aparezca en Chile si Chile no está
+// en el Country List, y que "Hantavirus South America" aparezca en Brasil
+// si la alerta solo nombra Argentina y Chile.
 
 const COUNTRY_KEYWORDS: Record<string, string[]> = {
   mx: ['mexico', 'mexican'],
   cr: ['costa rica'],
   do: ['dominican republic'],
-  br: ['brazil', 'brazil,', 'brazilian'],
-  cl: ['chile', 'chile,', 'chilean'],
+  br: ['brazil', 'brazilian'],
+  cl: ['chile', 'chilean'],
 }
 
-// Términos regionales que aplican a cada destino
-const REGIONAL_KEYWORDS: Record<string, string[]> = {
+// Keywords regionales — usados SOLO para marcar isRegional=true cuando
+// el país ya fue confirmado en la descripción
+const REGIONAL_TITLE_KEYWORDS: Record<string, string[]> = {
   mx: ['americas', 'latin america', 'central america', 'north america', 'global'],
   cr: ['americas', 'latin america', 'central america', 'global'],
   do: ['americas', 'latin america', 'caribbean', 'global'],
@@ -116,20 +127,26 @@ function isRelevantForDestination(
   item: RawItem,
   isoCode: string,
 ): { relevant: boolean; isRegional: boolean } {
-  const searchText = `${item.title} ${item.description}`.toLowerCase()
-
-  // 1. Directo: el país aparece explícitamente
+  const titleLower = item.title.toLowerCase()
+  const descLower  = item.description.toLowerCase()
   const countryKws = COUNTRY_KEYWORDS[isoCode] ?? []
-  if (countryKws.some(kw => searchText.includes(kw))) {
-    return { relevant: true, isRegional: false }
+
+  // 1. País en el título → directo e inequívoco
+  const inTitle = countryKws.some(kw => titleLower.includes(kw))
+  if (inTitle) return { relevant: true, isRegional: false }
+
+  // 2. País en la descripción (Country List del CDC)
+  //    Solo se acepta si el nombre del país aparece explícitamente,
+  //    lo que confirma que la alerta nombra ese país en concreto.
+  const inDesc = countryKws.some(kw => descLower.includes(kw))
+  if (inDesc) {
+    // isRegional = true cuando el título usa una región ("Global X", "Americas")
+    const regionalKws = REGIONAL_TITLE_KEYWORDS[isoCode] ?? []
+    const titleIsRegional = regionalKws.some(kw => titleLower.includes(kw))
+    return { relevant: true, isRegional: titleIsRegional }
   }
 
-  // 2. Regional: término de región que incluye este destino
-  const regionalKws = REGIONAL_KEYWORDS[isoCode] ?? []
-  if (regionalKws.some(kw => searchText.includes(kw))) {
-    return { relevant: true, isRegional: true }
-  }
-
+  // 3. Solo keyword regional sin confirmar el país → no relevante
   return { relevant: false, isRegional: false }
 }
 
