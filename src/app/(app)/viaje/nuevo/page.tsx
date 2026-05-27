@@ -178,7 +178,7 @@ export default function NuevoViajePage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F0FDF9]">
+    <div className="min-h-screen bg-[#F7FFFE]">
       {/* Header */}
       <header className="bg-white border-b border-slate-100 sticky top-0 z-50">
         <div className="max-w-2xl mx-auto px-5 h-14 flex items-center gap-3">

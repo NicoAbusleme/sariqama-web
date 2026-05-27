@@ -17,13 +17,13 @@ export default async function TeleorientacionPage() {
   const userPlan: string = familia.plan ?? 'gratis'
 
   return (
-    <div className="min-h-screen bg-[#F0FDF9] flex flex-col">
+    <div className="min-h-screen bg-[#F7FFFE] flex flex-col">
 
       {/* Header — siempre visible */}
-      <header className="bg-gradient-to-br from-teal-600 to-teal-800 px-5 pt-12 pb-8">
+      <header className="bg-gradient-to-br from-[#1A3D5C] to-[#0F2D45] px-5 pt-12 pb-8">
         <div className="max-w-2xl mx-auto">
           <Link href="/dashboard"
-            className="inline-flex items-center gap-1.5 text-teal-200 text-sm mb-5 hover:text-white transition-colors">
+            className="inline-flex items-center gap-1.5 text-[#A8C5DA] text-sm mb-5 hover:text-white transition-colors">
             <ChevronLeft className="h-4 w-4" /> Inicio
           </Link>
           <div className="flex items-center gap-3 mb-3">
@@ -35,7 +35,7 @@ export default async function TeleorientacionPage() {
                 style={{ fontFamily: 'var(--font-fraunces)' }}>
                 Teleorientación médica
               </h1>
-              <p className="text-teal-200 text-sm">Especialistas en medicina del viajero</p>
+              <p className="text-[#A8C5DA] text-sm">Especialistas en medicina del viajero</p>
             </div>
           </div>
         </div>

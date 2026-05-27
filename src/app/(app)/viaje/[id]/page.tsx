@@ -73,11 +73,11 @@ export default async function DetalleViajePage({ params }: { params: Promise<{ i
   const flagCode = destino?.pais_code ?? 'un'
 
   return (
-    <div className="min-h-screen bg-[#F0FDF9]">
+    <div className="min-h-screen bg-[#F7FFFE]">
       {/* Header gradiente */}
-      <header className="bg-gradient-to-br from-teal-600 to-teal-800 px-5 pt-12 pb-8">
+      <header className="bg-gradient-to-br from-[#1A3D5C] to-[#0F2D45] px-5 pt-12 pb-8">
         <div className="max-w-2xl mx-auto">
-          <Link href="/dashboard" className="inline-flex items-center gap-1.5 text-teal-200 text-sm mb-5 hover:text-white transition-colors">
+          <Link href="/dashboard" className="inline-flex items-center gap-1.5 text-[#A8C5DA] text-sm mb-5 hover:text-white transition-colors">
             <ChevronLeft className="h-4 w-4" /> Dashboard
           </Link>
           <div className="flex items-start justify-between">
@@ -87,7 +87,7 @@ export default async function DetalleViajePage({ params }: { params: Promise<{ i
                 style={{ fontFamily: 'var(--font-fraunces)' }}>
                 {viaje.destino_nombre}
               </h1>
-              <p className="text-teal-200 text-sm mt-1">
+              <p className="text-[#A8C5DA] text-sm mt-1">
                 {new Date(viaje.fecha_salida).toLocaleDateString('es-CL', { day: 'numeric', month: 'long' })}
                 {' — '}
                 {new Date(viaje.fecha_regreso).toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric' })}
@@ -106,7 +106,7 @@ export default async function DetalleViajePage({ params }: { params: Promise<{ i
               {viaje.escalas && viaje.escalas.length > 0 && (
                 <div className="flex flex-wrap gap-1.5 mt-1.5">
                   {viaje.escalas.map((e: { destino: string; horas: number }, i: number) => (
-                    <span key={i} className="text-[11px] bg-white/10 text-teal-100 px-2.5 py-0.5 rounded-full border border-white/15">
+                    <span key={i} className="text-[11px] bg-white/10 text-[#C8DDE9] px-2.5 py-0.5 rounded-full border border-white/15">
                       ✈ {e.destino} · {e.horas < 3 ? '< 2h' : e.horas <= 6 ? '3–6h' : e.horas <= 12 ? '7–12h' : e.horas <= 24 ? '13–24h' : '+24h'}
                     </span>
                   ))}
@@ -121,7 +121,7 @@ export default async function DetalleViajePage({ params }: { params: Promise<{ i
               ) : diasRestantes > 0 ? (
                 <div>
                   <div className="text-3xl font-bold text-white">{diasRestantes}</div>
-                  <div className="text-teal-200 text-xs">días</div>
+                  <div className="text-[#A8C5DA] text-xs">días</div>
                 </div>
               ) : (
                 <div className="bg-slate-500 text-white text-xs font-bold px-3 py-1.5 rounded-full">
@@ -134,7 +134,7 @@ export default async function DetalleViajePage({ params }: { params: Promise<{ i
           {/* Progreso checklist */}
           {totalItems > 0 && (
             <div className="mt-5 bg-white/10 rounded-2xl p-4">
-              <div className="flex justify-between text-xs text-teal-100 mb-2">
+              <div className="flex justify-between text-xs text-[#C8DDE9] mb-2">
                 <span>Preparación pre-viaje</span>
                 <span>{completados}/{totalItems} completados</span>
               </div>
@@ -301,10 +301,10 @@ export default async function DetalleViajePage({ params }: { params: Promise<{ i
 
         {/* Teleorientación CTA */}
         <Link href="/teleorientacion">
-          <div className="bg-gradient-to-r from-teal-600 to-teal-700 rounded-2xl p-5 flex items-center justify-between hover:from-teal-700 hover:to-teal-800 transition-all">
+          <div className="bg-gradient-to-r from-[#1A3D5C] to-[#1F4D72] rounded-2xl p-5 flex items-center justify-between hover:from-teal-700 hover:to-teal-800 transition-all">
             <div>
               <p className="font-semibold text-white text-sm">¿Tienes dudas médicas?</p>
-              <p className="text-teal-200 text-xs mt-0.5">Habla con un especialista en medicina del viajero</p>
+              <p className="text-[#A8C5DA] text-xs mt-0.5">Habla con un especialista en medicina del viajero</p>
             </div>
             <div className="text-2xl">👩‍⚕️</div>
           </div>

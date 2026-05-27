@@ -179,13 +179,13 @@ export default async function BotiquinPage({ params }: { params: Promise<{ id: s
   const totalItems = secciones.reduce((acc, s) => acc + s.items.length, 0)
 
   return (
-    <div className="min-h-screen bg-[#F0FDF9]">
+    <div className="min-h-screen bg-[#F7FFFE]">
       {/* Header */}
-      <header className="bg-gradient-to-br from-teal-600 to-teal-800 px-5 pt-12 pb-8">
+      <header className="bg-gradient-to-br from-[#1A3D5C] to-[#0F2D45] px-5 pt-12 pb-8">
         <div className="max-w-2xl mx-auto">
           <Link
             href={`/viaje/${id}`}
-            className="inline-flex items-center gap-1.5 text-teal-200 text-sm mb-5 hover:text-white transition-colors"
+            className="inline-flex items-center gap-1.5 text-[#A8C5DA] text-sm mb-5 hover:text-white transition-colors"
           >
             <ChevronLeft className="h-4 w-4" /> Volver al viaje
           </Link>
@@ -199,12 +199,12 @@ export default async function BotiquinPage({ params }: { params: Promise<{ id: s
                 >
                   Botiquín familiar
                 </h1>
-                <p className="text-teal-200 text-sm">{destino.nombre}</p>
+                <p className="text-[#A8C5DA] text-sm">{destino.nombre}</p>
               </div>
             </div>
             <div className="bg-white/10 rounded-2xl px-4 py-2 text-center">
               <p className="text-2xl font-bold text-white">{totalItems}</p>
-              <p className="text-teal-200 text-xs">ítems</p>
+              <p className="text-[#A8C5DA] text-xs">ítems</p>
             </div>
           </div>
         </div>
@@ -284,10 +284,10 @@ export default async function BotiquinPage({ params }: { params: Promise<{ id: s
 
         {/* CTA médico */}
         <Link href="/teleorientacion">
-          <div className="mt-5 bg-gradient-to-r from-teal-600 to-teal-700 rounded-2xl p-5 flex items-center justify-between hover:from-teal-700 hover:to-teal-800 transition-all">
+          <div className="mt-5 bg-gradient-to-r from-[#1A3D5C] to-[#1F4D72] rounded-2xl p-5 flex items-center justify-between hover:from-teal-700 hover:to-teal-800 transition-all">
             <div>
               <p className="font-semibold text-white text-sm">¿Dudas sobre qué llevar?</p>
-              <p className="text-teal-200 text-xs mt-0.5">Habla con un especialista en medicina del viajero</p>
+              <p className="text-[#A8C5DA] text-xs mt-0.5">Habla con un especialista en medicina del viajero</p>
             </div>
             <div className="text-2xl">👩‍⚕️</div>
           </div>

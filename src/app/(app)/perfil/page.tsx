@@ -48,9 +48,9 @@ export default async function PerfilPage() {
   const inicial = (familia.nombre as string).charAt(0).toUpperCase()
 
   return (
-    <div className="min-h-screen bg-[#F0FDF9]">
+    <div className="min-h-screen bg-[#F7FFFE]">
       {/* Header */}
-      <header className="bg-gradient-to-br from-teal-600 to-teal-800 px-5 pt-12 pb-8">
+      <header className="bg-gradient-to-br from-[#1A3D5C] to-[#0F2D45] px-5 pt-12 pb-8">
         <div className="max-w-2xl mx-auto flex flex-col items-center text-center">
           <div className="w-20 h-20 rounded-full bg-white flex items-center justify-center mb-3">
             <span
@@ -66,7 +66,7 @@ export default async function PerfilPage() {
           >
             {familia.nombre}
           </h1>
-          <p className="text-teal-200 text-sm">{user.email}</p>
+          <p className="text-[#A8C5DA] text-sm">{user.email}</p>
         </div>
       </header>
 

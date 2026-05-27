@@ -69,7 +69,7 @@ const PLANES = [
     precio: "USD 19–29",
     precioSub: "por viaje",
     descripcion: "Todo lo que necesitas para llegar 100% preparado.",
-    headerBg: "bg-gradient-to-br from-teal-600 to-teal-700",
+    headerBg: "bg-gradient-to-br from-[#1A3D5C] to-[#1F4D72]",
     headerText: "text-white",
     badge: "Más popular",
     borderClass: "border-teal-300 ring-2 ring-teal-200",
@@ -142,12 +142,12 @@ const TESTIMONIOS = [
 // ─── Página ───────────────────────────────────────────────────────────────────
 export default function LandingPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-[#F0FDF9]">
+    <div className="flex flex-col min-h-screen bg-[#F7FFFE]">
 
       {/* NAVBAR */}
       <header className="bg-white/80 backdrop-blur border-b border-slate-100 sticky top-0 z-50">
         <div className="max-w-5xl mx-auto px-5 h-16 flex items-center justify-between">
-          <span className="text-xl font-bold text-slate-900 tracking-tight"
+          <span className="text-xl font-bold text-[#1A3D5C] tracking-tight"
             style={{ fontFamily: "var(--font-fraunces)" }}>
             SARIQAMA
           </span>
@@ -172,7 +172,7 @@ export default function LandingPage() {
       <main className="flex-1">
 
         {/* ── HERO ─────────────────────────────────────────────────────────── */}
-        <section className="bg-gradient-to-br from-teal-600 via-teal-700 to-teal-900 px-5 py-20 sm:py-28 text-center relative overflow-hidden">
+        <section className="bg-gradient-to-br from-[#1A3D5C] via-[#1F4D72] to-[#0A2238] px-5 py-20 sm:py-28 text-center relative overflow-hidden">
           <div className="absolute inset-0 opacity-10"
             style={{ backgroundImage: "radial-gradient(circle at 20% 80%, #fff 1px, transparent 1px), radial-gradient(circle at 80% 20%, #fff 1px, transparent 1px)", backgroundSize: "60px 60px" }} />
 
@@ -180,6 +180,13 @@ export default function LandingPage() {
             style={{ background: "rgba(255,255,255,0.15)", backdropFilter: "blur(8px)" }}>
             🌴
           </div>
+
+          {/* Tagline gold — estilo logo */}
+          <p className="relative z-10 text-[#D4A338] text-xs font-bold uppercase tracking-[0.25em] mb-4 flex items-center justify-center gap-2">
+            <span className="inline-block w-6 h-px bg-[#D4A338]/50" />
+            Family Travel Health
+            <span className="inline-block w-6 h-px bg-[#D4A338]/50" />
+          </p>
 
           <h1 className="relative z-10 text-4xl sm:text-5xl lg:text-6xl font-semibold text-white tracking-tight mb-4 leading-tight"
             style={{ fontFamily: "var(--font-fraunces)" }}>
@@ -231,7 +238,7 @@ export default function LandingPage() {
         <section id="como-funciona" className="py-20 px-5">
           <div className="max-w-5xl mx-auto">
             <div className="text-center mb-14">
-              <p className="text-teal-600 text-xs font-bold uppercase tracking-widest mb-3">Proceso simple</p>
+              <p className="text-[#D4A338] text-xs font-bold uppercase tracking-widest mb-3">Proceso simple</p>
               <h2 className="text-3xl font-semibold text-slate-900 mb-3"
                 style={{ fontFamily: "var(--font-fraunces)" }}>
                 Tres pasos para viajar protegido
@@ -265,7 +272,7 @@ export default function LandingPage() {
         <section id="planes" className="py-20 px-5 bg-white">
           <div className="max-w-5xl mx-auto">
             <div className="text-center mb-14">
-              <p className="text-teal-600 text-xs font-bold uppercase tracking-widest mb-3">Precios transparentes</p>
+              <p className="text-[#D4A338] text-xs font-bold uppercase tracking-widest mb-3">Precios transparentes</p>
               <h2 className="text-3xl font-semibold text-slate-900 mb-3"
                 style={{ fontFamily: "var(--font-fraunces)" }}>
                 Elige tu nivel de protección
@@ -343,10 +350,10 @@ export default function LandingPage() {
         </section>
 
         {/* ── DESTINOS ─────────────────────────────────────────────────────── */}
-        <section id="destinos" className="py-20 px-5 bg-[#F0FDF9]">
+        <section id="destinos" className="py-20 px-5 bg-[#F7FFFE]">
           <div className="max-w-5xl mx-auto">
             <div className="text-center mb-12">
-              <p className="text-teal-600 text-xs font-bold uppercase tracking-widest mb-3">Cobertura clínica</p>
+              <p className="text-[#D4A338] text-xs font-bold uppercase tracking-widest mb-3">Cobertura clínica</p>
               <h2 className="text-3xl font-semibold text-slate-900 mb-3"
                 style={{ fontFamily: "var(--font-fraunces)" }}>
                 Destinos cubiertos
@@ -375,7 +382,7 @@ export default function LandingPage() {
         <section className="py-20 px-5 bg-white">
           <div className="max-w-5xl mx-auto">
             <div className="text-center mb-12">
-              <p className="text-teal-600 text-xs font-bold uppercase tracking-widest mb-3">Familias SARIQAMA</p>
+              <p className="text-[#D4A338] text-xs font-bold uppercase tracking-widest mb-3">Familias SARIQAMA</p>
               <h2 className="text-3xl font-semibold text-slate-900"
                 style={{ fontFamily: "var(--font-fraunces)" }}>
                 Lo que dicen las familias
@@ -383,7 +390,7 @@ export default function LandingPage() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
               {TESTIMONIOS.map((t, i) => (
-                <div key={i} className="bg-[#F0FDF9] rounded-2xl border border-teal-100 p-6">
+                <div key={i} className="bg-[#F7FFFE] rounded-2xl border border-teal-100 p-6">
                   <p className="text-sm text-slate-600 leading-relaxed mb-5 italic">
                     &ldquo;{t.texto}&rdquo;
                   </p>
@@ -406,7 +413,7 @@ export default function LandingPage() {
               style={{ fontFamily: "var(--font-fraunces)" }}>
               ¿Cuándo sale tu próximo viaje?
             </h2>
-            <p className="text-teal-100 mb-10 text-sm max-w-md mx-auto leading-relaxed">
+            <p className="text-[#C8DDE9] mb-10 text-sm max-w-md mx-auto leading-relaxed">
               Crea el perfil de tu familia en minutos y obtén tu primer reporte sanitario completo — gratis.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">

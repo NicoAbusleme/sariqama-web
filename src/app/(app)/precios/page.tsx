@@ -33,7 +33,7 @@ const PLANES = [
     precioSub: 'por viaje',
     descripcion: 'Todo lo que necesitas para llegar preparado.',
     color: 'border-teal-300 ring-2 ring-teal-200',
-    headerBg: 'bg-gradient-to-br from-teal-600 to-teal-700',
+    headerBg: 'bg-gradient-to-br from-[#1A3D5C] to-[#1F4D72]',
     badge: 'Más popular',
     cta: 'Solicitar Preparación Total',
     ctaStyle: 'bg-teal-600 hover:bg-teal-700 text-white',
@@ -85,19 +85,19 @@ export default async function PreciosPage() {
   const userPlan: string = familia?.plan ?? 'gratis'
 
   return (
-    <div className="min-h-screen bg-[#F0FDF9]">
+    <div className="min-h-screen bg-[#F7FFFE]">
       {/* Header */}
-      <header className="bg-gradient-to-br from-teal-600 to-teal-800 px-5 pt-12 pb-8">
+      <header className="bg-gradient-to-br from-[#1A3D5C] to-[#0F2D45] px-5 pt-12 pb-8">
         <div className="max-w-2xl mx-auto">
           <Link href="/dashboard"
-            className="inline-flex items-center gap-1.5 text-teal-200 text-sm mb-5 hover:text-white transition-colors">
+            className="inline-flex items-center gap-1.5 text-[#A8C5DA] text-sm mb-5 hover:text-white transition-colors">
             <ChevronLeft className="h-4 w-4" /> Inicio
           </Link>
           <h1 className="text-2xl font-semibold text-white mb-1"
             style={{ fontFamily: 'var(--font-fraunces)' }}>
             Planes SARIQAMA
           </h1>
-          <p className="text-teal-200 text-sm">
+          <p className="text-[#A8C5DA] text-sm">
             Elige el nivel de protección que tu familia necesita.
           </p>
         </div>

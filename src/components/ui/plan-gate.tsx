@@ -13,7 +13,7 @@ const PLAN_INFO = {
     nombre: 'Preparación Total',
     precio: 'USD 19–29 / viaje',
     descripcion: 'Accede al checklist completo, botiquín específico y reporte familiar PDF.',
-    gradiente: 'from-teal-600 to-teal-700',
+    gradiente: 'from-[#1A3D5C] to-[#1F4D72]',
     badge: 'bg-teal-100 text-teal-700',
     checkColor: 'bg-teal-100 text-teal-600',
     items: [

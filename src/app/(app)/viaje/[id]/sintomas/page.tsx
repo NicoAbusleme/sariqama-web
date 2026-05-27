@@ -39,12 +39,12 @@ export default async function SintomasPage({ params }: { params: Promise<{ id: s
   const flagCode = destino?.pais_code ?? 'un'
 
   return (
-    <div className="min-h-screen bg-[#F0FDF9]">
+    <div className="min-h-screen bg-[#F7FFFE]">
       {/* Header */}
-      <header className="bg-gradient-to-br from-teal-600 to-teal-800 px-5 pt-12 pb-8">
+      <header className="bg-gradient-to-br from-[#1A3D5C] to-[#0F2D45] px-5 pt-12 pb-8">
         <div className="max-w-2xl mx-auto">
           <Link href={`/viaje/${id}`}
-            className="inline-flex items-center gap-1.5 text-teal-200 text-sm mb-5 hover:text-white transition-colors">
+            className="inline-flex items-center gap-1.5 text-[#A8C5DA] text-sm mb-5 hover:text-white transition-colors">
             <ChevronLeft className="h-4 w-4" /> Volver al viaje
           </Link>
           <div className="flex items-center justify-between">
@@ -54,13 +54,13 @@ export default async function SintomasPage({ params }: { params: Promise<{ id: s
                 <h1 className="text-xl font-semibold text-white" style={{ fontFamily: 'var(--font-fraunces)' }}>
                   Evaluador de síntomas
                 </h1>
-                <p className="text-teal-200 text-sm">{viaje.destino_nombre}</p>
+                <p className="text-[#A8C5DA] text-sm">{viaje.destino_nombre}</p>
               </div>
             </div>
             {(historial?.length ?? 0) > 0 && (
               <div className="bg-white/10 rounded-2xl px-4 py-2 text-center">
                 <p className="text-2xl font-bold text-white">{historial!.length}</p>
-                <p className="text-teal-200 text-xs">registros</p>
+                <p className="text-[#A8C5DA] text-xs">registros</p>
               </div>
             )}
           </div>

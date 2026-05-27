@@ -24,13 +24,13 @@ export default async function DashboardPage() {
   const tieneViajes = viajes && viajes.length > 0
 
   return (
-    <div className="min-h-screen bg-[#F0FDF9]">
+    <div className="min-h-screen bg-[#F7FFFE]">
       {/* Header con gradiente */}
-      <header className="bg-gradient-to-br from-teal-600 to-teal-800 px-5 pt-12 pb-8">
+      <header className="bg-gradient-to-br from-[#1A3D5C] to-[#0F2D45] px-5 pt-12 pb-8">
         <div className="max-w-2xl mx-auto">
           <div className="flex items-start justify-between mb-6">
             <div>
-              <p className="text-teal-200 text-sm mb-1">Buenos días,</p>
+              <p className="text-[#A8C5DA] text-sm mb-1">Buenos días,</p>
               <h1 className="text-2xl font-semibold text-white"
                 style={{ fontFamily: "var(--font-fraunces)" }}>
                 {familia.nombre} 👋

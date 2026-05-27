@@ -16,7 +16,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
 
   return (
-    <div className="min-h-screen bg-[#F0FDF9] flex flex-col">
+    <div className="min-h-screen bg-[#F7FFFE] flex flex-col">
       {/* Top bar */}
       <header className="bg-white border-b border-slate-100 sticky top-0 z-50">
         <div className="max-w-2xl mx-auto px-4 h-14 flex items-center justify-between">
