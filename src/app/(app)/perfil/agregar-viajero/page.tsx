@@ -48,6 +48,12 @@ const GENERO_OPTS = [
   { id: 'no_indicado',   label: 'Prefiero no indicar' },
 ]
 
+const ALERGIA_TIPOS = [
+  { id: 'alimentaria', label: 'Alergias alimentarias' },
+  { id: 'rinitis',     label: 'Rinitis alérgica' },
+  { id: 'farmacos',    label: 'Alergia a fármacos' },
+]
+
 /** Calcula semanas de embarazo a partir de FUM en una fecha objetivo */
 function calcularSemanas(fum: string, fecha: Date): number | null {
   if (!fum) return null
@@ -98,6 +104,10 @@ export default function AgregarViajeroPage() {
   const [inmunosupresionTipo, setInmunosupresionTipo] = useState('')
   const [vihCargaViral, setVihCargaViral] = useState('')
   const [embarazoFum, setEmbarazoFum] = useState('')
+  const [alergiaTipos, setAlergiaTipos] = useState<string[]>([])
+  const [alergiaHuevo, setAlergiaHuevo] = useState(false)
+  const [alergiaPlv, setAlergiaPlv] = useState(false)
+  const [alergiaFarmacosCuales, setAlergiaFarmacosCuales] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -107,9 +117,22 @@ export default function AgregarViajeroPage() {
       if (tenia) {
         if (id === 'inmunosupresion') { setInmunosupresionTipo(''); setVihCargaViral('') }
         if (id === 'embarazo') setEmbarazoFum('')
+        if (id === 'alergia') { setAlergiaTipos([]); setAlergiaHuevo(false); setAlergiaPlv(false); setAlergiaFarmacosCuales('') }
         return prev.filter(c => c !== id)
       }
       return [...prev, id]
+    })
+  }
+
+  function toggleAlergiaTipo(tipo: string) {
+    setAlergiaTipos(prev => {
+      const tenia = prev.includes(tipo)
+      if (tenia) {
+        if (tipo === 'alimentaria') { setAlergiaHuevo(false); setAlergiaPlv(false) }
+        if (tipo === 'farmacos') setAlergiaFarmacosCuales('')
+        return prev.filter(t => t !== tipo)
+      }
+      return [...prev, tipo]
     })
   }
 
@@ -130,6 +153,10 @@ export default function AgregarViajeroPage() {
       inmunosupresion_tipo: condiciones.includes('inmunosupresion') ? inmunosupresionTipo || undefined : undefined,
       vih_carga_viral: (condiciones.includes('inmunosupresion') && inmunosupresionTipo === 'vih') ? vihCargaViral || undefined : undefined,
       embarazo_fum: condiciones.includes('embarazo') ? embarazoFum || undefined : undefined,
+      alergia_tipos: condiciones.includes('alergia') ? alergiaTipos : [],
+      alergia_huevo: condiciones.includes('alergia') && alergiaTipos.includes('alimentaria') ? alergiaHuevo : false,
+      alergia_plv: condiciones.includes('alergia') && alergiaTipos.includes('alimentaria') ? alergiaPlv : false,
+      alergia_farmacos_cuales: condiciones.includes('alergia') && alergiaTipos.includes('farmacos') ? alergiaFarmacosCuales || undefined : undefined,
     })
 
     if (result?.error) {
@@ -359,6 +386,81 @@ export default function AgregarViajeroPage() {
                   className="h-11 bg-white"
                 />
                 {embarazoFum && <PreviewEmbarazo fum={embarazoFum} />}
+              </div>
+            )}
+
+            {/* Sub-sección: Alergias */}
+            {condiciones.includes('alergia') && (
+              <div className="mt-4 ml-1 pl-3 border-l-2 border-orange-200">
+                <p className="text-xs font-semibold text-slate-600 mb-2">
+                  Tipo de alergia
+                </p>
+                <div className="flex flex-col gap-1.5">
+                  {ALERGIA_TIPOS.map(t => (
+                    <label
+                      key={t.id}
+                      className={`flex items-center gap-2.5 p-2.5 rounded-xl border cursor-pointer transition-all text-sm ${
+                        alergiaTipos.includes(t.id)
+                          ? 'border-orange-400 bg-orange-50 text-orange-800 font-medium'
+                          : 'border-slate-100 hover:border-orange-200 text-slate-700'
+                      }`}
+                    >
+                      <Checkbox
+                        checked={alergiaTipos.includes(t.id)}
+                        onCheckedChange={() => toggleAlergiaTipo(t.id)}
+                      />
+                      {t.label}
+                    </label>
+                  ))}
+                </div>
+
+                {/* Sub-sub-sección: Alergias alimentarias */}
+                {alergiaTipos.includes('alimentaria') && (
+                  <div className="mt-3 ml-1 pl-3 border-l-2 border-amber-200">
+                    <p className="text-xs font-semibold text-slate-600 mb-2">
+                      Especifica la alergia alimentaria
+                    </p>
+                    <div className="flex flex-col gap-1.5">
+                      <label className="flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-100 hover:border-amber-200 cursor-pointer text-sm text-slate-700">
+                        <Checkbox
+                          checked={alergiaHuevo}
+                          onCheckedChange={checked => setAlergiaHuevo(!!checked)}
+                        />
+                        Alergia al huevo
+                      </label>
+                      <label className="flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-100 hover:border-amber-200 cursor-pointer text-sm text-slate-700">
+                        <Checkbox
+                          checked={alergiaPlv}
+                          onCheckedChange={checked => setAlergiaPlv(!!checked)}
+                        />
+                        Alergia a la proteína de leche de vaca (PLV)
+                      </label>
+                    </div>
+                  </div>
+                )}
+
+                {/* Sub-sub-sección: Alergia a fármacos */}
+                {alergiaTipos.includes('farmacos') && (
+                  <div className="mt-3 ml-1 pl-3 border-l-2 border-amber-200">
+                    <p className="text-xs font-semibold text-slate-600 mb-1">
+                      ¿A qué fármaco(s)?
+                    </p>
+                    <Input
+                      value={alergiaFarmacosCuales}
+                      onChange={e => setAlergiaFarmacosCuales(e.target.value)}
+                      placeholder="Ej: penicilina, AINEs, sulfas…"
+                      className="h-11 bg-white mt-1"
+                    />
+                  </div>
+                )}
+
+                {/* Aviso: consultar con inmunólogo */}
+                <div className="mt-3 flex items-start gap-2 p-2.5 rounded-xl bg-amber-50 border border-amber-200">
+                  <AlertTriangle className="h-4 w-4 text-amber-500 flex-shrink-0 mt-0.5" />
+                  <p className="text-xs text-amber-700 leading-snug">
+                    En caso de alergias, consulta con tu <strong>inmunólogo o alergólogo</strong> antes de viajar para verificar la compatibilidad con vacunas y medicamentos preventivos.
+                  </p>
+                </div>
               </div>
             )}
           </div>

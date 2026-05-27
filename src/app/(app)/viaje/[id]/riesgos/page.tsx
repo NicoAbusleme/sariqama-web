@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect, notFound } from 'next/navigation'
-import { ChevronLeft, Radio } from 'lucide-react'
+import { ChevronLeft, Radio, AlertTriangle } from 'lucide-react'
 import Link from 'next/link'
 import { getDestinoBySlug } from '@/lib/content/destinos'
 import { FlagImg } from '@/components/ui/flag-img'
@@ -124,6 +124,14 @@ export default async function RiesgosPage({ params }: { params: Promise<{ id: st
   const { data: familia } = await supabase.from('familias').select('id').eq('user_id', user.id).single()
   if (!familia || viaje.familia_id !== familia.id) redirect('/dashboard')
 
+  // Viajeros — solo necesitamos alergia_huevo para el aviso de fiebre amarilla
+  const { data: viajeros } = await supabase
+    .from('viajeros')
+    .select('alergia_huevo')
+    .eq('familia_id', familia.id)
+
+  const hayAlergicoHuevo = viajeros?.some(v => v.alergia_huevo) ?? false
+
   const destino = getDestinoBySlug(viaje.destino_slug)
   if (!destino) notFound()
 
@@ -147,6 +155,9 @@ export default async function RiesgosPage({ params }: { params: Promise<{ id: st
 
   const tugoMeta = tugoAdvisory ? ADVISORY_META[tugoAdvisory.advisoryLevel] : null
   const maxCdcLevel = cdcNotices.length > 0 ? Math.max(...cdcNotices.map(n => n.level)) as CdcAlertLevel : null
+
+  const tieneRiesgoFiebreAmarilla = (destino.riesgos.fiebre_amarilla as NivelRiesgo) !== 'no_aplica'
+  const alertaAlergiaFiebreAmarilla = hayAlergicoHuevo && tieneRiesgoFiebreAmarilla
 
   return (
     <div className="min-h-screen bg-[#F0FDF9]">
@@ -259,6 +270,21 @@ export default async function RiesgosPage({ params }: { params: Promise<{ id: st
           defaultOpen={true}
         >
           <div className="mt-2 space-y-3">
+            {/* Aviso: alergia al huevo + fiebre amarilla */}
+            {alertaAlergiaFiebreAmarilla && (
+              <div className="flex items-start gap-3 p-3.5 rounded-xl bg-amber-50 border border-amber-300">
+                <AlertTriangle className="h-5 w-5 text-amber-500 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm font-semibold text-amber-800 leading-snug mb-1">
+                    ⚠️ Alergia al huevo — precaución con vacuna de fiebre amarilla
+                  </p>
+                  <p className="text-xs text-amber-700 leading-relaxed">
+                    La vacuna de fiebre amarilla se produce en embrión de pollo. Las personas con <strong>alergia al huevo</strong> pueden requerir evaluación previa por un <strong>alergólogo o inmunólogo</strong> antes de vacunarse. No omitas la vacuna sin consultar: puede ser obligatoria para ingresar al destino.
+                  </p>
+                </div>
+              </div>
+            )}
+
             {destino.vacunas_requeridas.length > 0 && (
               <div>
                 <p className="text-xs font-semibold text-red-600 mb-2 uppercase tracking-wide">Requeridas ⚠️</p>

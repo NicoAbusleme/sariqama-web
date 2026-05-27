@@ -14,6 +14,10 @@ export async function agregarViajeros(viajeros: {
   inmunosupresion_tipo?: string
   vih_carga_viral?: string
   embarazo_fum?: string
+  alergia_tipos?: string[]
+  alergia_huevo?: boolean
+  alergia_plv?: boolean
+  alergia_farmacos_cuales?: string
 }[], nombreFamilia?: string) {
   const supabase = await createClient()
   const adminClient = createAdminClient()
@@ -53,6 +57,10 @@ export async function agregarViajeros(viajeros: {
     inmunosupresion_tipo: v.inmunosupresion_tipo || null,
     vih_carga_viral: v.vih_carga_viral || null,
     embarazo_fum: v.embarazo_fum || null,
+    alergia_tipos: v.alergia_tipos?.length ? v.alergia_tipos : null,
+    alergia_huevo: v.alergia_huevo ?? false,
+    alergia_plv: v.alergia_plv ?? false,
+    alergia_farmacos_cuales: v.alergia_farmacos_cuales || null,
   }))
 
   const { error } = await supabase.from('viajeros').insert(registros)
@@ -72,6 +80,10 @@ export async function agregarUnViajero(data: {
   inmunosupresion_tipo?: string
   vih_carga_viral?: string
   embarazo_fum?: string
+  alergia_tipos?: string[]
+  alergia_huevo?: boolean
+  alergia_plv?: boolean
+  alergia_farmacos_cuales?: string
 }): Promise<{ error?: string }> {
   const supabase = await createClient()
 
@@ -98,6 +110,10 @@ export async function agregarUnViajero(data: {
     inmunosupresion_tipo: data.inmunosupresion_tipo || null,
     vih_carga_viral: data.vih_carga_viral || null,
     embarazo_fum: data.embarazo_fum || null,
+    alergia_tipos: data.alergia_tipos?.length ? data.alergia_tipos : null,
+    alergia_huevo: data.alergia_huevo ?? false,
+    alergia_plv: data.alergia_plv ?? false,
+    alergia_farmacos_cuales: data.alergia_farmacos_cuales || null,
   })
 
   if (error) return { error: error.message }
