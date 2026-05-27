@@ -18,7 +18,7 @@ function calcularSemanasEmbarazo(fum: string, fechaViaje: string): number | null
 
 const RIESGOS_INFO = [
   { key: 'dengue',          label: '🦟 Dengue',                icono: '🦟' },
-  { key: 'malaria',         label: '🦠 Malaria',               icono: '🦠' },
+  { key: 'malaria',         label: '🪱 Malaria',               icono: '🪱' },
   { key: 'fiebre_amarilla', label: '💉 Fiebre amarilla',       icono: '💉' },
   { key: 'diarrea_viajero', label: '💧 Diarrea del viajero',   icono: '💧' },
   { key: 'agua_alimentos',  label: '🚰 Agua y alimentos',      icono: '🚰' },
