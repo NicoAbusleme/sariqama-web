@@ -41,6 +41,8 @@ async function _fetchAdvisory(isoCode: string): Promise<TugoAdvisory | null> {
         'X-Auth-API-Key': apiKey,
         Accept: 'application/json',
       },
+      // Timeout de 5 s para no bloquear el render si TuGo tarda o falla
+      signal: AbortSignal.timeout(5000),
       // Cache a nivel de fetch: 24 h
       next: { revalidate: 86400, tags: [`tugo-${isoCode}`] },
     })

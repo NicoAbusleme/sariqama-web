@@ -105,8 +105,8 @@ export default async function RiesgosPage({ params }: { params: Promise<{ id: st
   const destino = getDestinoBySlug(viaje.destino_slug)
   if (!destino) notFound()
 
-  // TuGo advisory (falla silenciosamente si la API key no está configurada)
-  const tugoAdvisory = await fetchTugoAdvisory(destino.pais_code)
+  // TuGo advisory — nunca bloquea ni rompe el render
+  const tugoAdvisory = await fetchTugoAdvisory(destino.pais_code).catch(() => null)
 
   const flagCode = destino?.pais_code ?? 'un'
 
