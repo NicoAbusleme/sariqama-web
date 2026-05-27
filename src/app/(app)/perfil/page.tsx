@@ -134,7 +134,7 @@ export default async function PerfilPage() {
           </div>
 
           <Link href="/perfil/agregar-viajero">
-            <button className="mt-3 w-full border-2 border-dashed border-teal-300 rounded-2xl py-3 text-sm font-medium text-teal-600 hover:border-teal-400 hover:bg-teal-50 transition-colors">
+            <button className="mt-3 w-full border-2 border-dashed border-teal-300 rounded-2xl py-3 text-sm font-medium text-teal-600 hover:border-teal-400 hover:bg-teal-50 transition-colors cursor-pointer">
               + Agregar integrante
             </button>
           </Link>
