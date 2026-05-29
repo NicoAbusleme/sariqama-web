@@ -27,45 +27,109 @@ export default function RegistroPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#1A3D5C] via-[#1F4D72] to-[#0A2238] flex items-center justify-center px-4 py-10">
-      <div className="w-full max-w-sm">
-        {/* Logo */}
-        <div className="flex justify-center mb-8">
-          <div className="bg-white rounded-2xl px-5 py-3 shadow-lg">
-            <Image src="/logo.png" alt="SARIQAMA" width={160} height={56} className="h-14 w-auto object-contain" priority />
+    <div className="min-h-screen flex">
+
+      {/* ── Panel visual izquierdo (solo desktop) ───────────────────────── */}
+      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden"
+        style={{ background: 'linear-gradient(145deg, #1A3D5C 0%, #0F2D45 50%, #0A2238 100%)' }}>
+        {/* Decoraciones */}
+        <div className="absolute top-0 left-0 w-96 h-96 opacity-15"
+          style={{ background: 'radial-gradient(circle at center, #2D9E8C, transparent 70%)' }} />
+        <div className="absolute bottom-32 right-0 w-64 h-64 opacity-10"
+          style={{ background: 'radial-gradient(circle at center, #D4A338, transparent 70%)' }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 opacity-05"
+          style={{ background: 'radial-gradient(circle at center, #C27058, transparent 70%)' }} />
+        <div className="absolute inset-0 opacity-[0.04]"
+          style={{
+            backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)',
+            backgroundSize: '28px 28px',
+          }} />
+
+        {/* Content */}
+        <div className="relative z-10 flex flex-col justify-between p-12 w-full">
+          <div>
+            <Image src="/logo.png" alt="SARIQAMA" width={150} height={48}
+              className="h-12 w-auto object-contain brightness-0 invert opacity-90 mb-16" />
+          </div>
+
+          <div>
+            <p className="text-[#D4A338] text-xs font-bold uppercase tracking-[0.25em] mb-4 flex items-center gap-3">
+              <span className="inline-block w-6 h-px bg-[#D4A338]/50" />
+              Únete a SARIQAMA
+            </p>
+            <h2 className="text-4xl font-semibold text-white mb-4 leading-tight"
+              style={{ fontFamily: "var(--font-fraunces)" }}>
+              Tu familia merece<br />viajar segura<br />y preparada
+            </h2>
+            <p className="text-[#A8C5DA] text-sm leading-relaxed max-w-xs">
+              Checklists de vacunas, riesgos por destino y orientación médica — todo en un solo lugar.
+            </p>
+
+            {/* Beneficios */}
+            <div className="mt-10 flex flex-col gap-3">
+              {[
+                { icon: "✈️", text: "Análisis de riesgos para tu destino exacto" },
+                { icon: "💉", text: "Vacunas recomendadas por el CDC para toda la familia" },
+                { icon: "👩‍⚕️", text: "Orientación médica de viaje disponible 24/7" },
+              ].map((b, i) => (
+                <div key={i} className="flex items-center gap-3">
+                  <div className="card-glass w-9 h-9 rounded-xl flex items-center justify-center text-base flex-shrink-0">
+                    {b.icon}
+                  </div>
+                  <p className="text-white/75 text-sm leading-snug">{b.text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <p className="text-white/20 text-xs">© 2026 SARIQAMA · Gratis · Sin tarjeta de crédito</p>
           </div>
         </div>
+      </div>
 
-        <div className="bg-white rounded-3xl p-8 shadow-xl">
-          <h2 className="text-lg font-semibold text-slate-900 mb-1"
-            style={{ fontFamily: "var(--font-fraunces)" }}>
-            Crea tu cuenta familiar
-          </h2>
-          <p className="text-sm text-slate-500 mb-6">Gratis · Sin tarjeta de crédito</p>
+      {/* ── Panel formulario derecho ─────────────────────────────────────── */}
+      <div className="flex-1 flex items-center justify-center px-6 py-12 bg-[#F7FFFE]">
+        <div className="w-full max-w-sm">
+
+          {/* Logo mobile */}
+          <div className="lg:hidden flex justify-center mb-8">
+            <Image src="/logo.png" alt="SARIQAMA" width={140} height={44} className="h-11 w-auto object-contain" />
+          </div>
+
+          <div className="mb-8">
+            <h1 className="text-2xl font-semibold text-[#1A3D5C]"
+              style={{ fontFamily: "var(--font-fraunces)" }}>
+              Crea tu cuenta familiar
+            </h1>
+            <p className="text-sm text-slate-400 mt-1">Gratis · Sin tarjeta de crédito</p>
+          </div>
 
           {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-600">
+            <div className="mb-5 p-3.5 bg-red-50 border border-red-200 rounded-xl text-sm text-red-600">
               {error}
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             {[
-              { name: "nombreFamilia", label: "Nombre de la familia", type: "text", placeholder: "Familia García" },
-              { name: "email",         label: "Correo electrónico",   type: "email", placeholder: "tu@email.com" },
+              { name: "nombreFamilia", label: "Nombre de la familia", type: "text",     placeholder: "Familia García" },
+              { name: "email",         label: "Correo electrónico",   type: "email",    placeholder: "tu@email.com" },
               { name: "password",      label: "Contraseña",           type: "password", placeholder: "Mínimo 8 caracteres" },
               { name: "confirmar",     label: "Confirmar contraseña", type: "password", placeholder: "Repite la contraseña" },
             ].map(f => (
               <div key={f.name}>
-                <label className="text-xs font-semibold text-slate-600 mb-1.5 block uppercase tracking-wide">
+                <label className="text-xs font-semibold text-slate-500 mb-1.5 block uppercase tracking-wide">
                   {f.label}
                 </label>
                 <Input name={f.name} type={f.type} placeholder={f.placeholder}
-                  className="h-11 rounded-xl border-slate-200 bg-slate-50" required />
+                  className="h-12 rounded-xl border-slate-200 bg-white focus:border-[#2D9E8C] focus:ring-[#2D9E8C]/20"
+                  style={{ boxShadow: 'var(--shadow-xs)' }}
+                  required />
               </div>
             ))}
 
-            {/* Aceptación de Términos y Condiciones */}
+            {/* Términos */}
             <label className="flex items-start gap-3 cursor-pointer">
               <input
                 type="checkbox"
@@ -75,7 +139,7 @@ export default function RegistroPage() {
               />
               <span className="text-[11px] text-slate-500 leading-relaxed">
                 He leído y acepto los{" "}
-                <a href="/terminos" target="_blank" className="text-[#2D9E8C] font-semibold hover:underline">
+                <a href="/terminos" target="_blank" className="text-[#2D9E8C] font-semibold hover:text-[#237F70] transition-colors">
                   Términos y Condiciones
                 </a>{" "}
                 y el tratamiento de mis datos personales conforme a la Ley N° 19.628.
@@ -83,24 +147,28 @@ export default function RegistroPage() {
             </label>
 
             <p className="text-[11px] text-slate-400 leading-relaxed -mt-1">
-              SARIQAMA entrega <strong>orientación sanitaria</strong> y no reemplaza una evaluación médica profesional.
+              SARIQAMA entrega <strong className="text-slate-500">orientación sanitaria</strong> y no reemplaza una evaluación médica profesional.
             </p>
 
-            <Button type="submit" disabled={loading || !aceptaTerminos}
-              className="w-full h-12 bg-[#2D9E8C] hover:bg-[#237F70] text-white rounded-2xl font-semibold mt-1 text-sm">
+            <Button
+              type="submit"
+              disabled={loading || !aceptaTerminos}
+              className="w-full h-12 bg-[#1A3D5C] hover:bg-[#254E72] text-white rounded-xl font-semibold mt-2 text-sm transition-all duration-200 disabled:opacity-40"
+              style={{ boxShadow: 'var(--shadow-md)' }}
+            >
               {loading
                 ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Creando cuenta...</>
-                : "Crear cuenta"}
+                : "Crear cuenta gratis"}
             </Button>
           </form>
-        </div>
 
-        <p className="text-center text-sm text-white/60 mt-6">
-          ¿Ya tienes cuenta?{" "}
-          <Link href="/login" className="text-white font-semibold hover:underline">
-            Iniciar sesión
-          </Link>
-        </p>
+          <p className="text-center text-sm text-slate-400 mt-7">
+            ¿Ya tienes cuenta?{" "}
+            <Link href="/login" className="text-[#2D9E8C] font-semibold hover:text-[#237F70] transition-colors">
+              Iniciar sesión
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   )
