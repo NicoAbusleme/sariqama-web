@@ -82,6 +82,7 @@
   --td: #1A3D5C;
 
   /* shadcn tokens — mapeados a SARIQAMA */
+  color-scheme: light;
   --background: #F7FFFE;
   --foreground: #1A3D5C;
   --card: #FFFFFF;
@@ -254,6 +255,27 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+/* ── prefers-reduced-motion ────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee,
+  .animate-fade-up,
+  .animate-fade-in,
+  .animate-scale-in,
+  .animate-float {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .card-elevated,
+  .hover-lift {
+    transition: none !important;
+  }
+  /* Tailwind animate-pulse override */
+  .animate-pulse {
+    animation: none !important;
+  }
 }
 
 @layer base {

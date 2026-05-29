@@ -99,26 +99,26 @@ export default function LoginPage() {
           </div>
 
           {error && (
-            <div className="mb-5 p-3.5 bg-red-50 border border-red-200 rounded-xl text-sm text-red-600">
+            <div role="alert" className="mb-5 p-3.5 bg-red-50 border border-red-200 rounded-xl text-sm text-red-600">
               {error}
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <div>
-              <label className="text-xs font-semibold text-slate-500 mb-1.5 block uppercase tracking-wide">
+              <label htmlFor="email" className="text-xs font-semibold text-slate-500 mb-1.5 block uppercase tracking-wide">
                 Correo electrónico
               </label>
-              <Input name="email" type="email" placeholder="tu@email.com"
+              <Input id="email" name="email" type="email" autoComplete="email" placeholder="tu@email.com"
                 className="h-12 rounded-xl border-slate-200 bg-white focus:border-[#2D9E8C] focus:ring-[#2D9E8C]/20"
                 style={{ boxShadow: 'var(--shadow-xs)' }}
                 required />
             </div>
             <div>
-              <label className="text-xs font-semibold text-slate-500 mb-1.5 block uppercase tracking-wide">
+              <label htmlFor="password" className="text-xs font-semibold text-slate-500 mb-1.5 block uppercase tracking-wide">
                 Contraseña
               </label>
-              <Input name="password" type="password" placeholder="••••••••"
+              <Input id="password" name="password" type="password" autoComplete="current-password" placeholder="••••••••"
                 className="h-12 rounded-xl border-slate-200 bg-white focus:border-[#2D9E8C] focus:ring-[#2D9E8C]/20"
                 style={{ boxShadow: 'var(--shadow-xs)' }}
                 required />
@@ -126,8 +126,8 @@ export default function LoginPage() {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full h-12 bg-[#1A3D5C] hover:bg-[#254E72] text-white rounded-xl font-semibold mt-2 text-sm transition-all duration-200"
-              style={{ boxShadow: 'var(--shadow-md)' }}
+              className="w-full h-12 bg-[#1A3D5C] hover:bg-[#254E72] text-white rounded-xl font-semibold mt-2 text-sm"
+              style={{ boxShadow: 'var(--shadow-md)', transition: 'background-color 200ms, opacity 200ms, transform 200ms' }}
             >
               {loading
                 ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Ingresando...</>

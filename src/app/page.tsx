@@ -85,6 +85,12 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen overflow-x-hidden" style={{ background: '#F7FFFE' }}>
 
+      {/* Skip link — accesibilidad teclado */}
+      <a href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[9999] focus:px-4 focus:py-2 focus:bg-[#2D9E8C] focus:text-white focus:rounded-xl focus:text-sm focus:font-semibold">
+        Saltar al contenido principal
+      </a>
+
       {/* ── NAVBAR ────────────────────────────────────────────────────────────── */}
       <nav
         className="fixed top-0 left-0 right-0 z-50"
@@ -93,6 +99,7 @@ export default function LandingPage() {
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
           borderBottom: '1px solid rgba(255,255,255,0.06)',
+          paddingTop: 'env(safe-area-inset-top)',
         }}
       >
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -124,6 +131,7 @@ export default function LandingPage() {
 
       {/* ── HERO ──────────────────────────────────────────────────────────────── */}
       <section
+        id="main-content"
         className="relative min-h-screen flex flex-col"
         style={{ background: 'linear-gradient(160deg, #07192A 0%, #0F2D45 40%, #1A3D5C 100%)' }}
       >
@@ -229,7 +237,7 @@ export default function LandingPage() {
                 </div>
                 <div className="rounded-2xl p-5"
                   style={{ background: 'rgba(212,163,56,0.10)', border: '1px solid rgba(212,163,56,0.20)' }}>
-                  <Shield className="h-5 w-5 text-[#D4A338] mb-3" />
+                  <Shield aria-hidden="true" className="h-5 w-5 text-[#D4A338] mb-3" />
                   <p className="text-xs font-bold text-[#D4A338]">CDC</p>
                   <p className="text-[10px]" style={{ color: 'rgba(255,255,255,0.30)' }}>Yellow Book 2026</p>
                 </div>
@@ -343,7 +351,7 @@ export default function LandingPage() {
               style={{ background: '#FBF0D4', boxShadow: 'var(--shadow-sm)' }}>
               <div className="w-12 h-12 rounded-2xl bg-[#D4A338] flex items-center justify-center"
                 style={{ boxShadow: '0 4px 14px rgba(212,163,56,0.40)' }}>
-                <Shield className="h-6 w-6 text-white" />
+                <Shield aria-hidden="true" className="h-6 w-6 text-white" />
               </div>
               <div>
                 <p className="text-[10px] font-bold text-[#B8892C] uppercase tracking-widest mb-2">Fuente oficial</p>
@@ -426,7 +434,7 @@ export default function LandingPage() {
             {/* Card 5: 24/7 */}
             <div className="rounded-3xl p-7 flex flex-col justify-between min-h-[160px] bg-white hover-lift"
               style={{ boxShadow: 'var(--shadow-sm)' }}>
-              <Clock className="h-6 w-6 text-[#2D9E8C]" />
+              <Clock aria-hidden="true" className="h-6 w-6 text-[#2D9E8C]" />
               <div>
                 <div className="text-5xl font-bold text-[#1A3D5C] mb-1"
                   style={{ fontFamily: "var(--font-fraunces)" }}>24/7</div>
@@ -437,7 +445,7 @@ export default function LandingPage() {
             {/* Card 6: Viajeros */}
             <div className="rounded-3xl p-7 flex flex-col justify-between min-h-[160px] bg-white hover-lift"
               style={{ boxShadow: 'var(--shadow-sm)' }}>
-              <Users className="h-6 w-6 text-[#D4A338]" />
+              <Users aria-hidden="true" className="h-6 w-6 text-[#D4A338]" />
               <div>
                 <div className="text-5xl font-bold text-[#1A3D5C] mb-1"
                   style={{ fontFamily: "var(--font-fraunces)" }}>∞</div>
