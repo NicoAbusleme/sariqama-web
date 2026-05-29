@@ -712,9 +712,10 @@ export default function LandingPage() {
       </section>
 
       {/* ── DISCLAIMER ────────────────────────────────────────────────────────── */}
-      <div className="py-5 px-6 border-t border-slate-100" style={{ background: '#F7FFFE' }}>
-        <p className="text-center text-[11px] text-slate-400 max-w-2xl mx-auto leading-relaxed">
-          <strong className="text-slate-500">Aviso:</strong>{" "}
+      <div className="py-4 px-6" style={{ background: '#07192A', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+        <p className="text-center text-[11px] max-w-2xl mx-auto leading-relaxed"
+          style={{ color: 'rgba(255,255,255,0.22)' }}>
+          <strong style={{ color: 'rgba(255,255,255,0.35)' }}>Aviso:</strong>{" "}
           SARIQAMA entrega orientación sanitaria basada en CDC Yellow Book 2026.
           No reemplaza evaluación médica profesional.
         </p>
