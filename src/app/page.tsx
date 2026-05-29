@@ -306,10 +306,7 @@ export default function LandingPage() {
               {PASOS.map((paso, i) => (
                 <div
                   key={paso.num}
-                  className="group bg-white rounded-3xl p-7 transition-all duration-300 hover:-translate-y-1 cursor-default"
-                  style={{ boxShadow: 'var(--shadow-sm)' }}
-                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.boxShadow = 'var(--shadow-lg)' }}
-                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.boxShadow = 'var(--shadow-sm)' }}
+                  className="group bg-white rounded-3xl p-7 hover-lift cursor-default"
                 >
                   <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${paso.gradient} flex items-center justify-center text-2xl mb-5`}
                     style={{ boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}>
@@ -440,11 +437,7 @@ export default function LandingPage() {
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
               {DESTINOS.map(d => (
-                <div key={d.nombre} className="group rounded-2xl p-5 text-center transition-all duration-200 hover:-translate-y-1 bg-white"
-                  style={{ boxShadow: 'var(--shadow-sm)' }}
-                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.boxShadow = 'var(--shadow-lg)' }}
-                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.boxShadow = 'var(--shadow-sm)' }}
-                >
+                <div key={d.nombre} className="group rounded-2xl p-5 text-center bg-white hover-lift">
                   <div className="flex justify-center mb-3">
                     <FlagImg code={d.code} size={56} className="rounded-xl shadow-md" />
                   </div>

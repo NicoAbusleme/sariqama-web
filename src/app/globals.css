@@ -219,6 +219,17 @@
   border-radius: 1rem;
 }
 
+/* Hover lift — para cards en Server Components (sin JS handlers) */
+.hover-lift {
+  transition: box-shadow var(--duration-base) var(--ease-base),
+              transform var(--duration-base) var(--ease-base);
+  box-shadow: var(--shadow-sm);
+}
+.hover-lift:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-4px);
+}
+
 /* Gradiente mesh de fondo */
 .mesh-bg {
   background-color: #F7FFFE;
