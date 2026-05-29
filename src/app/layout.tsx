@@ -20,6 +20,15 @@ export const metadata: Metadata = {
   description:
     "Prepara la salud de tu familia antes de viajar. Checklists sanitarios, evaluación de riesgos por destino y orientación médica profesional.",
   keywords: ["salud viajero", "vacunas viaje", "dengue", "familias", "tropical"],
+  icons: {
+    icon: [
+      { url: "/icon.png", type: "image/png" },
+    ],
+    apple: [
+      { url: "/icon.png", type: "image/png" },
+    ],
+    shortcut: "/icon.png",
+  },
 };
 
 export default function RootLayout({
