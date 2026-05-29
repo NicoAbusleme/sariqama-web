@@ -1,39 +1,17 @@
 import Link from "next/link"
 import Image from "next/image"
-import { ChevronRight, Check, Shield, MapPin, CheckCircle, Stethoscope } from "lucide-react"
+import { ArrowRight, Check, Shield, Clock, Users } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { FlagImg } from "@/components/ui/flag-img"
 
-// ─── Datos ────────────────────────────────────────────────────────────────────
+// ─── Data ─────────────────────────────────────────────────────────────────────
 
-const STATS = [
-  { num: "5",    lbl: "Destinos LATAM" },
-  { num: "CDC",  lbl: "Fuente clínica" },
-  { num: "24/7", lbl: "Disponible" },
-]
-
-const PASOS = [
-  {
-    num: "01",
-    emoji: "✈️",
-    titulo: "Crea tu viaje",
-    desc: "Selecciona destino, fechas y tipo de viaje. SARIQAMA arma el perfil sanitario de tu familia.",
-    gradient: "from-[#2D9E8C] to-[#1A7A6B]",
-  },
-  {
-    num: "02",
-    emoji: "🗺️",
-    titulo: "Conoce los riesgos",
-    desc: "Dengue, malaria, vacunas, agua potable — información CDC 2026 adaptada a tu destino específico.",
-    gradient: "from-amber-500 to-orange-500",
-  },
-  {
-    num: "03",
-    emoji: "✅",
-    titulo: "Viaja protegido",
-    desc: "Checklist personalizado, botiquín curado y evaluador de síntomas si algo ocurre durante el viaje.",
-    gradient: "from-[#1A3D5C] to-[#254E72]",
-  },
+const DESTINOS = [
+  { code: "br", nombre: "Brasil",          riesgo: "Dengue muy alto"     },
+  { code: "do", nombre: "Rep. Dominicana", riesgo: "Malaria moderado"    },
+  { code: "cr", nombre: "Costa Rica",      riesgo: "Dengue alto"         },
+  { code: "mx", nombre: "México",          riesgo: "Diarrea del viajero" },
+  { code: "cl", nombre: "Chile",           riesgo: "Bajo riesgo infec."  },
 ]
 
 const PLANES = [
@@ -42,21 +20,16 @@ const PLANES = [
     nombre: "Exploración",
     precio: "Gratis",
     precioSub: "siempre",
-    descripcion: "Para familias que quieren saber a qué se enfrentan.",
-    headerBg: "bg-slate-50",
-    headerText: "text-slate-800",
-    badge: null,
     featured: false,
     cta: "Empezar gratis",
     ctaHref: "/registro",
-    ctaStyle: "bg-slate-900 hover:bg-slate-700 text-white",
+    ctaStyle: "bg-[#1A3D5C] hover:bg-[#254E72] text-white",
     items: [
       { texto: "Perfil de viaje familiar",          ok: true  },
       { texto: "Riesgos generales del destino",     ok: true  },
       { texto: "Checklist básico (vacunas + docs)", ok: true  },
       { texto: "Checklist detallado adulto/niño",   ok: false },
       { texto: "Botiquín por destino + pediátrico", ok: false },
-      { texto: "Reporte familiar PDF",              ok: false },
       { texto: "Evaluador de síntomas clínico",     ok: false },
       { texto: "Teleorientación médica",            ok: false },
     ],
@@ -66,10 +39,6 @@ const PLANES = [
     nombre: "Preparación Total",
     precio: "USD 19–29",
     precioSub: "por viaje",
-    descripcion: "Todo lo que necesitas para llegar 100% preparado.",
-    headerBg: "bg-gradient-to-br from-[#1A3D5C] to-[#1F4D72]",
-    headerText: "text-white",
-    badge: "Más popular",
     featured: true,
     cta: "Solicitar acceso",
     ctaHref: "/registro",
@@ -80,7 +49,6 @@ const PLANES = [
       { texto: "Checklist básico (vacunas + docs)", ok: true  },
       { texto: "Checklist detallado adulto/niño",   ok: true  },
       { texto: "Botiquín por destino + pediátrico", ok: true  },
-      { texto: "Reporte familiar PDF",              ok: true  },
       { texto: "Evaluador de síntomas clínico",     ok: false },
       { texto: "Teleorientación médica",            ok: false },
     ],
@@ -90,504 +58,730 @@ const PLANES = [
     nombre: "Acompañamiento",
     precio: "USD 29–39",
     precioSub: "por evento",
-    descripcion: "Atención profesional antes, durante y después.",
-    headerBg: "bg-gradient-to-br from-amber-500 to-orange-500",
-    headerText: "text-white",
-    badge: "Máxima protección",
     featured: false,
     cta: "Solicitar acceso",
     ctaHref: "/registro",
-    ctaStyle: "bg-amber-500 hover:bg-amber-600 text-white",
+    ctaStyle: "bg-[#D4A338] hover:bg-[#B8892C] text-white",
     items: [
       { texto: "Perfil de viaje familiar",          ok: true },
       { texto: "Riesgos generales del destino",     ok: true },
       { texto: "Checklist básico (vacunas + docs)", ok: true },
       { texto: "Checklist detallado adulto/niño",   ok: true },
       { texto: "Botiquín por destino + pediátrico", ok: true },
-      { texto: "Reporte familiar PDF",              ok: true },
       { texto: "Evaluador de síntomas clínico",     ok: true },
       { texto: "Teleorientación médica",            ok: true },
     ],
   },
 ]
 
-const DESTINOS = [
-  { code: "br", nombre: "Brasil",          riesgo: "Dengue muy alto",     chip: "bg-red-100 text-red-700",       continente: "Sudamérica"    },
-  { code: "do", nombre: "Rep. Dominicana", riesgo: "Malaria moderado",    chip: "bg-yellow-100 text-yellow-700", continente: "Caribe"        },
-  { code: "cr", nombre: "Costa Rica",      riesgo: "Dengue alto",         chip: "bg-orange-100 text-orange-700", continente: "Centroamérica" },
-  { code: "mx", nombre: "México",          riesgo: "Diarrea del viajero", chip: "bg-yellow-100 text-yellow-700", continente: "Centroamérica" },
-  { code: "cl", nombre: "Chile",           riesgo: "Bajo riesgo infec.",  chip: "bg-green-100 text-green-700",   continente: "Sudamérica"    },
+const MARQUEE_ITEMS = [
+  "CDC Yellow Book 2026", "Dengue", "Malaria", "Diarrea del viajero",
+  "Vacunas", "Botiquín familiar", "Repelentes", "Agua segura",
+  "Altitud", "Enfermedades tropicales", "Checklist personalizado",
 ]
 
-const TESTIMONIOS = [
-  {
-    texto: "Antes de viajar a Brasil con mis hijos no sabía nada sobre el dengue. SARIQAMA me explicó todo de forma clara y me dio la lista exacta de lo que necesitaba llevar.",
-    nombre: "Valentina R.",
-    detalle: "Viajó a Brasil · 2 hijos",
-    inicial: "V",
-  },
-  {
-    texto: "El evaluador de síntomas me ayudó a entender que la fiebre de mi hija era señal de alerta. Pudimos actuar rápido gracias a eso.",
-    nombre: "Carlos M.",
-    detalle: "Viajó a México · 1 hija",
-    inicial: "C",
-  },
-  {
-    texto: "Muy útil el botiquín personalizado. Llevé exactamente lo que necesitaba y nada más. El médico en la teleorientación fue muy claro.",
-    nombre: "Daniela P.",
-    detalle: "Viajó a Costa Rica · Familia de 4",
-    inicial: "D",
-  },
-]
-
-const FEATURES = [
-  { icon: Shield,       label: "Datos clínicos CDC 2026",       desc: "Fuente médica oficial" },
-  { icon: MapPin,       label: "5 destinos LATAM cubiertos",    desc: "Brasil, México, Caribe y más" },
-  { icon: CheckCircle,  label: "Checklist personalizado",        desc: "Por familia y destino" },
-  { icon: Stethoscope,  label: "Orientación médica en español",  desc: "Profesionales especializados" },
-]
-
-// ─── Página ───────────────────────────────────────────────────────────────────
+// ─── Page ─────────────────────────────────────────────────────────────────────
 export default function LandingPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-[#F7FFFE]">
+    <div className="min-h-screen overflow-x-hidden" style={{ background: '#F7FFFE' }}>
 
-      {/* ── NAVBAR ────────────────────────────────────────────────────────── */}
-      <header
-        className="sticky top-0 z-50 border-b border-[#1A3D5C]/08"
+      {/* ── NAVBAR ────────────────────────────────────────────────────────────── */}
+      <nav
+        className="fixed top-0 left-0 right-0 z-50"
         style={{
-          background: 'rgba(247,255,254,0.92)',
+          background: 'rgba(10,34,56,0.85)',
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
+          borderBottom: '1px solid rgba(255,255,255,0.06)',
         }}
       >
-        <div className="max-w-5xl mx-auto px-5 h-16 flex items-center justify-between">
-          <Image src="/logo.png" alt="SARIQAMA" width={130} height={40} className="h-9 w-auto object-contain" />
-          <nav className="hidden sm:flex items-center gap-7 text-sm text-slate-500">
-            <a href="#como-funciona" className="hover:text-[#1A3D5C] transition-colors font-medium">Cómo funciona</a>
-            <a href="#planes" className="hover:text-[#1A3D5C] transition-colors font-medium">Planes</a>
-            <a href="#destinos" className="hover:text-[#1A3D5C] transition-colors font-medium">Destinos</a>
-          </nav>
+        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+          <Image src="/logo.png" alt="SARIQAMA" width={120} height={36}
+            className="h-8 w-auto object-contain brightness-0 invert opacity-90" />
+          <div className="hidden sm:flex items-center gap-7 text-sm" style={{ color: 'rgba(255,255,255,0.45)' }}>
+            <a href="#features" className="hover:text-white transition-colors font-medium">Features</a>
+            <a href="#planes" className="hover:text-white transition-colors font-medium">Planes</a>
+            <a href="#destinos" className="hover:text-white transition-colors font-medium">Destinos</a>
+          </div>
           <div className="flex items-center gap-3">
             <Link href="/login">
-              <Button variant="ghost" size="sm" className="text-slate-600 font-medium">Iniciar sesión</Button>
+              <Button variant="ghost" size="sm"
+                className="font-medium text-sm"
+                style={{ color: 'rgba(255,255,255,0.5)' }}>
+                Iniciar sesión
+              </Button>
             </Link>
             <Link href="/registro">
-              <Button size="sm" className="bg-[#1A3D5C] hover:bg-[#254E72] text-white rounded-xl font-semibold px-5"
-                style={{ boxShadow: 'var(--shadow-sm)' }}>
+              <Button size="sm"
+                className="bg-[#2D9E8C] hover:bg-[#237F70] text-white rounded-xl font-semibold px-5 text-sm"
+                style={{ boxShadow: '0 4px 14px rgba(45,158,140,0.35)' }}>
                 Empezar gratis
               </Button>
             </Link>
           </div>
         </div>
-      </header>
+      </nav>
 
-      <main className="flex-1">
+      {/* ── HERO ──────────────────────────────────────────────────────────────── */}
+      <section
+        className="relative min-h-screen flex flex-col"
+        style={{ background: 'linear-gradient(160deg, #07192A 0%, #0F2D45 40%, #1A3D5C 100%)' }}
+      >
+        {/* Gradient blobs */}
+        <div className="absolute top-0 right-0 w-[700px] h-[700px] pointer-events-none"
+          style={{ background: 'radial-gradient(circle at 70% 30%, rgba(45,158,140,0.18), transparent 65%)' }} />
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] pointer-events-none"
+          style={{ background: 'radial-gradient(circle at 30% 70%, rgba(212,163,56,0.10), transparent 65%)' }} />
+        {/* Dot grid */}
+        <div className="absolute inset-0 pointer-events-none" style={{
+          backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px)',
+          backgroundSize: '36px 36px',
+        }} />
 
-        {/* ── HERO ──────────────────────────────────────────────────────────── */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-[#1A3D5C] via-[#1F4D72] to-[#0A2238] px-5 pt-20 pb-32 sm:pt-28 sm:pb-40">
-          {/* Mesh gradient overlays */}
-          <div className="absolute inset-0">
-            <div className="absolute top-0 right-0 w-96 h-96 opacity-20"
-              style={{ background: 'radial-gradient(circle at center, #2D9E8C, transparent 70%)' }} />
-            <div className="absolute bottom-10 left-10 w-64 h-64 opacity-10"
-              style={{ background: 'radial-gradient(circle at center, #D4A338, transparent 70%)' }} />
-            <div className="absolute inset-0 opacity-[0.04]"
-              style={{
-                backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)',
-                backgroundSize: '32px 32px',
-              }} />
-          </div>
+        {/* Content */}
+        <div className="relative z-10 flex-1 max-w-6xl mx-auto px-6 w-full flex flex-col justify-center pt-36 pb-20">
+          <div className="grid lg:grid-cols-[1fr_420px] gap-16 items-center">
 
-          <div className="relative z-10 max-w-3xl mx-auto text-center">
-            {/* Badge flotante */}
-            <div className="inline-flex items-center gap-2 card-glass px-4 py-2 mb-8 text-[11px] font-semibold text-white/90 uppercase tracking-widest rounded-full">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#2D9E8C] animate-pulse" />
-              Family Travel Health · CDC Yellow Book 2026
-            </div>
+            {/* Left */}
+            <div>
+              <div className="inline-flex items-center gap-2 mb-8 px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-widest"
+                style={{
+                  background: 'rgba(255,255,255,0.06)',
+                  border: '1px solid rgba(255,255,255,0.10)',
+                  color: 'rgba(255,255,255,0.55)',
+                }}>
+                <span className="w-1.5 h-1.5 rounded-full bg-[#2D9E8C] animate-pulse" />
+                Family Travel Health · CDC 2026
+              </div>
 
-            {/* Logo */}
-            <div className="flex justify-center mb-8">
-              <div className="bg-white rounded-2xl px-8 py-4 inline-block"
-                style={{ boxShadow: '0 8px 32px rgba(0,0,0,0.20)' }}>
-                <Image src="/logo.png" alt="SARIQAMA" width={180} height={60} className="h-14 w-auto object-contain" priority />
+              <h1
+                className="font-semibold text-white leading-[1.0] tracking-tight mb-6"
+                style={{
+                  fontFamily: "var(--font-fraunces)",
+                  fontSize: 'clamp(3rem, 7vw, 5.5rem)',
+                }}
+              >
+                La salud<br />
+                de tu familia<br />
+                <span style={{ color: '#2D9E8C' }}>no improvisa.</span>
+              </h1>
+
+              <p className="text-lg leading-relaxed mb-10 max-w-md"
+                style={{ color: 'rgba(255,255,255,0.50)' }}>
+                Checklists, riesgos y botiquín adaptados a tu destino,
+                tus fechas y cada miembro de tu familia. Basado en CDC 2026.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Link href="/registro">
+                  <Button size="lg"
+                    className="bg-[#2D9E8C] hover:bg-[#237F70] text-white font-bold px-8 h-14 rounded-2xl text-base w-full sm:w-auto transition-all duration-200 hover:-translate-y-0.5"
+                    style={{ boxShadow: '0 8px 32px rgba(45,158,140,0.35)' }}>
+                    Crear mi viaje gratis
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Button>
+                </Link>
+                <Link href="/login">
+                  <Button size="lg" variant="ghost"
+                    className="rounded-2xl text-sm w-full sm:w-auto h-14 px-6 font-medium"
+                    style={{
+                      color: 'rgba(255,255,255,0.50)',
+                      border: '1px solid rgba(255,255,255,0.10)',
+                    }}>
+                    Ya tengo cuenta
+                  </Button>
+                </Link>
               </div>
             </div>
 
-            {/* Tagline dorada */}
-            <p className="text-[#D4A338] text-xs font-bold uppercase tracking-[0.3em] mb-5 flex items-center justify-center gap-3">
-              <span className="inline-block w-8 h-px bg-[#D4A338]/40" />
-              Salud del viajero para tu familia
-              <span className="inline-block w-8 h-px bg-[#D4A338]/40" />
-            </p>
+            {/* Right — mini bento preview */}
+            <div className="hidden lg:flex flex-col gap-3">
+              {/* Risk card */}
+              <div className="rounded-2xl p-5"
+                style={{
+                  background: 'rgba(255,255,255,0.05)',
+                  border: '1px solid rgba(255,255,255,0.09)',
+                  backdropFilter: 'blur(12px)',
+                }}>
+                <p className="text-[10px] font-bold text-[#2D9E8C] uppercase tracking-widest mb-3">
+                  Perfil de riesgo · Brasil
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {['🦟 Dengue alto', '💉 Vacuna Hep A', '💧 Agua filtrada', '🏥 Seguro viaje'].map(t => (
+                    <span key={t}
+                      className="text-xs px-3 py-1.5 rounded-full font-medium"
+                      style={{
+                        background: 'rgba(255,255,255,0.07)',
+                        border: '1px solid rgba(255,255,255,0.08)',
+                        color: 'rgba(255,255,255,0.65)',
+                      }}>
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              </div>
 
-            {/* Headline */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold text-white tracking-tight mb-5 leading-[1.1]"
-              style={{ fontFamily: "var(--font-fraunces)" }}>
-              Prepara la salud<br className="hidden sm:block" />
-              <span style={{ color: '#7DD4C8' }}> de tu familia</span> para el viaje
-            </h1>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="rounded-2xl p-5"
+                  style={{ background: 'rgba(45,158,140,0.12)', border: '1px solid rgba(45,158,140,0.22)' }}>
+                  <div className="text-4xl font-bold text-white mb-1" style={{ fontFamily: "var(--font-fraunces)" }}>5</div>
+                  <p className="text-xs" style={{ color: 'rgba(255,255,255,0.40)' }}>destinos LATAM</p>
+                </div>
+                <div className="rounded-2xl p-5"
+                  style={{ background: 'rgba(212,163,56,0.10)', border: '1px solid rgba(212,163,56,0.20)' }}>
+                  <Shield className="h-5 w-5 text-[#D4A338] mb-3" />
+                  <p className="text-xs font-bold text-[#D4A338]">CDC</p>
+                  <p className="text-[10px]" style={{ color: 'rgba(255,255,255,0.30)' }}>Yellow Book 2026</p>
+                </div>
+              </div>
 
-            <p className="text-white/70 text-base sm:text-lg max-w-xl mx-auto mb-10 leading-relaxed">
-              Información clínica validada adaptada a tu destino, tu familia y tus fechas.
-              Antes, durante y después del viaje.
-            </p>
+              {/* Checklist preview */}
+              <div className="rounded-2xl p-5"
+                style={{
+                  background: 'rgba(255,255,255,0.05)',
+                  border: '1px solid rgba(255,255,255,0.09)',
+                }}>
+                <p className="text-[10px] font-bold uppercase tracking-widest mb-3"
+                  style={{ color: 'rgba(255,255,255,0.30)' }}>
+                  Tu checklist familiar
+                </p>
+                <div className="space-y-2.5">
+                  {[
+                    { t: 'Vacuna Hepatitis A', done: true },
+                    { t: 'Repelente DEET 30%', done: true },
+                    { t: 'Antiparasitario pediátrico', done: false },
+                  ].map(item => (
+                    <div key={item.t} className="flex items-center gap-2.5">
+                      <div className={`w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 ${item.done ? 'bg-[#2D9E8C]' : ''}`}
+                        style={item.done ? {} : { border: '1px solid rgba(255,255,255,0.20)' }}>
+                        {item.done && <Check className="h-2.5 w-2.5 text-white" />}
+                      </div>
+                      <span className="text-xs"
+                        style={{ color: item.done ? 'rgba(255,255,255,0.40)' : 'rgba(255,255,255,0.75)' }}>
+                        {item.t}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-            {/* CTA buttons */}
-            <div className="flex flex-col sm:flex-row gap-3 justify-center mb-12">
+        {/* Marquee strip */}
+        <div className="relative z-10 overflow-hidden"
+          style={{ borderTop: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.03)' }}>
+          <div className="flex animate-marquee whitespace-nowrap py-3">
+            {[0, 1].map(rep => (
+              <span key={rep} className="flex items-center flex-shrink-0">
+                {MARQUEE_ITEMS.map(t => (
+                  <span key={`${rep}-${t}`} className="flex items-center gap-4 px-4">
+                    <span className="text-[11px] font-semibold uppercase tracking-widest"
+                      style={{ color: 'rgba(255,255,255,0.25)' }}>
+                      {t}
+                    </span>
+                    <span className="w-1 h-1 rounded-full flex-shrink-0"
+                      style={{ background: 'rgba(255,255,255,0.12)' }} />
+                  </span>
+                ))}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── BENTO GRID ────────────────────────────────────────────────────────── */}
+      <section id="features" className="py-24 px-6">
+        <div className="max-w-6xl mx-auto">
+
+          <div className="mb-16">
+            <p className="text-[#2D9E8C] text-xs font-bold uppercase tracking-widest mb-4">Todo en un lugar</p>
+            <h2 className="font-semibold text-[#1A3D5C] leading-tight"
+              style={{ fontFamily: "var(--font-fraunces)", fontSize: 'clamp(2.2rem, 5vw, 3.5rem)' }}>
+              Prepara el viaje.<br />No improvises la salud.
+            </h2>
+          </div>
+
+          {/* Bento grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+            {/* Card 1: Destinos — col-span-2 */}
+            <div className="lg:col-span-2 rounded-3xl p-8 relative overflow-hidden min-h-[260px] flex flex-col justify-between"
+              style={{
+                background: 'linear-gradient(135deg, #1A3D5C 0%, #2D9E8C 100%)',
+                boxShadow: 'var(--shadow-lg)',
+              }}>
+              <div className="absolute inset-0 pointer-events-none" style={{
+                backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px)',
+                backgroundSize: '22px 22px',
+              }} />
+              <div className="relative z-10">
+                <p className="text-[10px] font-bold uppercase tracking-widest mb-3"
+                  style={{ color: 'rgba(255,255,255,0.45)' }}>Cobertura clínica</p>
+                <h3 className="text-2xl font-semibold text-white mb-6"
+                  style={{ fontFamily: "var(--font-fraunces)" }}>
+                  5 destinos LATAM cubiertos
+                </h3>
+                <div className="flex gap-2.5 flex-wrap">
+                  {DESTINOS.map(d => (
+                    <div key={d.code}
+                      className="flex items-center gap-2 px-3 py-2 rounded-full"
+                      style={{ background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.15)' }}>
+                      <FlagImg code={d.code} size={16} className="rounded-full flex-shrink-0" />
+                      <span className="text-xs font-medium text-white">{d.nombre}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <p className="relative z-10 text-[10px] mt-6" style={{ color: 'rgba(255,255,255,0.30)' }}>
+                Actualizado · CDC Yellow Book 2026
+              </p>
+            </div>
+
+            {/* Card 2: CDC */}
+            <div className="rounded-3xl p-7 flex flex-col justify-between min-h-[260px]"
+              style={{ background: '#FBF0D4', boxShadow: 'var(--shadow-sm)' }}>
+              <div className="w-12 h-12 rounded-2xl bg-[#D4A338] flex items-center justify-center"
+                style={{ boxShadow: '0 4px 14px rgba(212,163,56,0.40)' }}>
+                <Shield className="h-6 w-6 text-white" />
+              </div>
+              <div>
+                <p className="text-[10px] font-bold text-[#B8892C] uppercase tracking-widest mb-2">Fuente oficial</p>
+                <h3 className="text-xl font-semibold text-[#1A3D5C] mb-2"
+                  style={{ fontFamily: "var(--font-fraunces)" }}>
+                  CDC Yellow Book 2026
+                </h3>
+                <p className="text-sm text-[#B8892C] leading-relaxed">
+                  Única plataforma en LATAM con datos clínicos validados en español.
+                </p>
+              </div>
+            </div>
+
+            {/* Card 3: Checklist */}
+            <div className="rounded-3xl p-7 flex flex-col min-h-[280px]"
+              style={{ background: '#1A3D5C', boxShadow: 'var(--shadow-md)' }}>
+              <p className="text-[10px] font-bold uppercase tracking-widest mb-5"
+                style={{ color: 'rgba(255,255,255,0.35)' }}>Checklist familiar</p>
+              <div className="space-y-3 flex-1">
+                {[
+                  { t: 'Vacuna Hepatitis A', done: true  },
+                  { t: 'Repelente DEET 30%', done: true  },
+                  { t: 'Antiparasitario pediátrico', done: true  },
+                  { t: 'Ropa manga larga', done: false },
+                  { t: 'Seguro médico viaje', done: false },
+                ].map(item => (
+                  <div key={item.t} className="flex items-center gap-3">
+                    <div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${item.done ? 'bg-[#2D9E8C]' : ''}`}
+                      style={item.done ? {} : { border: '1px solid rgba(255,255,255,0.18)' }}>
+                      {item.done && <Check className="h-3 w-3 text-white" />}
+                    </div>
+                    <span className="text-sm"
+                      style={{ color: item.done ? 'rgba(255,255,255,0.40)' : 'rgba(255,255,255,0.80)',
+                                textDecoration: item.done ? 'line-through' : 'none' }}>
+                      {item.t}
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <p className="text-[11px] mt-4" style={{ color: 'rgba(255,255,255,0.20)' }}>
+                Personalizado por familia, destino y edad
+              </p>
+            </div>
+
+            {/* Card 4: Síntomas */}
+            <div className="rounded-3xl p-7 flex flex-col justify-between min-h-[280px]"
+              style={{
+                background: 'linear-gradient(160deg, #0F2D45 0%, #1A3D5C 100%)',
+                boxShadow: 'var(--shadow-md)',
+              }}>
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-[#2D9E8C] mb-4">
+                  Evaluador de síntomas
+                </p>
+                <div className="space-y-2.5 mb-4">
+                  {[
+                    { s: 'Fiebre alta',     nivel: 'Alerta',    color: '#EF4444' },
+                    { s: 'Dolor muscular',  nivel: 'Vigilar',   color: '#F59E0B' },
+                    { s: 'Náuseas',         nivel: 'Monitorear',color: '#EAB308' },
+                  ].map(s => (
+                    <div key={s.s}
+                      className="flex items-center justify-between px-3 py-2.5 rounded-xl"
+                      style={{ background: 'rgba(255,255,255,0.05)' }}>
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: s.color }} />
+                        <span className="text-sm" style={{ color: 'rgba(255,255,255,0.65)' }}>{s.s}</span>
+                      </div>
+                      <span className="text-[10px] font-bold"
+                        style={{ color: 'rgba(255,255,255,0.35)' }}>{s.nivel}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <h3 className="text-base font-semibold text-white" style={{ fontFamily: "var(--font-fraunces)" }}>
+                ¿Síntomas en el viaje?{" "}
+                <span style={{ color: '#2D9E8C' }}>Sabrás exactamente qué hacer.</span>
+              </h3>
+            </div>
+
+            {/* Card 5: 24/7 */}
+            <div className="rounded-3xl p-7 flex flex-col justify-between min-h-[160px] bg-white hover-lift"
+              style={{ boxShadow: 'var(--shadow-sm)' }}>
+              <Clock className="h-6 w-6 text-[#2D9E8C]" />
+              <div>
+                <div className="text-5xl font-bold text-[#1A3D5C] mb-1"
+                  style={{ fontFamily: "var(--font-fraunces)" }}>24/7</div>
+                <p className="text-sm text-slate-400">Orientación médica disponible</p>
+              </div>
+            </div>
+
+            {/* Card 6: Viajeros */}
+            <div className="rounded-3xl p-7 flex flex-col justify-between min-h-[160px] bg-white hover-lift"
+              style={{ boxShadow: 'var(--shadow-sm)' }}>
+              <Users className="h-6 w-6 text-[#D4A338]" />
+              <div>
+                <div className="text-5xl font-bold text-[#1A3D5C] mb-1"
+                  style={{ fontFamily: "var(--font-fraunces)" }}>∞</div>
+                <p className="text-sm text-slate-400">Viajeros por familia</p>
+              </div>
+            </div>
+
+            {/* Card 7: CTA */}
+            <div className="rounded-3xl p-7 flex flex-col justify-between min-h-[160px]"
+              style={{
+                background: 'linear-gradient(135deg, #2D9E8C 0%, #1A7A6B 100%)',
+                boxShadow: 'var(--shadow-md)',
+              }}>
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-widest mb-2"
+                  style={{ color: 'rgba(255,255,255,0.55)' }}>Empieza hoy</p>
+                <h3 className="text-xl font-semibold text-white"
+                  style={{ fontFamily: "var(--font-fraunces)" }}>
+                  Gratis.<br />Sin tarjeta.
+                </h3>
+              </div>
               <Link href="/registro">
-                <Button size="lg"
-                  className="bg-[#D4A338] hover:bg-[#B8892C] text-white font-bold px-8 h-14 rounded-2xl text-base w-full sm:w-auto transition-all duration-200 hover:-translate-y-0.5"
-                  style={{ boxShadow: '0 8px 24px rgba(212,163,56,0.40)' }}>
-                  Crear mi viaje gratis
-                  <ChevronRight className="ml-2 h-5 w-5" />
-                </Button>
-              </Link>
-              <Link href="/login">
-                <Button size="lg" variant="ghost"
-                  className="card-glass hover:bg-white/20 text-white/90 font-medium rounded-2xl text-sm w-full sm:w-auto h-14 px-6">
-                  ¿Ya tienes cuenta? Inicia sesión
-                </Button>
+                <div className="flex items-center gap-2 bg-white text-[#1A7A6B] font-bold text-sm px-4 py-2.5 rounded-xl w-fit hover-lift cursor-pointer">
+                  Crear cuenta <ArrowRight className="h-4 w-4" />
+                </div>
               </Link>
             </div>
 
-            {/* Stats */}
-            <div className="flex gap-8 sm:gap-16 justify-center">
-              {STATS.map(s => (
-                <div key={s.lbl} className="text-center">
-                  <div className="text-2xl sm:text-3xl font-bold text-white mb-0.5"
-                    style={{ fontFamily: "var(--font-fraunces)" }}>{s.num}</div>
-                  <div className="text-[11px] text-white/50 uppercase tracking-wider">{s.lbl}</div>
+            {/* Card 8: Testimonial — col-span-2 */}
+            <div className="lg:col-span-2 rounded-3xl p-8 relative overflow-hidden"
+              style={{ background: '#0F2D45', boxShadow: 'var(--shadow-lg)' }}>
+              <div className="text-[#D4A338] text-7xl font-serif leading-none mb-3"
+                style={{ opacity: 0.30 }}>&ldquo;</div>
+              <p className="text-xl text-white leading-relaxed mb-6 max-w-2xl"
+                style={{ fontFamily: "var(--font-fraunces)", opacity: 0.80 }}>
+                Antes de viajar a Brasil con mis hijos no sabía nada sobre el dengue.
+                SARIQAMA me explicó todo de forma clara y me dio la lista exacta de lo que necesitaba llevar.
+              </p>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-[#2D9E8C] flex items-center justify-center font-bold text-white text-sm">
+                  V
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-white">Valentina R.</p>
+                  <p className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>Viajó a Brasil · 2 hijos</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ── CÓMO FUNCIONA ─────────────────────────────────────────────────────── */}
+      <section id="como-funciona" className="py-24 px-6"
+        style={{ background: '#0A2238' }}>
+        <div className="max-w-6xl mx-auto">
+          <div className="flex flex-col lg:flex-row gap-20 items-start">
+
+            {/* Sticky left */}
+            <div className="lg:sticky lg:top-28 lg:w-72 flex-shrink-0">
+              <p className="text-[#2D9E8C] text-xs font-bold uppercase tracking-widest mb-4">Proceso</p>
+              <h2 className="font-semibold text-white mb-5 leading-tight"
+                style={{ fontFamily: "var(--font-fraunces)", fontSize: 'clamp(2rem, 4vw, 3rem)' }}>
+                Tres pasos.<br />Un viaje<br />seguro.
+              </h2>
+              <p className="text-sm leading-relaxed mb-8"
+                style={{ color: 'rgba(255,255,255,0.35)' }}>
+                De cero a completamente preparado en menos de 5 minutos.
+              </p>
+              <Link href="/registro">
+                <div className="inline-flex items-center gap-2 bg-[#2D9E8C] hover:bg-[#237F70] text-white font-semibold text-sm px-5 py-2.5 rounded-xl transition-colors cursor-pointer">
+                  Empezar gratis <ArrowRight className="h-4 w-4" />
+                </div>
+              </Link>
+            </div>
+
+            {/* Steps */}
+            <div className="flex-1">
+              {[
+                {
+                  num: '01', emoji: '✈️', color: '#2D9E8C',
+                  titulo: 'Crea tu viaje',
+                  desc: 'Selecciona destino, fechas y agrega a cada miembro de tu familia. SARIQAMA construye el perfil sanitario personalizado.',
+                },
+                {
+                  num: '02', emoji: '🗺️', color: '#D4A338',
+                  titulo: 'Conoce los riesgos',
+                  desc: 'Dengue, malaria, agua, vacunas — información CDC 2026 filtrada para tu destino específico, no genérica.',
+                },
+                {
+                  num: '03', emoji: '✅', color: '#C27058',
+                  titulo: 'Viaja protegido',
+                  desc: 'Checklist personalizado, botiquín curado por destino y edad, y evaluador de síntomas si algo ocurre en el viaje.',
+                },
+              ].map((paso, i) => (
+                <div key={paso.num} className={`flex gap-6 relative ${i < 2 ? 'pb-12' : ''}`}>
+                  {/* Connector line */}
+                  {i < 2 && (
+                    <div className="absolute left-7 top-16 bottom-0 w-px"
+                      style={{ background: 'rgba(255,255,255,0.07)' }} />
+                  )}
+                  <div className="flex-shrink-0">
+                    <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl"
+                      style={{
+                        background: `${paso.color}18`,
+                        border: `1px solid ${paso.color}30`,
+                      }}>
+                      {paso.emoji}
+                    </div>
+                  </div>
+                  <div className="pt-1">
+                    <p className="text-xs font-bold tracking-widest mb-2"
+                      style={{ color: 'rgba(255,255,255,0.20)' }}>{paso.num}</p>
+                    <h3 className="text-xl font-semibold text-white mb-2"
+                      style={{ fontFamily: "var(--font-fraunces)" }}>{paso.titulo}</h3>
+                    <p className="text-sm leading-relaxed max-w-sm"
+                      style={{ color: 'rgba(255,255,255,0.40)' }}>{paso.desc}</p>
+                  </div>
                 </div>
               ))}
             </div>
           </div>
+        </div>
+      </section>
 
-          {/* Ola inferior */}
-          <div className="absolute bottom-0 left-0 right-0 leading-none">
-            <svg viewBox="0 0 1440 80" preserveAspectRatio="none" className="w-full h-16 sm:h-20 block">
-              <path d="M0,80 C240,20 480,70 720,45 C960,20 1200,65 1440,35 L1440,80 Z" fill="#F7FFFE" />
-            </svg>
+      {/* ── DESTINOS ──────────────────────────────────────────────────────────── */}
+      <section id="destinos" className="py-24 px-6 bg-white">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-12">
+            <div>
+              <p className="text-[#2D9E8C] text-xs font-bold uppercase tracking-widest mb-3">Cobertura</p>
+              <h2 className="font-semibold text-[#1A3D5C]"
+                style={{ fontFamily: "var(--font-fraunces)", fontSize: 'clamp(2rem, 4vw, 3rem)' }}>
+                Destinos cubiertos
+              </h2>
+            </div>
+            <p className="text-sm text-slate-400">CDC Yellow Book 2026</p>
           </div>
-        </section>
-
-        {/* ── FEATURE STRIPS ────────────────────────────────────────────────── */}
-        <section className="py-10 px-5">
-          <div className="max-w-5xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-4">
-            {FEATURES.map(f => (
-              <div key={f.label} className="flex flex-col items-center text-center p-5 bg-white rounded-2xl"
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+            {DESTINOS.map(d => (
+              <div key={d.nombre}
+                className="rounded-2xl p-5 text-center bg-white hover-lift"
                 style={{ boxShadow: 'var(--shadow-sm)' }}>
-                <div className="w-10 h-10 rounded-xl bg-[#E0F5F2] flex items-center justify-center mb-3">
-                  <f.icon className="h-5 w-5 text-[#2D9E8C]" />
+                <div className="flex justify-center mb-3">
+                  <FlagImg code={d.code} size={52} className="rounded-xl shadow-sm" />
                 </div>
-                <p className="text-xs font-semibold text-[#1A3D5C] mb-0.5 leading-tight">{f.label}</p>
-                <p className="text-[11px] text-slate-400">{f.desc}</p>
+                <p className="font-semibold text-[#1A3D5C] text-sm mb-1">{d.nombre}</p>
+                <p className="text-[11px] text-slate-400 leading-tight">{d.riesgo}</p>
               </div>
             ))}
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* ── CÓMO FUNCIONA ─────────────────────────────────────────────────── */}
-        <section id="como-funciona" className="py-20 px-5">
-          <div className="max-w-5xl mx-auto">
-            <div className="text-center mb-14">
-              <p className="text-[#D4A338] text-xs font-bold uppercase tracking-widest mb-3">Proceso simple</p>
-              <h2 className="text-3xl sm:text-4xl font-semibold text-[#1A3D5C] mb-4"
-                style={{ fontFamily: "var(--font-fraunces)" }}>
-                Tres pasos para viajar protegido
-              </h2>
-              <p className="text-slate-500 max-w-xl mx-auto text-sm leading-relaxed">
-                SARIQAMA te acompaña desde la planificación hasta el regreso,
-                con información basada en fuentes clínicas reales.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-              {PASOS.map((paso, i) => (
-                <div
-                  key={paso.num}
-                  className="group bg-white rounded-3xl p-7 hover-lift cursor-default"
-                >
-                  <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${paso.gradient} flex items-center justify-center text-2xl mb-5`}
-                    style={{ boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}>
-                    {paso.emoji}
-                  </div>
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="text-xs font-bold text-[#D4A338] bg-[#FBF0D4] px-2.5 py-0.5 rounded-full">
-                      Paso {paso.num}
-                    </span>
-                  </div>
-                  <h3 className="font-semibold text-[#1A3D5C] mb-2 text-lg"
-                    style={{ fontFamily: "var(--font-fraunces)" }}>
-                    {paso.titulo}
-                  </h3>
-                  <p className="text-sm text-slate-500 leading-relaxed">{paso.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ── PLANES ────────────────────────────────────────────────────────── */}
-        <section id="planes" className="py-20 px-5 relative overflow-hidden"
-          style={{
-            background: 'linear-gradient(to bottom, #F7FFFE 0%, #EEF8F6 100%)',
-          }}>
-          <div className="max-w-5xl mx-auto">
-            <div className="text-center mb-14">
-              <p className="text-[#D4A338] text-xs font-bold uppercase tracking-widest mb-3">Precios transparentes</p>
-              <h2 className="text-3xl sm:text-4xl font-semibold text-[#1A3D5C] mb-4"
-                style={{ fontFamily: "var(--font-fraunces)" }}>
-                Elige tu nivel de protección
-              </h2>
-              <p className="text-slate-500 max-w-lg mx-auto text-sm leading-relaxed">
-                Empieza gratis y escala según lo que tu familia necesita.
-                Sin suscripciones ni letras pequeñas.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-4xl mx-auto items-start">
-              {PLANES.map(plan => (
-                <div
-                  key={plan.id}
-                  className={`bg-white rounded-3xl overflow-hidden flex flex-col transition-all duration-300 ${
-                    plan.featured
-                      ? 'ring-2 ring-[#2D9E8C] hover:-translate-y-1'
-                      : 'hover:-translate-y-0.5'
-                  }`}
-                  style={{ boxShadow: plan.featured ? 'var(--shadow-xl)' : 'var(--shadow-md)' }}
-                >
-                  {/* Header */}
-                  <div className={`${plan.headerBg} px-6 py-6 relative`}>
-                    {plan.badge && (
-                      <div className="absolute top-4 right-4">
-                        <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-white/25 text-white backdrop-blur-sm">
-                          {plan.badge}
-                        </span>
-                      </div>
-                    )}
-                    <p className={`text-xs font-bold uppercase tracking-widest mb-3 ${plan.id === 'gratis' ? 'text-slate-400' : 'text-white/70'}`}>
-                      {plan.nombre}
-                    </p>
-                    <div className={`text-3xl font-bold mb-0.5 ${plan.headerText}`}
-                      style={{ fontFamily: "var(--font-fraunces)" }}>
-                      {plan.precio}
-                    </div>
-                    <div className={`text-xs mb-4 ${plan.id === 'gratis' ? 'text-slate-400' : 'text-white/60'}`}>
-                      {plan.precioSub}
-                    </div>
-                    <p className={`text-xs leading-relaxed ${plan.id === 'gratis' ? 'text-slate-500' : 'text-white/80'}`}>
-                      {plan.descripcion}
-                    </p>
-                  </div>
-
-                  {/* Features */}
-                  <div className="px-6 py-5 flex-1">
-                    <ul className="space-y-3">
-                      {plan.items.map(item => (
-                        <li key={item.texto} className="flex items-center gap-3">
-                          <span className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${item.ok ? 'bg-[#E0F5F2]' : 'bg-slate-100'}`}>
-                            {item.ok
-                              ? <Check className="h-3 w-3 text-[#2D9E8C]" />
-                              : <span className="w-2 h-px bg-slate-300 rounded-full" />
-                            }
-                          </span>
-                          <span className={`text-sm leading-tight ${item.ok ? 'text-slate-700' : 'text-slate-400'}`}>
-                            {item.texto}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  {/* CTA */}
-                  <div className="px-6 pb-6">
-                    <Link href={plan.ctaHref} className="block">
-                      <Button className={`w-full rounded-xl font-semibold h-11 ${plan.ctaStyle} transition-all duration-200`}
-                        style={{ boxShadow: plan.featured ? 'var(--shadow-md)' : 'none' }}>
-                        {plan.cta}
-                      </Button>
-                    </Link>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <p className="text-center text-xs text-slate-400 mt-8 max-w-md mx-auto leading-relaxed">
-              🧪 <strong className="text-slate-500">Programa piloto activo.</strong>{" "}
-              Contáctanos en{" "}
-              <a href="mailto:contacto@sariqama.com" className="text-[#2D9E8C] hover:underline font-medium">
-                contacto@sariqama.com
-              </a>{" "}
-              y te activamos en menos de 24 horas.
-            </p>
-          </div>
-        </section>
-
-        {/* ── DESTINOS ──────────────────────────────────────────────────────── */}
-        <section id="destinos" className="py-20 px-5 bg-white">
-          <div className="max-w-5xl mx-auto">
-            <div className="text-center mb-12">
-              <p className="text-[#D4A338] text-xs font-bold uppercase tracking-widest mb-3">Cobertura clínica</p>
-              <h2 className="text-3xl sm:text-4xl font-semibold text-[#1A3D5C] mb-3"
-                style={{ fontFamily: "var(--font-fraunces)" }}>
-                Destinos cubiertos
-              </h2>
-              <p className="text-slate-400 text-sm">Actualizado con CDC Yellow Book 2026</p>
-            </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-              {DESTINOS.map(d => (
-                <div key={d.nombre} className="group rounded-2xl p-5 text-center bg-white hover-lift">
-                  <div className="flex justify-center mb-3">
-                    <FlagImg code={d.code} size={56} className="rounded-xl shadow-md" />
-                  </div>
-                  <div className="font-semibold text-[#1A3D5C] mb-0.5 text-sm">{d.nombre}</div>
-                  <div className="text-[10px] text-slate-400 mb-2.5">{d.continente}</div>
-                  <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full ${d.chip}`}>
-                    {d.riesgo}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ── TESTIMONIOS ───────────────────────────────────────────────────── */}
-        <section className="py-20 px-5"
-          style={{ background: 'linear-gradient(135deg, #1A3D5C 0%, #0A2238 100%)' }}>
-          <div className="max-w-5xl mx-auto">
-            <div className="text-center mb-12">
-              <p className="text-[#D4A338] text-xs font-bold uppercase tracking-widest mb-3">Familias SARIQAMA</p>
-              <h2 className="text-3xl sm:text-4xl font-semibold text-white"
-                style={{ fontFamily: "var(--font-fraunces)" }}>
-                Lo que dicen las familias
-              </h2>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-              {TESTIMONIOS.map((t, i) => (
-                <div key={i} className="card-glass rounded-2xl p-6 flex flex-col">
-                  {/* Comillas decorativas */}
-                  <div className="text-[#D4A338] text-4xl font-serif leading-none mb-3 opacity-70">&ldquo;</div>
-                  <p className="text-white/80 text-sm leading-relaxed mb-6 flex-1">
-                    {t.texto}
-                  </p>
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-full bg-[#2D9E8C] flex items-center justify-center flex-shrink-0">
-                      <span className="text-xs font-bold text-white">{t.inicial}</span>
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-white">{t.nombre}</p>
-                      <p className="text-[11px] text-white/50">{t.detalle}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ── CTA FINAL ─────────────────────────────────────────────────────── */}
-        <section className="py-24 px-5 bg-[#F7FFFE] text-center">
-          <div className="max-w-2xl mx-auto">
-            <div className="inline-flex items-center gap-2 bg-[#E0F5F2] text-[#2D9E8C] text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full mb-6">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#2D9E8C]" />
-              Gratis para empezar
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-semibold text-[#1A3D5C] mb-4"
-              style={{ fontFamily: "var(--font-fraunces)" }}>
-              ¿Cuándo sale tu próximo viaje?
+      {/* ── PLANES ────────────────────────────────────────────────────────────── */}
+      <section id="planes" className="py-24 px-6" style={{ background: '#F7FFFE' }}>
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-14">
+            <p className="text-[#2D9E8C] text-xs font-bold uppercase tracking-widest mb-4">Precios transparentes</p>
+            <h2 className="font-semibold text-[#1A3D5C] mb-4"
+              style={{ fontFamily: "var(--font-fraunces)", fontSize: 'clamp(2rem, 4vw, 3rem)' }}>
+              Elige tu nivel de protección
             </h2>
-            <p className="text-slate-500 mb-10 max-w-md mx-auto leading-relaxed">
-              Crea el perfil de tu familia en minutos y obtén tu primer reporte sanitario completo — gratis.
+            <p className="text-slate-400 text-sm max-w-md mx-auto">
+              Empieza gratis. Escala según lo que tu familia necesita.
             </p>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Link href="/registro">
-                <Button size="lg"
-                  className="bg-[#1A3D5C] hover:bg-[#254E72] text-white font-bold px-10 h-14 rounded-2xl text-base w-full sm:w-auto transition-all duration-200 hover:-translate-y-0.5"
-                  style={{ boxShadow: 'var(--shadow-lg)' }}>
-                  Empezar gratis
-                  <ChevronRight className="ml-2 h-5 w-5" />
-                </Button>
-              </Link>
-              <a href="mailto:contacto@sariqama.com">
-                <Button size="lg" variant="outline"
-                  className="border-[#1A3D5C]/20 text-[#1A3D5C] hover:bg-[#1A3D5C]/05 rounded-2xl text-sm w-full sm:w-auto h-14 px-7 font-medium">
-                  Contactar al equipo
-                </Button>
-              </a>
-            </div>
           </div>
-        </section>
 
-        {/* ── DISCLAIMER ────────────────────────────────────────────────────── */}
-        <div className="py-5 px-5 bg-[#F7FFFE] border-t border-slate-100">
-          <p className="text-center text-[11px] text-slate-400 max-w-2xl mx-auto leading-relaxed">
-            <strong className="text-slate-500">Aviso importante:</strong>{" "}
-            SARIQAMA entrega orientación sanitaria basada en fuentes clínicas validadas (CDC Yellow Book 2026).
-            No reemplaza una evaluación médica profesional. Ante signos de alarma, busca atención médica de inmediato.
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {PLANES.map(plan => (
+              <div key={plan.id}
+                className={`rounded-3xl overflow-hidden flex flex-col ${plan.featured ? 'ring-2 ring-[#2D9E8C]' : ''}`}
+                style={{ boxShadow: plan.featured ? 'var(--shadow-xl)' : 'var(--shadow-sm)' }}>
+                {/* Header */}
+                <div className={`px-6 py-7 ${plan.featured
+                  ? 'bg-gradient-to-br from-[#1A3D5C] to-[#1F4D72]'
+                  : 'bg-white border-b border-slate-100'}`}>
+                  {plan.featured && (
+                    <span className="inline-block text-[10px] font-bold text-[#2D9E8C] bg-[#2D9E8C]/15 px-2.5 py-1 rounded-full uppercase tracking-widest mb-3">
+                      Más popular
+                    </span>
+                  )}
+                  <p className={`text-xs font-bold uppercase tracking-widest mb-2 ${plan.featured ? 'text-white/40' : 'text-slate-400'}`}>
+                    {plan.nombre}
+                  </p>
+                  <div className={`text-4xl font-bold mb-1 ${plan.featured ? 'text-white' : 'text-[#1A3D5C]'}`}
+                    style={{ fontFamily: "var(--font-fraunces)" }}>
+                    {plan.precio}
+                  </div>
+                  <p className={`text-xs ${plan.featured ? 'text-white/35' : 'text-slate-400'}`}>{plan.precioSub}</p>
+                </div>
+                {/* Items */}
+                <div className="bg-white px-6 py-5 flex-1">
+                  <ul className="space-y-3">
+                    {plan.items.map(item => (
+                      <li key={item.texto} className="flex items-center gap-3">
+                        <div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${item.ok ? 'bg-[#E0F5F2]' : 'bg-slate-100'}`}>
+                          {item.ok
+                            ? <Check className="h-3 w-3 text-[#2D9E8C]" />
+                            : <span className="w-2 h-px bg-slate-300 block rounded" />}
+                        </div>
+                        <span className={`text-sm ${item.ok ? 'text-slate-700' : 'text-slate-400'}`}>
+                          {item.texto}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                {/* CTA */}
+                <div className="bg-white px-6 pb-6">
+                  <Link href={plan.ctaHref} className="block">
+                    <Button className={`w-full rounded-xl font-semibold h-11 ${plan.ctaStyle}`}
+                      style={{ boxShadow: plan.featured ? 'var(--shadow-md)' : 'none' }}>
+                      {plan.cta}
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <p className="text-center text-xs text-slate-400 mt-8">
+            🧪 Programa piloto —{" "}
+            <a href="mailto:contacto@sariqama.com" className="text-[#2D9E8C] hover:underline font-medium">
+              contacto@sariqama.com
+            </a>
           </p>
         </div>
-      </main>
+      </section>
 
-      {/* ── FOOTER ────────────────────────────────────────────────────────── */}
-      <footer className="bg-[#0F2D45] px-5 pt-14 pb-8">
-        <div className="max-w-5xl mx-auto">
+      {/* ── CTA FINAL ─────────────────────────────────────────────────────────── */}
+      <section className="py-32 px-6 relative overflow-hidden"
+        style={{ background: 'linear-gradient(160deg, #1A3D5C 0%, #07192A 100%)' }}>
+        <div className="absolute inset-0 pointer-events-none" style={{
+          backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px)',
+          backgroundSize: '28px 28px',
+        }} />
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] pointer-events-none"
+          style={{ background: 'radial-gradient(circle at 70% 30%, rgba(45,158,140,0.15), transparent 65%)' }} />
+
+        <div className="relative z-10 max-w-3xl mx-auto text-center">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-widest mb-8"
+            style={{
+              background: 'rgba(255,255,255,0.06)',
+              border: '1px solid rgba(255,255,255,0.10)',
+              color: 'rgba(255,255,255,0.45)',
+            }}>
+            <span className="w-1.5 h-1.5 rounded-full bg-[#2D9E8C] animate-pulse" />
+            Gratis para empezar
+          </div>
+          <h2 className="font-semibold text-white mb-6 leading-tight"
+            style={{ fontFamily: "var(--font-fraunces)", fontSize: 'clamp(2.5rem, 6vw, 4.5rem)' }}>
+            ¿Cuándo sale<br />tu próximo viaje?
+          </h2>
+          <p className="text-lg mb-10 max-w-md mx-auto"
+            style={{ color: 'rgba(255,255,255,0.40)' }}>
+            Crea el perfil de tu familia en minutos y obtén tu primer reporte sanitario completo.
+          </p>
+          <Link href="/registro">
+            <Button size="lg"
+              className="bg-[#2D9E8C] hover:bg-[#237F70] text-white font-bold px-12 h-14 rounded-2xl text-base transition-all duration-200 hover:-translate-y-0.5"
+              style={{ boxShadow: '0 8px 32px rgba(45,158,140,0.40)' }}>
+              Empezar gratis
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+          </Link>
+          <p className="text-xs mt-5" style={{ color: 'rgba(255,255,255,0.20)' }}>
+            Sin tarjeta de crédito · Sin suscripción
+          </p>
+        </div>
+      </section>
+
+      {/* ── DISCLAIMER ────────────────────────────────────────────────────────── */}
+      <div className="py-5 px-6 border-t border-slate-100" style={{ background: '#F7FFFE' }}>
+        <p className="text-center text-[11px] text-slate-400 max-w-2xl mx-auto leading-relaxed">
+          <strong className="text-slate-500">Aviso:</strong>{" "}
+          SARIQAMA entrega orientación sanitaria basada en CDC Yellow Book 2026.
+          No reemplaza evaluación médica profesional.
+        </p>
+      </div>
+
+      {/* ── FOOTER ────────────────────────────────────────────────────────────── */}
+      <footer className="px-6 pt-14 pb-8" style={{ background: '#07192A' }}>
+        <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-10 mb-12">
-            {/* Brand col */}
             <div className="sm:col-span-2">
-              <Image src="/logo.png" alt="SARIQAMA" width={140} height={44} className="h-10 w-auto object-contain mb-4 brightness-0 invert opacity-90" />
-              <p className="text-[#A8C5DA] text-sm leading-relaxed max-w-xs">
+              <Image src="/logo.png" alt="SARIQAMA" width={130} height={40}
+                className="h-9 w-auto object-contain mb-4 brightness-0 invert opacity-80" />
+              <p className="text-sm leading-relaxed max-w-xs" style={{ color: '#A8C5DA' }}>
                 Salud del viajero para familias latinoamericanas.
                 Información clínica validada, en español.
               </p>
               <div className="mt-5 flex items-center gap-2">
                 <div className="w-1.5 h-1.5 rounded-full bg-[#2D9E8C] animate-pulse" />
-                <span className="text-[11px] text-[#2D9E8C] font-semibold">Piloto activo — Acceso gratuito</span>
+                <span className="text-[11px] text-[#2D9E8C] font-semibold">Piloto activo · Acceso gratuito</span>
               </div>
             </div>
-
-            {/* Links */}
             <div>
-              <p className="text-white/40 text-[10px] font-bold uppercase tracking-widest mb-4">App</p>
+              <p className="text-[10px] font-bold uppercase tracking-widest mb-4"
+                style={{ color: 'rgba(255,255,255,0.25)' }}>App</p>
               <div className="flex flex-col gap-2.5">
                 {[
-                  { href: "#como-funciona", label: "Cómo funciona" },
-                  { href: "#planes",        label: "Planes"         },
-                  { href: "#destinos",      label: "Destinos"       },
-                  { href: "/login",         label: "Iniciar sesión" },
-                  { href: "/registro",      label: "Registrarse"   },
+                  { href: '#features', label: 'Features' },
+                  { href: '#planes',   label: 'Planes'   },
+                  { href: '/login',    label: 'Iniciar sesión' },
+                  { href: '/registro', label: 'Registrarse'    },
                 ].map(l => (
-                  <a key={l.label} href={l.href} className="text-[#A8C5DA] hover:text-white text-sm transition-colors">
+                  <a key={l.label} href={l.href}
+                    className="text-sm transition-colors hover:text-white"
+                    style={{ color: '#A8C5DA' }}>
                     {l.label}
                   </a>
                 ))}
               </div>
             </div>
-
             <div>
-              <p className="text-white/40 text-[10px] font-bold uppercase tracking-widest mb-4">Contacto</p>
+              <p className="text-[10px] font-bold uppercase tracking-widest mb-4"
+                style={{ color: 'rgba(255,255,255,0.25)' }}>Contacto</p>
               <div className="flex flex-col gap-2.5">
-                <a href="mailto:contacto@sariqama.com" className="text-[#A8C5DA] hover:text-white text-sm transition-colors">
+                <a href="mailto:contacto@sariqama.com"
+                  className="text-sm transition-colors hover:text-white"
+                  style={{ color: '#A8C5DA' }}>
                   contacto@sariqama.com
                 </a>
-                <Link href="/terminos" className="text-[#A8C5DA] hover:text-white text-sm transition-colors">
+                <Link href="/terminos"
+                  className="text-sm transition-colors hover:text-white"
+                  style={{ color: '#A8C5DA' }}>
                   Términos y condiciones
                 </Link>
-                <Link href="/terminos" className="text-[#A8C5DA] hover:text-white text-sm transition-colors">
-                  Política de privacidad
+                <Link href="/terminos"
+                  className="text-sm transition-colors hover:text-white"
+                  style={{ color: '#A8C5DA' }}>
+                  Privacidad
                 </Link>
-              </div>
-              <div className="mt-5 p-3 rounded-xl border border-white/10 bg-white/05">
-                <p className="text-[10px] text-white/40 leading-relaxed">
-                  Fuente clínica: <span className="text-white/60 font-medium">CDC Yellow Book 2026</span>
-                </p>
               </div>
             </div>
           </div>
-
-          <div className="border-t border-white/08 pt-6 flex flex-col sm:flex-row justify-between items-center gap-2">
-            <p className="text-white/30 text-xs">© 2026 SARIQAMA · Orientación sanitaria, no diagnóstico médico.</p>
-            <p className="text-white/20 text-xs">Hecho en Chile 🇨🇱</p>
+          <div className="pt-6 flex flex-col sm:flex-row justify-between items-center gap-2"
+            style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+            <p className="text-xs" style={{ color: 'rgba(255,255,255,0.20)' }}>
+              © 2026 SARIQAMA · Orientación sanitaria, no diagnóstico médico.
+            </p>
+            <p className="text-xs" style={{ color: 'rgba(255,255,255,0.15)' }}>Hecho en Chile 🇨🇱</p>
           </div>
         </div>
       </footer>
