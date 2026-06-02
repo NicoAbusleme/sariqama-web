@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect, notFound } from 'next/navigation'
-import { ChevronLeft } from 'lucide-react'
+import { ChevronLeft, Plane, AlertTriangle, Stethoscope } from 'lucide-react'
 import Link from 'next/link'
 import { getDestinoBySlug } from '@/lib/content/destinos'
 import { FlagImg } from '@/components/ui/flag-img'
@@ -179,32 +179,34 @@ export default async function BotiquinPage({ params }: { params: Promise<{ id: s
   const totalItems = secciones.reduce((acc, s) => acc + s.items.length, 0)
 
   return (
-    <div className="min-h-screen bg-[#F7FFFE]">
-      {/* Header */}
-      <header className="bg-gradient-to-br from-[#1A3D5C] to-[#0F2D45] px-5 pt-12 pb-8">
+    <div className="min-h-screen bg-[#F8FAFB]">
+      {/* ── Header limpio ─────────────────────────────────────────────── */}
+      <header className="bg-white border-b border-[#E8EEF4] px-5 pt-5 pb-5">
         <div className="max-w-2xl mx-auto">
           <Link
             href={`/viaje/${id}`}
-            className="inline-flex items-center gap-1.5 text-[#A8C5DA] text-sm mb-5 hover:text-white transition-colors"
+            className="inline-flex items-center gap-1.5 text-slate-400 hover:text-[#1A3D5C] text-sm mb-4 transition-colors"
           >
-            <ChevronLeft className="h-4 w-4" /> Volver al viaje
+            <ChevronLeft className="h-4 w-4" aria-hidden="true" /> Volver al viaje
           </Link>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <FlagImg code={flagCode} size={36} className="rounded" />
-              <div>
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-10 h-10 rounded-xl overflow-hidden bg-slate-100 flex-shrink-0">
+                <FlagImg code={flagCode} size={40} className="w-full h-full object-cover" />
+              </div>
+              <div className="min-w-0">
                 <h1
-                  className="text-xl font-semibold text-white"
+                  className="text-xl font-semibold text-[#1A3D5C]"
                   style={{ fontFamily: 'var(--font-fraunces)' }}
                 >
                   Botiquín familiar
                 </h1>
-                <p className="text-[#A8C5DA] text-sm">{destino.nombre}</p>
+                <p className="text-sm text-slate-400">{destino.nombre}</p>
               </div>
             </div>
-            <div className="bg-white/10 rounded-2xl px-4 py-2 text-center">
-              <p className="text-2xl font-bold text-white">{totalItems}</p>
-              <p className="text-[#A8C5DA] text-xs">ítems</p>
+            <div className="bg-[#E8F7F4] rounded-xl px-3 py-2 text-center flex-shrink-0">
+              <p className="text-xl font-bold text-[#1A3D5C]">{totalItems}</p>
+              <p className="text-[11px] text-[#2D9E8C] font-medium">ítems</p>
             </div>
           </div>
         </div>
@@ -219,8 +221,8 @@ export default async function BotiquinPage({ params }: { params: Promise<{ id: s
         >
 
         {/* Tip intro */}
-        <div className="bg-[#E0F5F2] border border-[#2D9E8C]/20 rounded-2xl px-4 py-3 mb-5 flex items-start gap-2">
-          <span className="text-base mt-0.5">✈️</span>
+        <div className="bg-[#E8F7F4] border border-[#2D9E8C]/20 rounded-xl px-4 py-3 mb-4 flex items-start gap-2.5">
+          <Plane className="h-4 w-4 text-[#2D9E8C] flex-shrink-0 mt-0.5" aria-hidden="true" />
           <p className="text-xs text-[#237F70] leading-relaxed">
             <strong>Tip de equipaje:</strong> Líquidos limitados a 100 ml en equipaje de mano.
             Llevar medicamentos en su envase original con prospecto. Consulta restricciones de tu aerolínea.
@@ -228,8 +230,8 @@ export default async function BotiquinPage({ params }: { params: Promise<{ id: s
         </div>
 
         {tieneNinos && (
-          <div className="bg-amber-50 border border-amber-100 rounded-2xl px-4 py-3 mb-5 flex items-start gap-2">
-            <span className="text-base mt-0.5">👶</span>
+          <div className="bg-amber-50 border border-amber-100 rounded-xl px-4 py-3 mb-4 flex items-start gap-2.5">
+            <AlertTriangle className="h-4 w-4 text-amber-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
             <p className="text-xs text-amber-700 leading-relaxed">
               <strong>Viajas con niños:</strong> Incluimos sección pediátrica personalizada. Siempre verifica
               dosis con tu pediatra antes de viajar.
@@ -238,34 +240,32 @@ export default async function BotiquinPage({ params }: { params: Promise<{ id: s
         )}
 
         {/* Secciones */}
-        <div className="flex flex-col gap-4">
+        <div className="space-y-4">
           {secciones.map((seccion) => (
-            <div key={seccion.titulo} className={`rounded-2xl border p-4 ${seccion.color}`}>
+            <div key={seccion.titulo} className="bg-white rounded-2xl border border-[#E8EEF4] overflow-hidden"
+              style={{ boxShadow: 'var(--shadow-xs)' }}>
               {/* Encabezado sección */}
-              <div className="flex items-center gap-2 mb-3">
-                <span className="text-lg">{seccion.emoji}</span>
+              <div className="flex items-center gap-2.5 px-4 py-3 border-b border-[#F0F4F8] bg-[#F8FAFB]">
+                <span className="text-base" aria-hidden="true">{seccion.emoji}</span>
                 <h2
-                  className="font-semibold text-slate-800 text-sm"
+                  className="font-semibold text-[#1A3D5C] text-sm flex-1"
                   style={{ fontFamily: 'var(--font-fraunces)' }}
                 >
                   {seccion.titulo}
                 </h2>
-                <span className="ml-auto text-xs text-slate-400 font-medium">
+                <span className="text-[11px] text-slate-400 font-medium">
                   {seccion.items.length} ítems
                 </span>
               </div>
 
               {/* Items */}
-              <div className="flex flex-col gap-2">
+              <div className="divide-y divide-[#F0F4F8]">
                 {seccion.items.map((item, idx) => (
-                  <div
-                    key={idx}
-                    className="bg-white rounded-xl border border-slate-100 p-3.5"
-                  >
+                  <div key={idx} className="px-4 py-3.5">
                     <div className="flex items-start gap-2.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-teal-400 flex-shrink-0 mt-2" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#2D9E8C] flex-shrink-0 mt-1.5" aria-hidden="true" />
                       <div>
-                        <p className="text-sm font-medium text-slate-800 leading-snug">
+                        <p className="text-sm font-medium text-[#1A3D5C] leading-snug">
                           {item.nombre}
                         </p>
                         {item.nota && (
@@ -284,12 +284,14 @@ export default async function BotiquinPage({ params }: { params: Promise<{ id: s
 
         {/* CTA médico */}
         <Link href="/teleorientacion">
-          <div className="mt-5 bg-gradient-to-r from-[#1A3D5C] to-[#1F4D72] rounded-2xl p-5 flex items-center justify-between hover:from-[#254E72] hover:to-[#1F4D72] transition-all">
+          <div className="mt-4 bg-[#1A3D5C] rounded-2xl p-5 flex items-center justify-between hover:bg-[#254E72] transition-colors cursor-pointer">
             <div>
               <p className="font-semibold text-white text-sm">¿Dudas sobre qué llevar?</p>
               <p className="text-[#A8C5DA] text-xs mt-0.5">Habla con un especialista en medicina del viajero</p>
             </div>
-            <div className="text-2xl">👩‍⚕️</div>
+            <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center flex-shrink-0">
+              <Stethoscope className="h-5 w-5 text-white" strokeWidth={1.8} aria-hidden="true" />
+            </div>
           </div>
         </Link>
 

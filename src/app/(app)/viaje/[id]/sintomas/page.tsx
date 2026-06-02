@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect, notFound } from 'next/navigation'
-import { ChevronLeft } from 'lucide-react'
+import { ChevronLeft, AlertTriangle } from 'lucide-react'
 import Link from 'next/link'
 import { SintomasClient } from './SintomasClient'
 import { HistorialCard } from './HistorialCard'
@@ -39,28 +39,30 @@ export default async function SintomasPage({ params }: { params: Promise<{ id: s
   const flagCode = destino?.pais_code ?? 'un'
 
   return (
-    <div className="min-h-screen bg-[#F7FFFE]">
-      {/* Header */}
-      <header className="bg-gradient-to-br from-[#1A3D5C] to-[#0F2D45] px-5 pt-12 pb-8">
+    <div className="min-h-screen bg-[#F8FAFB]">
+      {/* ── Header limpio ─────────────────────────────────────────────── */}
+      <header className="bg-white border-b border-[#E8EEF4] px-5 pt-5 pb-5">
         <div className="max-w-2xl mx-auto">
           <Link href={`/viaje/${id}`}
-            className="inline-flex items-center gap-1.5 text-[#A8C5DA] text-sm mb-5 hover:text-white transition-colors">
-            <ChevronLeft className="h-4 w-4" /> Volver al viaje
+            className="inline-flex items-center gap-1.5 text-slate-400 hover:text-[#1A3D5C] text-sm mb-4 transition-colors">
+            <ChevronLeft className="h-4 w-4" aria-hidden="true" /> Volver al viaje
           </Link>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <FlagImg code={flagCode} size={36} className="rounded" />
-              <div>
-                <h1 className="text-xl font-semibold text-white" style={{ fontFamily: 'var(--font-fraunces)' }}>
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-10 h-10 rounded-xl overflow-hidden bg-slate-100 flex-shrink-0">
+                <FlagImg code={flagCode} size={40} className="w-full h-full object-cover" />
+              </div>
+              <div className="min-w-0">
+                <h1 className="text-xl font-semibold text-[#1A3D5C]" style={{ fontFamily: 'var(--font-fraunces)' }}>
                   Evaluador de síntomas
                 </h1>
-                <p className="text-[#A8C5DA] text-sm">{viaje.destino_nombre}</p>
+                <p className="text-sm text-slate-400">{viaje.destino_nombre}</p>
               </div>
             </div>
             {(historial?.length ?? 0) > 0 && (
-              <div className="bg-white/10 rounded-2xl px-4 py-2 text-center">
-                <p className="text-2xl font-bold text-white">{historial!.length}</p>
-                <p className="text-[#A8C5DA] text-xs">registros</p>
+              <div className="bg-[#E8F7F4] rounded-xl px-3 py-2 text-center flex-shrink-0">
+                <p className="text-xl font-bold text-[#1A3D5C]">{historial!.length}</p>
+                <p className="text-[11px] text-[#2D9E8C] font-medium">registros</p>
               </div>
             )}
           </div>
@@ -76,8 +78,8 @@ export default async function SintomasPage({ params }: { params: Promise<{ id: s
         >
 
         {/* Aviso clínico */}
-        <div className="bg-amber-50 border border-amber-100 rounded-2xl px-4 py-3 mb-5 flex items-start gap-2">
-          <span className="text-base mt-0.5">⚕️</span>
+        <div className="bg-amber-50 border border-amber-100 rounded-xl px-4 py-3 mb-5 flex items-start gap-2.5">
+          <AlertTriangle className="h-4 w-4 text-amber-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
           <p className="text-xs text-amber-700 leading-relaxed">
             Este semáforo usa <strong>criterios clínicos validados</strong> (CDC Yellow Book 2026), sin inteligencia artificial.
             No reemplaza evaluación médica. Ante signos de alarma, busca atención inmediata.
@@ -90,10 +92,10 @@ export default async function SintomasPage({ params }: { params: Promise<{ id: s
         {/* ─── Historial ─────────────────────────────────────────────────── */}
         {historial && historial.length > 0 && (
           <div className="mt-8">
-            <h2 className="font-semibold text-slate-800 mb-3 flex items-center gap-2"
+            <h2 className="font-semibold text-[#1A3D5C] mb-3 flex items-center gap-2"
               style={{ fontFamily: 'var(--font-fraunces)' }}>
-              📋 Historial de evaluaciones
-              <span className="text-xs font-normal text-slate-400 ml-1">{historial.length} registro{historial.length !== 1 ? 's' : ''}</span>
+              Historial de evaluaciones
+              <span className="text-xs font-normal text-slate-400">{historial.length} registro{historial.length !== 1 ? 's' : ''}</span>
             </h2>
 
             <div className="flex flex-col gap-3">

@@ -172,20 +172,22 @@ export default async function RiesgosPage({ params }: { params: Promise<{ id: st
     && (nivelMax === 'alto' || nivelMax === 'muy_alto')
 
   return (
-    <div className="min-h-screen bg-[#F7FFFE]">
-      {/* Header */}
-      <header className="bg-gradient-to-br from-[#1A3D5C] to-[#0F2D45] px-5 pt-12 pb-8">
+    <div className="min-h-screen bg-[#F8FAFB]">
+      {/* ── Header limpio ─────────────────────────────────────────────── */}
+      <header className="bg-white border-b border-[#E8EEF4] px-5 pt-5 pb-5">
         <div className="max-w-2xl mx-auto">
-          <Link href={`/viaje/${id}`} className="inline-flex items-center gap-1.5 text-[#A8C5DA] text-sm mb-5 hover:text-white transition-colors">
-            <ChevronLeft className="h-4 w-4" /> Volver al viaje
+          <Link href={`/viaje/${id}`} className="inline-flex items-center gap-1.5 text-slate-400 hover:text-[#1A3D5C] text-sm mb-4 transition-colors">
+            <ChevronLeft className="h-4 w-4" aria-hidden="true" /> Volver al viaje
           </Link>
           <div className="flex items-center gap-3">
-            <FlagImg code={flagCode} size={40} className="rounded" />
+            <div className="w-10 h-10 rounded-xl overflow-hidden bg-slate-100 flex-shrink-0">
+              <FlagImg code={flagCode} size={40} className="w-full h-full object-cover" />
+            </div>
             <div>
-              <h1 className="text-xl font-semibold text-white" style={{ fontFamily: 'var(--font-fraunces)' }}>
+              <h1 className="text-xl font-semibold text-[#1A3D5C]" style={{ fontFamily: 'var(--font-fraunces)' }}>
                 Riesgos de salud
               </h1>
-              <p className="text-[#A8C5DA] text-sm">{destino.nombre}</p>
+              <p className="text-sm text-slate-400">{destino.nombre}</p>
             </div>
           </div>
         </div>
@@ -194,9 +196,9 @@ export default async function RiesgosPage({ params }: { params: Promise<{ id: st
       <main className="max-w-2xl mx-auto px-5 py-5 pb-28">
 
         {/* Fuente */}
-        <div className="bg-[#E0F5F2] border border-[#2D9E8C]/20 rounded-2xl px-4 py-3 mb-4 flex items-center gap-2">
-          <span className="text-sm">📋</span>
-          <p className="text-xs text-[#2D9E8C]">
+        <div className="bg-[#E8F7F4] border border-[#2D9E8C]/20 rounded-xl px-4 py-3 mb-4 flex items-center gap-2">
+          <Radio className="h-3.5 w-3.5 text-[#2D9E8C] flex-shrink-0" aria-hidden="true" />
+          <p className="text-xs text-[#237F70]">
             Información basada en <strong>CDC Yellow Book 2026</strong> · Revisado {destino.revisado_at}
           </p>
         </div>
@@ -256,29 +258,26 @@ export default async function RiesgosPage({ params }: { params: Promise<{ id: st
           accentClass="border-[#2D9E8C]/40"
           defaultOpen={true}
         >
-          <div className="flex flex-col gap-3 mt-2">
+          <div className="space-y-2.5">
             {riesgosActivos.map(r => {
               const nivel = destino.riesgos[r.key as keyof typeof destino.riesgos] as NivelRiesgo
               return (
-                <div key={r.key} className="bg-slate-50 rounded-xl border border-slate-100 p-4">
-                  <div className="flex items-center justify-between mb-2.5">
-                    <div className="flex items-center gap-2.5">
-                      <span className="text-xl">{r.icono}</span>
-                      <span className="font-semibold text-slate-900 text-sm">{r.label}</span>
-                    </div>
+                <div key={r.key} className="bg-white rounded-xl border border-[#E8EEF4] p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-semibold text-[#1A3D5C] text-sm">{r.label}</span>
                     <RiskChip nivel={nivel} />
                   </div>
-                  <p className="text-xs text-slate-500 leading-relaxed pl-8">{r.tip}</p>
+                  <p className="text-xs text-slate-500 leading-relaxed">{r.tip}</p>
                 </div>
               )
             })}
             {riesgosNoAplican.length > 0 && (
-              <div className="bg-slate-50 rounded-xl border border-slate-100 p-4">
+              <div className="bg-[#F8FAFB] rounded-xl border border-[#E8EEF4] p-4">
                 <p className="text-xs font-semibold text-slate-400 mb-2">Sin riesgo relevante en este destino</p>
                 <div className="flex flex-wrap gap-2">
                   {riesgosNoAplican.map(r => (
-                    <span key={r.key} className="text-xs bg-white text-slate-400 border border-slate-100 px-3 py-1 rounded-full">
-                      {r.icono} {r.label}
+                    <span key={r.key} className="text-xs text-slate-400 border border-[#E8EEF4] bg-white px-3 py-1 rounded-full">
+                      {r.label}
                     </span>
                   ))}
                 </div>

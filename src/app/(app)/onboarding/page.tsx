@@ -224,11 +224,11 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center px-4 py-10">
+    <div className="min-h-screen bg-[#F8FAFB] flex flex-col items-center justify-center px-4 py-10">
       <div className="w-full max-w-lg">
 
         {/* Logo */}
-        <div className="flex items-center justify-center gap-2 mb-8">
+        <div className="flex items-center justify-center mb-8">
           <img src="/logo.png" alt="SARIQAMA" className="h-10 w-auto object-contain" />
         </div>
 
@@ -238,16 +238,19 @@ export default function OnboardingPage() {
             <span>Paso {paso} de {totalPasos}</span>
             <span>{Math.round(progreso)}%</span>
           </div>
-          <Progress value={progreso} className="h-2" />
+          <div className="h-1.5 bg-[#E8EEF4] rounded-full overflow-hidden">
+            <div className="h-full bg-[#2D9E8C] rounded-full transition-all duration-300"
+              style={{ width: `${progreso}%` }} />
+          </div>
         </div>
 
-        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-8">
+        <div className="bg-white rounded-2xl border border-[#E8EEF4] p-8" style={{ boxShadow: 'var(--shadow-sm)' }}>
 
           {/* PASO 1 — Integrantes de la familia */}
           {paso === 1 && (
             <div>
               <div className="flex items-center gap-3 mb-6">
-                <div className="p-2 bg-[#E0F5F2] rounded-xl">
+                <div className="p-2 bg-[#E8F7F4] rounded-xl">
                   <Users className="h-5 w-5 text-[#2D9E8C]" />
                 </div>
                 <div>
@@ -272,7 +275,7 @@ export default function OnboardingPage() {
 
               <div className="flex flex-col gap-4">
                 {viajeros.map((v, i) => (
-                  <div key={i} className="border border-slate-100 rounded-xl p-4 bg-slate-50">
+                  <div key={i} className="border border-[#E8EEF4] rounded-xl p-4 bg-[#F8FAFB]">
                     <div className="flex items-center justify-between mb-3">
                       <span className="text-sm font-medium text-slate-600">
                         Integrante {i + 1}
@@ -390,7 +393,7 @@ export default function OnboardingPage() {
           {paso === 2 && (
             <div>
               <div className="flex items-center gap-3 mb-6">
-                <div className="p-2 bg-[#E0F5F2] rounded-xl">
+                <div className="p-2 bg-[#E8F7F4] rounded-xl">
                   <Heart className="h-5 w-5 text-[#2D9E8C]" />
                 </div>
                 <div>
@@ -411,7 +414,7 @@ export default function OnboardingPage() {
                       {CONDICIONES.map(c => (
                         <label
                           key={c.id}
-                          className="flex items-center gap-2 p-2.5 rounded-lg border border-slate-100 hover:border-[#2D9E8C]/30 hover:bg-[#E0F5F2] cursor-pointer transition-all"
+                          className="flex items-center gap-2 p-2.5 rounded-lg border border-slate-100 hover:border-[#2D9E8C]/30 hover:bg-[#E8F7F4] cursor-pointer transition-all"
                         >
                           <Checkbox
                             checked={v.condiciones.includes(c.id)}
@@ -434,7 +437,7 @@ export default function OnboardingPage() {
                               key={t.id}
                               className={`flex items-center gap-2.5 p-2 rounded-lg border cursor-pointer transition-all text-sm ${
                                 v.inmunosupresion_tipo === t.id
-                                  ? 'border-[#2D9E8C] bg-[#E0F5F2] text-[#1A3D5C] font-medium'
+                                  ? 'border-[#2D9E8C] bg-[#E8F7F4] text-[#1A3D5C] font-medium'
                                   : 'border-slate-100 hover:border-[#2D9E8C]/30 text-slate-700'
                               }`}
                             >

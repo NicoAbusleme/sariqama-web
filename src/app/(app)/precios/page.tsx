@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import { ChevronLeft, Check } from 'lucide-react'
+import { ChevronLeft, Check, AlertTriangle } from 'lucide-react'
 import Link from 'next/link'
 
 const PLANES = [
@@ -85,29 +85,29 @@ export default async function PreciosPage() {
   const userPlan: string = familia?.plan ?? 'gratis'
 
   return (
-    <div className="min-h-screen bg-[#F7FFFE]">
-      {/* Header */}
-      <header className="bg-gradient-to-br from-[#1A3D5C] to-[#0F2D45] px-5 pt-12 pb-8">
+    <div className="min-h-screen bg-[#F8FAFB]">
+      {/* ── Header limpio ─────────────────────────────────────────────── */}
+      <header className="bg-white border-b border-[#E8EEF4] px-5 pt-5 pb-5">
         <div className="max-w-2xl mx-auto">
           <Link href="/dashboard"
-            className="inline-flex items-center gap-1.5 text-[#A8C5DA] text-sm mb-5 hover:text-white transition-colors">
-            <ChevronLeft className="h-4 w-4" /> Inicio
+            className="inline-flex items-center gap-1.5 text-slate-400 hover:text-[#1A3D5C] text-sm mb-4 transition-colors">
+            <ChevronLeft className="h-4 w-4" aria-hidden="true" /> Inicio
           </Link>
-          <h1 className="text-2xl font-semibold text-white mb-1"
+          <h1 className="text-xl font-semibold text-[#1A3D5C]"
             style={{ fontFamily: 'var(--font-fraunces)' }}>
             Planes SARIQAMA
           </h1>
-          <p className="text-[#A8C5DA] text-sm">
+          <p className="text-sm text-slate-400 mt-0.5">
             Elige el nivel de protección que tu familia necesita.
           </p>
         </div>
       </header>
 
-      <main className="max-w-2xl mx-auto px-5 py-6 pb-28">
+      <main className="max-w-2xl mx-auto px-5 py-5 pb-28">
 
         {/* Aviso piloto */}
-        <div className="bg-amber-50 border border-amber-100 rounded-2xl px-4 py-3 mb-6 flex items-start gap-2">
-          <span className="text-base mt-0.5">🧪</span>
+        <div className="bg-amber-50 border border-amber-100 rounded-xl px-4 py-3 mb-5 flex items-start gap-2.5">
+          <AlertTriangle className="h-4 w-4 text-amber-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
           <p className="text-xs text-amber-700 leading-relaxed">
             <strong>Programa piloto activo.</strong> Durante el piloto, el acceso a los planes
             pagados se gestiona manualmente. Contáctanos y te activamos el plan en menos de 24 horas.
@@ -118,39 +118,47 @@ export default async function PreciosPage() {
         <div className="flex flex-col gap-4 mb-8">
           {PLANES.map(plan => {
             const esPlanActual = plan.id === userPlan
+            const isPopular = plan.id === 'preparacion'
 
             return (
               <div key={plan.id}
-                className={`bg-white rounded-2xl border overflow-hidden ${plan.color} ${esPlanActual ? 'opacity-100' : ''}`}>
+                className={`bg-white rounded-2xl border overflow-hidden ${
+                  isPopular ? 'border-[#2D9E8C]/40 ring-2 ring-[#2D9E8C]/10' : 'border-[#E8EEF4]'
+                }`}
+                style={{ boxShadow: isPopular ? 'var(--shadow-sm)' : 'var(--shadow-xs)' }}>
 
-                {/* Header del plan */}
-                <div className={`px-5 py-4 ${plan.headerBg}`}>
+                {/* Header del plan — limpio, sin gradiente */}
+                <div className={`px-5 py-4 border-b ${isPopular ? 'bg-[#1A3D5C] border-[#1A3D5C]' : 'bg-[#F8FAFB] border-[#E8EEF4]'}`}>
                   <div className="flex items-start justify-between">
                     <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className={`text-sm font-bold ${plan.id === 'gratis' ? 'text-slate-700' : 'text-white'}`}>
+                      <div className="flex items-center gap-2 mb-0.5">
+                        <span className={`text-sm font-bold ${isPopular ? 'text-white' : 'text-[#1A3D5C]'}`}>
                           {plan.nombre}
                         </span>
                         {plan.badge && (
-                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/25 text-white">
+                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                            isPopular ? 'bg-white/20 text-white' : 'bg-[#E8F7F4] text-[#2D9E8C]'
+                          }`}>
                             {plan.badge}
                           </span>
                         )}
                         {esPlanActual && (
-                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/25 text-white border border-white/30">
-                            Tu plan actual
+                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
+                            isPopular ? 'bg-white/20 text-white border-white/30' : 'bg-[#E8F7F4] text-[#2D9E8C] border-[#2D9E8C]/20'
+                          }`}>
+                            Tu plan
                           </span>
                         )}
                       </div>
-                      <p className={`text-xs leading-relaxed ${plan.id === 'gratis' ? 'text-slate-500' : 'text-white/80'}`}>
+                      <p className={`text-xs leading-relaxed ${isPopular ? 'text-white/80' : 'text-slate-500'}`}>
                         {plan.descripcion}
                       </p>
                     </div>
                     <div className="text-right ml-4 flex-shrink-0">
-                      <p className={`text-xl font-bold ${plan.id === 'gratis' ? 'text-slate-800' : 'text-white'}`}>
+                      <p className={`text-xl font-bold ${isPopular ? 'text-white' : 'text-[#1A3D5C]'}`}>
                         {plan.precio}
                       </p>
-                      <p className={`text-[11px] ${plan.id === 'gratis' ? 'text-slate-400' : 'text-white/70'}`}>
+                      <p className={`text-[11px] ${isPopular ? 'text-white/70' : 'text-slate-400'}`}>
                         {plan.precioSub}
                       </p>
                     </div>
@@ -163,15 +171,15 @@ export default async function PreciosPage() {
                     {plan.items.map(item => (
                       <li key={item.texto} className="flex items-center gap-2.5">
                         <span className={`w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 ${
-                          item.disponible ? 'bg-[#E0F5F2]' : 'bg-slate-100'
+                          item.disponible ? 'bg-[#E8F7F4]' : 'bg-slate-100'
                         }`}>
                           {item.disponible ? (
-                            <Check className="h-2.5 w-2.5 text-[#2D9E8C]" />
+                            <Check className="h-2.5 w-2.5 text-[#2D9E8C]" aria-hidden="true" />
                           ) : (
-                            <span className="w-1.5 h-0.5 bg-slate-300 rounded-full" />
+                            <span className="w-1.5 h-0.5 bg-slate-300 rounded-full" aria-hidden="true" />
                           )}
                         </span>
-                        <span className={`text-sm ${item.disponible ? 'text-slate-700' : 'text-slate-400'}`}>
+                        <span className={`text-sm ${item.disponible ? 'text-[#1A3D5C]' : 'text-slate-400'}`}>
                           {item.texto}
                         </span>
                       </li>
@@ -189,8 +197,8 @@ export default async function PreciosPage() {
                   )}
 
                   {esPlanActual && plan.id !== 'gratis' && (
-                    <div className="mt-4 bg-[#E0F5F2] rounded-xl px-4 py-2.5 text-center">
-                      <p className="text-xs text-[#2D9E8C] font-semibold">✓ Plan activo</p>
+                    <div className="mt-4 bg-[#E8F7F4] rounded-xl px-4 py-2.5 text-center">
+                      <p className="text-xs text-[#2D9E8C] font-semibold">Plan activo</p>
                     </div>
                   )}
                 </div>
@@ -200,7 +208,7 @@ export default async function PreciosPage() {
         </div>
 
         {/* FAQ */}
-        <div className="bg-white rounded-2xl border border-slate-100 p-5 mb-6">
+        <div className="bg-white rounded-2xl border border-[#E8EEF4] p-5 mb-6" style={{ boxShadow: 'var(--shadow-xs)' }}>
           <h2 className="font-semibold text-slate-800 mb-4 text-sm"
             style={{ fontFamily: 'var(--font-fraunces)' }}>
             Preguntas frecuentes

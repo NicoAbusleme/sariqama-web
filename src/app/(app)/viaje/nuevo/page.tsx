@@ -178,9 +178,9 @@ export default function NuevoViajePage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F7FFFE]">
+    <div className="min-h-screen bg-[#F8FAFB]">
       {/* Header */}
-      <header className="bg-white border-b border-slate-100 sticky top-0 z-50">
+      <header className="bg-white border-b border-[#E8EEF4] sticky top-0 z-50">
         <div className="max-w-2xl mx-auto px-5 h-14 flex items-center gap-3">
           <button onClick={() => paso > 1 ? setPaso(paso - 1) : router.back()}
             className="w-9 h-9 rounded-xl bg-slate-50 flex items-center justify-center">
@@ -199,7 +199,7 @@ export default function NuevoViajePage() {
         {paso === 1 && (
           <div>
             <div className="mb-6">
-              <div className="w-11 h-11 bg-[#E0F5F2] rounded-2xl flex items-center justify-center mb-3">
+              <div className="w-11 h-11 bg-[#E8F7F4] rounded-2xl flex items-center justify-center mb-3">
                 <MapPin className="h-5 w-5 text-[#2D9E8C]" />
               </div>
               <h1 className="text-2xl font-semibold text-slate-900 mb-1"
@@ -225,7 +225,7 @@ export default function NuevoViajePage() {
                       'bg-white rounded-2xl border p-4 text-left transition-all',
                       continente === c.id
                         ? 'border-teal-400 shadow-sm ring-2 ring-teal-100'
-                        : 'border-slate-100 hover:border-[#2D9E8C]/30'
+                        : 'border-[#E8EEF4] hover:border-[#2D9E8C]/30'
                     )}>
                     <div className="text-2xl mb-1">{c.emoji}</div>
                     <p className="font-semibold text-slate-900 text-sm">{c.id}</p>
@@ -252,7 +252,7 @@ export default function NuevoViajePage() {
                       }}
                         className={cn(
                           'w-full bg-white rounded-2xl border p-4 text-left transition-all',
-                          selected ? 'border-teal-400 shadow-sm ring-2 ring-teal-100' : 'border-slate-100 hover:border-[#2D9E8C]/30'
+                          selected ? 'border-teal-400 shadow-sm ring-2 ring-teal-100' : 'border-[#E8EEF4] hover:border-[#2D9E8C]/30'
                         )}>
                         <div className="flex items-center gap-3">
                           <FlagImg code={d.pais_code} size={36} className="rounded" />
@@ -308,7 +308,7 @@ export default function NuevoViajePage() {
                     <p className="text-xs text-slate-400">Paradas en el camino al destino</p>
                   </div>
                   <button onClick={addEscala}
-                    className="inline-flex items-center gap-1.5 bg-[#E0F5F2] hover:bg-[#E0F5F2] text-[#237F70] text-xs font-semibold px-3 py-2 rounded-xl transition-colors border border-[#2D9E8C]/30">
+                    className="inline-flex items-center gap-1.5 bg-[#E8F7F4] hover:bg-[#E8F7F4] text-[#237F70] text-xs font-semibold px-3 py-2 rounded-xl transition-colors border border-[#2D9E8C]/30">
                     <Plus className="h-3.5 w-3.5" /> Añadir escala
                   </button>
                 </div>
@@ -319,7 +319,7 @@ export default function NuevoViajePage() {
 
                 <div className="flex flex-col gap-3">
                   {escalas.map((escala, idx) => (
-                    <div key={escala.id} className="bg-white rounded-2xl border border-slate-100 p-4">
+                    <div key={escala.id} className="bg-white rounded-2xl border border-[#E8EEF4] p-4">
                       <div className="flex items-center justify-between mb-3">
                         <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
                           Escala {idx + 1}
@@ -377,9 +377,9 @@ export default function NuevoViajePage() {
               </div>
             )}
 
-            <div className="mt-4 p-4 bg-[#E0F5F2] rounded-2xl border border-[#2D9E8C]/20">
+            <div className="mt-4 p-4 bg-[#E8F7F4] rounded-xl border border-[#2D9E8C]/20">
               <p className="text-xs text-[#237F70] leading-relaxed">
-                🌴 <strong>SARIQAMA</strong> es la única plataforma en español diseñada para familias que viajan a destinos tropicales.
+                <strong>SARIQAMA</strong> es la única plataforma en español diseñada para familias que viajan a destinos tropicales.
               </p>
             </div>
           </div>
@@ -389,7 +389,7 @@ export default function NuevoViajePage() {
         {paso === 2 && (
           <div>
             <div className="mb-6">
-              <div className="w-11 h-11 bg-[#E0F5F2] rounded-2xl flex items-center justify-center mb-3">
+              <div className="w-11 h-11 bg-[#E8F7F4] rounded-2xl flex items-center justify-center mb-3">
                 <Calendar className="h-5 w-5 text-[#2D9E8C]" />
               </div>
               <h1 className="text-2xl font-semibold text-slate-900 mb-1"
@@ -400,7 +400,7 @@ export default function NuevoViajePage() {
             </div>
 
             {/* Resumen destino + escalas */}
-            <div className="bg-white rounded-2xl border border-slate-100 p-4 mb-5">
+            <div className="bg-white rounded-2xl border border-[#E8EEF4] p-4 mb-5">
               <div className="flex items-center gap-3 mb-2">
                 {destino && <FlagImg code={destino.pais_code} size={32} className="rounded" />}
                 <div>
@@ -411,7 +411,7 @@ export default function NuevoViajePage() {
               {escalas.filter(e => e.destino.trim()).length > 0 && (
                 <div className="flex flex-wrap gap-1.5 mt-2 pt-2 border-t border-slate-50">
                   {escalas.filter(e => e.destino.trim()).map((e, i) => (
-                    <span key={e.id} className="text-[11px] bg-[#E0F5F2] text-[#237F70] border border-[#2D9E8C]/20 px-2.5 py-1 rounded-full">
+                    <span key={e.id} className="text-[11px] bg-[#E8F7F4] text-[#237F70] border border-[#2D9E8C]/20 px-2.5 py-1 rounded-full">
                       ✈ Escala {i + 1}: {e.destino} · {HORAS_OPTIONS.find(o => o.v === e.horas)?.label}
                     </span>
                   ))}
@@ -420,7 +420,7 @@ export default function NuevoViajePage() {
             </div>
 
             <div className="flex flex-col gap-4">
-              <div className="bg-white rounded-2xl border border-slate-100 p-5">
+              <div className="bg-white rounded-2xl border border-[#E8EEF4] p-5">
                 <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3 block">
                   Fecha de salida
                 </label>
@@ -428,7 +428,7 @@ export default function NuevoViajePage() {
                   onChange={e => { setFechaSalida(e.target.value); if (fechaRegreso && e.target.value > fechaRegreso) setFechaRegreso('') }}
                   className="h-11 rounded-xl border-slate-200 text-slate-900" />
               </div>
-              <div className="bg-white rounded-2xl border border-slate-100 p-5">
+              <div className="bg-white rounded-2xl border border-[#E8EEF4] p-5">
                 <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3 block">
                   Fecha de regreso
                 </label>
@@ -438,7 +438,7 @@ export default function NuevoViajePage() {
               </div>
 
               {fechaSalida && fechaRegreso && (
-                <div className="p-4 bg-[#E0F5F2] rounded-2xl border border-[#2D9E8C]/20 text-center">
+                <div className="p-4 bg-[#E8F7F4] rounded-2xl border border-[#2D9E8C]/20 text-center">
                   <p className="text-sm font-semibold text-[#237F70]">
                     {Math.ceil((new Date(fechaRegreso).getTime() - new Date(fechaSalida).getTime()) / 86400000)} días de viaje
                   </p>
@@ -455,7 +455,7 @@ export default function NuevoViajePage() {
         {paso === 3 && (
           <div>
             <div className="mb-6">
-              <div className="w-11 h-11 bg-[#E0F5F2] rounded-2xl flex items-center justify-center mb-3">
+              <div className="w-11 h-11 bg-[#E8F7F4] rounded-2xl flex items-center justify-center mb-3">
                 <Compass className="h-5 w-5 text-[#2D9E8C]" />
               </div>
               <h1 className="text-2xl font-semibold text-slate-900 mb-1"
@@ -472,7 +472,7 @@ export default function NuevoViajePage() {
                 {tipos.map(t => {
                   const meta = TIPOS.find(x => x.id === t)!
                   return (
-                    <span key={t} className="inline-flex items-center gap-1 text-xs bg-[#E0F5F2] text-[#237F70] font-semibold px-2.5 py-1 rounded-full">
+                    <span key={t} className="inline-flex items-center gap-1 text-xs bg-[#E8F7F4] text-[#237F70] font-semibold px-2.5 py-1 rounded-full">
                       {meta.emoji} {meta.label}
                     </span>
                   )
@@ -487,7 +487,7 @@ export default function NuevoViajePage() {
                   <button key={t.id} onClick={() => toggleTipo(t.id)}
                     className={cn(
                       'bg-white rounded-2xl border p-4 text-left transition-all relative',
-                      sel ? 'border-teal-400 ring-2 ring-teal-100 shadow-sm' : 'border-slate-100 hover:border-[#2D9E8C]/30'
+                      sel ? 'border-teal-400 ring-2 ring-teal-100 shadow-sm' : 'border-[#E8EEF4] hover:border-[#2D9E8C]/30'
                     )}>
                     {sel && (
                       <div className="absolute top-2.5 right-2.5 w-5 h-5 rounded-full bg-[#2D9E8C] flex items-center justify-center">
@@ -516,7 +516,7 @@ export default function NuevoViajePage() {
         {paso === 4 && (
           <div>
             <div className="mb-6">
-              <div className="w-11 h-11 bg-[#E0F5F2] rounded-2xl flex items-center justify-center mb-3">
+              <div className="w-11 h-11 bg-[#E8F7F4] rounded-2xl flex items-center justify-center mb-3">
                 <Shield className="h-5 w-5 text-[#2D9E8C]" />
               </div>
               <h1 className="text-2xl font-semibold text-slate-900 mb-1"
@@ -536,7 +536,7 @@ export default function NuevoViajePage() {
                   label: 'Sí, ya tenemos seguro',
                   desc: 'Cubiertos ante cualquier emergencia médica',
                   color: 'border-teal-400 ring-2 ring-teal-100',
-                  colorInact: 'border-slate-100 hover:border-[#2D9E8C]/30',
+                  colorInact: 'border-[#E8EEF4] hover:border-[#2D9E8C]/30',
                 },
                 {
                   id: 'no' as const,
@@ -544,7 +544,7 @@ export default function NuevoViajePage() {
                   label: 'No, viajaremos sin seguro',
                   desc: 'Viajan sin cobertura médica adicional',
                   color: 'border-orange-300 ring-2 ring-orange-100',
-                  colorInact: 'border-slate-100 hover:border-orange-200',
+                  colorInact: 'border-[#E8EEF4] hover:border-orange-200',
                 },
                 {
                   id: 'no_decidido' as const,
@@ -552,7 +552,7 @@ export default function NuevoViajePage() {
                   label: 'Aún no lo hemos decidido',
                   desc: 'Lo evaluaremos antes del viaje',
                   color: 'border-slate-400 ring-2 ring-slate-100',
-                  colorInact: 'border-slate-100 hover:border-slate-300',
+                  colorInact: 'border-[#E8EEF4] hover:border-slate-300',
                 },
               ].map(op => (
                 <button
@@ -574,7 +574,7 @@ export default function NuevoViajePage() {
 
             {/* Sub-campo: compañía aseguradora */}
             {seguroViaje === 'si' && (
-              <div className="bg-[#E0F5F2] rounded-2xl border border-[#2D9E8C]/20 p-4 mb-4">
+              <div className="bg-[#E8F7F4] rounded-2xl border border-[#2D9E8C]/20 p-4 mb-4">
                 <label className="text-xs font-semibold text-[#237F70] mb-2 block">
                   ¿Con qué compañía? <span className="font-normal text-[#2D9E8C]">(opcional)</span>
                 </label>
@@ -617,7 +617,7 @@ export default function NuevoViajePage() {
       </main>
 
       {/* Botón fijo — sube sobre el BottomNav */}
-      <div className="fixed bottom-[72px] left-0 right-0 bg-white border-t border-slate-100 p-4 z-30">
+      <div className="fixed bottom-[72px] left-0 right-0 bg-white border-t border-[#E8EEF4] p-4 z-30">
         <div className="max-w-2xl mx-auto">
           {paso < totalPasos ? (
             <Button

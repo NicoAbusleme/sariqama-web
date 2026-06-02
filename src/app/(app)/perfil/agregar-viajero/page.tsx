@@ -169,18 +169,18 @@ export default function AgregarViajeroPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F7FFFE]">
-      {/* Header */}
-      <header className="bg-gradient-to-br from-[#1A3D5C] to-[#0F2D45] px-5 pt-12 pb-8">
+    <div className="min-h-screen bg-[#F8FAFB]">
+      {/* ── Header limpio ─────────────────────────────────────────────── */}
+      <header className="bg-white border-b border-[#E8EEF4] px-5 pt-5 pb-4">
         <div className="max-w-2xl mx-auto">
           <div className="flex items-center gap-3">
             <Link href="/perfil">
-              <span className="w-9 h-9 rounded-xl flex items-center justify-center text-white hover:bg-white/10 transition-colors">
-                <ChevronLeft className="h-5 w-5" />
+              <span className="w-9 h-9 rounded-xl flex items-center justify-center text-slate-400 hover:text-[#1A3D5C] hover:bg-[#F0F4F8] transition-colors">
+                <ChevronLeft className="h-5 w-5" aria-hidden="true" />
               </span>
             </Link>
             <h1
-              className="text-xl font-semibold text-white"
+              className="text-xl font-semibold text-[#1A3D5C]"
               style={{ fontFamily: 'var(--font-fraunces)' }}
             >
               Agregar integrante
@@ -190,7 +190,7 @@ export default function AgregarViajeroPage() {
       </header>
 
       <main className="max-w-2xl mx-auto px-5 pt-5 pb-32">
-        <div className="bg-white rounded-2xl border border-slate-100 p-6">
+        <div className="bg-white rounded-2xl border border-[#E8EEF4] p-6" style={{ boxShadow: 'var(--shadow-xs)' }}>
 
           {/* Nombre */}
           <div className="mb-4">

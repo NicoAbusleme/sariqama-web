@@ -47,16 +47,20 @@ export function TeleorientacionClient() {
     return (
       <main className="flex-1 flex flex-col items-center justify-center px-5 pb-28">
         <div className="text-center max-w-xs">
-          <div className="text-6xl mb-5">✅</div>
-          <h2 className="text-xl font-semibold text-slate-900 mb-2"
+          <div className="w-16 h-16 rounded-full bg-[#E8F7F4] flex items-center justify-center mx-auto mb-5">
+            <svg className="w-8 h-8 text-[#2D9E8C]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <h2 className="text-xl font-semibold text-[#1A3D5C] mb-2"
             style={{ fontFamily: 'var(--font-fraunces)' }}>
-            ¡Solicitud enviada!
+            Solicitud enviada
           </h2>
           <p className="text-sm text-slate-500 mb-6 leading-relaxed">
             Hemos recibido tu solicitud. Un especialista en medicina del viajero
             te contactará en las próximas horas.
           </p>
-          <div className="bg-[#E0F5F2] border border-[#2D9E8C]/20 rounded-2xl p-4 mb-6 text-left">
+          <div className="bg-[#E8F7F4] border border-[#2D9E8C]/20 rounded-2xl p-4 mb-6 text-left">
             <p className="text-xs text-[#237F70] font-semibold mb-2">¿Qué sigue?</p>
             <ol className="text-xs text-[#2D9E8C] space-y-1.5 list-decimal list-inside">
               <li>Revisamos tu solicitud</li>
@@ -100,15 +104,14 @@ export function TeleorientacionClient() {
         <div className="flex flex-col gap-2">
           {MOTIVOS.map(m => (
             <button key={m.id} onClick={() => setMotivo(m.id)}
-              className={`w-full text-left p-4 rounded-2xl border transition-all ${
+              className={`w-full text-left p-4 rounded-xl border transition-all ${
                 motivo === m.id
-                  ? 'border-teal-400 bg-[#E0F5F2] ring-2 ring-teal-200'
-                  : 'border-slate-100 bg-white hover:border-[#2D9E8C]/30'
+                  ? 'border-[#2D9E8C]/40 bg-[#E8F7F4]'
+                  : 'border-[#E8EEF4] bg-white hover:border-[#2D9E8C]/30'
               }`}>
               <div className="flex items-center gap-3">
-                <span className="text-xl">{m.emoji}</span>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-slate-800">{m.label}</p>
+                  <p className="text-sm font-semibold text-[#1A3D5C]">{m.label}</p>
                   <p className="text-xs text-slate-400 mt-0.5">{m.desc}</p>
                 </div>
                 {motivo === m.id && (
@@ -134,7 +137,7 @@ export function TeleorientacionClient() {
           {URGENCIAS.map(u => (
             <button key={u.id} onClick={() => setUrgencia(u.id)}
               className={`w-full text-left p-4 rounded-2xl border transition-all flex items-center gap-3 ${
-                urgencia === u.id ? `${u.color} ring-2 ring-offset-0` : 'border-slate-100 bg-white hover:border-slate-200'
+                urgencia === u.id ? `${u.color} ring-2 ring-offset-0` : 'border-[#E8EEF4] bg-white hover:border-slate-200'
               }`}>
               <span className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${u.dot}`} />
               <span className="text-sm font-semibold">{u.label}</span>

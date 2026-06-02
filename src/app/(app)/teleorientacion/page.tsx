@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import { ChevronLeft } from 'lucide-react'
+import { ChevronLeft, Stethoscope } from 'lucide-react'
 import Link from 'next/link'
 import { PlanGate } from '@/components/ui/plan-gate'
 import { TeleorientacionClient } from './TeleorientacionClient'
@@ -17,25 +17,25 @@ export default async function TeleorientacionPage() {
   const userPlan: string = familia.plan ?? 'gratis'
 
   return (
-    <div className="min-h-screen bg-[#F7FFFE] flex flex-col">
+    <div className="min-h-screen bg-[#F8FAFB] flex flex-col">
 
-      {/* Header — siempre visible */}
-      <header className="bg-gradient-to-br from-[#1A3D5C] to-[#0F2D45] px-5 pt-12 pb-8">
+      {/* ── Header limpio ─────────────────────────────────────────────── */}
+      <header className="bg-white border-b border-[#E8EEF4] px-5 pt-5 pb-5">
         <div className="max-w-2xl mx-auto">
           <Link href="/dashboard"
-            className="inline-flex items-center gap-1.5 text-[#A8C5DA] text-sm mb-5 hover:text-white transition-colors">
-            <ChevronLeft className="h-4 w-4" /> Inicio
+            className="inline-flex items-center gap-1.5 text-slate-400 hover:text-[#1A3D5C] text-sm mb-4 transition-colors">
+            <ChevronLeft className="h-4 w-4" aria-hidden="true" /> Inicio
           </Link>
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-12 h-12 rounded-2xl bg-white/15 flex items-center justify-center text-2xl">
-              👩‍⚕️
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-[#E8F7F4] flex items-center justify-center flex-shrink-0">
+              <Stethoscope className="h-5 w-5 text-[#2D9E8C]" strokeWidth={1.8} aria-hidden="true" />
             </div>
             <div>
-              <h1 className="text-xl font-semibold text-white"
+              <h1 className="text-xl font-semibold text-[#1A3D5C]"
                 style={{ fontFamily: 'var(--font-fraunces)' }}>
                 Teleorientación médica
               </h1>
-              <p className="text-[#A8C5DA] text-sm">Especialistas en medicina del viajero</p>
+              <p className="text-sm text-slate-400">Especialistas en medicina del viajero</p>
             </div>
           </div>
         </div>
