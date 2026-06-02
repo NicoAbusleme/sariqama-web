@@ -2,16 +2,21 @@
 
 import { useState } from 'react'
 import { ChevronDown } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 interface CollapsibleSectionProps {
   title: string
-  icon?: string
-  badge?: React.ReactNode          // chip/badge que aparece junto al título
-  count?: number                   // número de items (ej: "4 alertas")
-  countLabel?: string              // texto del conteo (default: "items")
+  icon?: React.ReactNode
+  badge?: React.ReactNode
+  count?: number
+  countLabel?: string
   defaultOpen?: boolean
-  accentClass?: string             // color del borde izquierdo (default: teal)
+  /** Color del dot indicador izquierdo (clase Tailwind bg-*) */
+  accentDot?: string
+  /** @deprecated Usa accentDot en su lugar */
+  accentClass?: string
   children: React.ReactNode
+  className?: string
 }
 
 export function CollapsibleSection({
@@ -21,39 +26,61 @@ export function CollapsibleSection({
   count,
   countLabel = 'items',
   defaultOpen = true,
-  accentClass = 'border-[#2D9E8C]/40',
+  accentDot,
+  accentClass: _accentClass, // aceptado por compat, ignorado visualmente
   children,
+  className,
 }: CollapsibleSectionProps) {
   const [open, setOpen] = useState(defaultOpen)
 
   return (
-    <div className={`bg-white rounded-2xl border border-slate-100 overflow-hidden mb-4 border-l-4 ${accentClass}`}>
-      {/* Header — siempre visible, clickable */}
+    <div className={cn("bg-white rounded-2xl border border-[#E8EEF4] overflow-hidden mb-4", className)}>
+
+      {/* Header */}
       <button
         onClick={() => setOpen(o => !o)}
-        className="w-full flex items-center justify-between px-4 py-3.5 text-left hover:bg-slate-50 transition-colors"
+        className="w-full flex items-center justify-between px-4 py-3.5 text-left transition-colors hover:bg-slate-50/70 active:bg-slate-100/70"
         aria-expanded={open}
       >
         <div className="flex items-center gap-2.5 min-w-0">
-          {icon && <span className="text-base flex-shrink-0">{icon}</span>}
-          <span className="font-semibold text-slate-900 text-sm">{title}</span>
+          {/* Dot acento izquierdo */}
+          {accentDot && (
+            <span className={cn("w-2 h-2 rounded-full flex-shrink-0", accentDot)} aria-hidden="true" />
+          )}
+
+          {/* Icono SVG (Lucide) */}
+          {icon && (
+            <span className="flex-shrink-0 text-slate-500">{icon}</span>
+          )}
+
+          <span className="font-semibold text-[#1A3D5C] text-sm leading-tight">{title}</span>
+
           {badge && <span className="flex-shrink-0">{badge}</span>}
+
           {count !== undefined && !open && (
             <span className="text-[11px] text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full flex-shrink-0">
               {count} {countLabel}
             </span>
           )}
         </div>
+
         <ChevronDown
-          className={`h-4 w-4 text-slate-400 flex-shrink-0 transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
+          className={cn(
+            "h-4 w-4 text-slate-400 flex-shrink-0 transition-transform duration-200",
+            open ? 'rotate-180' : ''
+          )}
+          aria-hidden="true"
         />
       </button>
 
-      {/* Contenido colapsable */}
+      {/* Separador y contenido */}
       {open && (
-        <div className="px-4 pb-4 pt-1 border-t border-slate-50">
-          {children}
-        </div>
+        <>
+          <div className="h-px bg-[#F0F4F8] mx-4" />
+          <div className="px-4 py-4">
+            {children}
+          </div>
+        </>
       )}
     </div>
   )

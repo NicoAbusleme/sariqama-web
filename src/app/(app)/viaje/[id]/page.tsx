@@ -1,6 +1,9 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect, notFound } from 'next/navigation'
-import { ChevronLeft, CheckCircle, Shield, Stethoscope, BookOpen, ChevronRight, MapPin, AlertTriangle, XCircle } from 'lucide-react'
+import {
+  ChevronLeft, CheckSquare, Shield, Stethoscope, BookOpen,
+  ChevronRight, AlertTriangle, XCircle, Plane, Pill, FileText,
+} from 'lucide-react'
 import Link from 'next/link'
 import { getDestinoBySlug } from '@/lib/content/destinos'
 import { FlagImg } from '@/components/ui/flag-img'
@@ -17,13 +20,18 @@ function calcularSemanasEmbarazo(fum: string, fechaViaje: string): number | null
 }
 
 const RIESGOS_INFO = [
-  { key: 'dengue',          label: '🦟 Dengue',                icono: '🦟' },
-  { key: 'malaria',         label: '🦟🩸 Malaria',             icono: '🦟🩸' },
-  { key: 'fiebre_amarilla', label: '💉 Fiebre amarilla',       icono: '💉' },
-  { key: 'diarrea_viajero', label: '💧 Diarrea del viajero',   icono: '💧' },
-  { key: 'agua_alimentos',  label: '🚰 Agua y alimentos',      icono: '🚰' },
-  { key: 'sol_calor',       label: '☀️ Sol y calor',           icono: '☀️' },
+  { key: 'dengue',          label: 'Dengue' },
+  { key: 'malaria',         label: 'Malaria' },
+  { key: 'fiebre_amarilla', label: 'Fiebre amarilla' },
+  { key: 'diarrea_viajero', label: 'Diarrea del viajero' },
+  { key: 'agua_alimentos',  label: 'Agua y alimentos' },
+  { key: 'sol_calor',       label: 'Sol y calor' },
 ]
+
+const TIPO_LABEL: Record<string, string> = {
+  playa: 'Playa', urbano: 'Ciudad', aventura: 'Aventura',
+  rural: 'Rural', familiar: 'Familiar', crucero: 'Crucero',
+}
 
 export default async function DetalleViajePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -47,7 +55,6 @@ export default async function DetalleViajePage({ params }: { params: Promise<{ i
   const { data: viajeros } = await supabase
     .from('viajeros').select('nombre, condiciones, embarazo_fum').eq('familia_id', familia.id)
 
-  // Calcular avisos de embarazo según fecha de salida del viaje
   type AvisoEmbarazo = { nombre: string; semanas: number; nivel: 'advertencia' | 'critico' }
   const avisosEmbarazo: AvisoEmbarazo[] = (viajeros ?? [])
     .filter(v => Array.isArray(v.condiciones) && v.condiciones.includes('embarazo') && v.embarazo_fum)
@@ -73,115 +80,193 @@ export default async function DetalleViajePage({ params }: { params: Promise<{ i
   const flagCode = destino?.pais_code ?? 'un'
 
   return (
-    <div className="min-h-screen bg-[#F7FFFE]">
-      {/* Header gradiente */}
-      <header className="bg-gradient-to-br from-[#1A3D5C] to-[#0F2D45] px-5 pt-12 pb-8">
+    <div className="min-h-screen bg-[#F8FAFB]">
+
+      {/* ── Header limpio ─────────────────────────────────────────────── */}
+      <header className="bg-white border-b border-[#E8EEF4] px-5 pt-5 pb-5">
         <div className="max-w-2xl mx-auto">
-          <Link href="/dashboard" className="inline-flex items-center gap-1.5 text-[#A8C5DA] text-sm mb-5 hover:text-white transition-colors">
-            <ChevronLeft className="h-4 w-4" /> Dashboard
+
+          {/* Back */}
+          <Link
+            href="/dashboard"
+            className="inline-flex items-center gap-1.5 text-slate-400 hover:text-[#1A3D5C] text-sm mb-4 transition-colors"
+          >
+            <ChevronLeft className="h-4 w-4" aria-hidden="true" /> Dashboard
           </Link>
-          <div className="flex items-start justify-between">
-            <div>
-              <div className="mb-2"><FlagImg code={flagCode} size={44} className="rounded" /></div>
-              <h1 className="text-2xl font-semibold text-white leading-tight"
-                style={{ fontFamily: 'var(--font-fraunces)' }}>
-                {viaje.destino_nombre}
-              </h1>
-              <p className="text-[#A8C5DA] text-sm mt-1">
-                {new Date(viaje.fecha_salida).toLocaleDateString('es-CL', { day: 'numeric', month: 'long' })}
-                {' — '}
-                {new Date(viaje.fecha_regreso).toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric' })}
-              </p>
-              {/* Tipos de viaje */}
-              {viaje.tipos && viaje.tipos.length > 0 && (
-                <div className="flex flex-wrap gap-1.5 mt-2">
-                  {viaje.tipos.map((t: string) => (
-                    <span key={t} className="text-[11px] bg-white/15 text-white/90 px-2.5 py-0.5 rounded-full border border-white/20">
-                      {t === 'playa' ? '🏖️ Playa' : t === 'urbano' ? '🏙️ Ciudad' : t === 'aventura' ? '🏕️ Aventura' : t === 'rural' ? '🌿 Rural' : t === 'familiar' ? '👨‍👩‍👧 Familiar' : '🚢 Crucero'}
-                    </span>
-                  ))}
-                </div>
-              )}
-              {/* Escalas */}
-              {viaje.escalas && viaje.escalas.length > 0 && (
-                <div className="flex flex-wrap gap-1.5 mt-1.5">
-                  {viaje.escalas.map((e: { destino: string; horas: number }, i: number) => (
-                    <span key={i} className="text-[11px] bg-white/10 text-[#C8DDE9] px-2.5 py-0.5 rounded-full border border-white/15">
-                      ✈ {e.destino} · {e.horas < 3 ? '< 2h' : e.horas <= 6 ? '3–6h' : e.horas <= 12 ? '7–12h' : e.horas <= 24 ? '13–24h' : '+24h'}
-                    </span>
-                  ))}
-                </div>
-              )}
+
+          {/* Destino info */}
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-12 h-12 rounded-xl overflow-hidden bg-slate-100 flex-shrink-0">
+                <FlagImg code={flagCode} size={48} className="w-full h-full object-cover" />
+              </div>
+              <div className="min-w-0">
+                <h1
+                  className="text-xl font-semibold text-[#1A3D5C] leading-tight truncate"
+                  style={{ fontFamily: 'var(--font-fraunces)' }}
+                >
+                  {viaje.destino_nombre}
+                </h1>
+                <p className="text-xs text-slate-400 mt-0.5">
+                  {new Date(viaje.fecha_salida).toLocaleDateString('es-CL', { day: 'numeric', month: 'long' })}
+                  {' — '}
+                  {new Date(viaje.fecha_regreso).toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric' })}
+                </p>
+              </div>
             </div>
-            <div className="text-right">
+
+            {/* Estado dias */}
+            <div className="flex-shrink-0 text-right">
               {enViaje ? (
-                <div className="bg-green-400 text-white text-xs font-bold px-3 py-1.5 rounded-full">
-                  ✈️ En viaje
-                </div>
+                <span className="inline-flex items-center gap-1 text-xs font-semibold bg-[#E8F7F4] text-[#2D9E8C] px-3 py-1 rounded-full">
+                  <Plane className="h-3 w-3" aria-hidden="true" /> En viaje
+                </span>
               ) : diasRestantes > 0 ? (
                 <div>
-                  <div className="text-3xl font-bold text-white">{diasRestantes}</div>
-                  <div className="text-[#A8C5DA] text-xs">días</div>
+                  <p className="text-2xl font-bold text-[#1A3D5C] leading-none">{diasRestantes}</p>
+                  <p className="text-xs text-slate-400 mt-0.5">días</p>
                 </div>
               ) : (
-                <div className="bg-slate-500 text-white text-xs font-bold px-3 py-1.5 rounded-full">
+                <span className="text-xs font-semibold text-slate-500 bg-slate-100 px-3 py-1 rounded-full">
                   Finalizado
-                </div>
+                </span>
               )}
             </div>
           </div>
 
-          {/* Progreso checklist */}
+          {/* Tags de tipo de viaje */}
+          {viaje.tipos && viaje.tipos.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 mt-3">
+              {viaje.tipos.map((t: string) => (
+                <span key={t} className="text-[11px] font-medium text-slate-500 bg-[#F8FAFB] border border-[#E8EEF4] px-2.5 py-0.5 rounded-full">
+                  {TIPO_LABEL[t] ?? t}
+                </span>
+              ))}
+              {viaje.escalas && viaje.escalas.map((e: { destino: string; horas: number }, i: number) => (
+                <span key={i} className="text-[11px] font-medium text-slate-400 bg-[#F8FAFB] border border-[#E8EEF4] px-2.5 py-0.5 rounded-full">
+                  Escala: {e.destino}
+                </span>
+              ))}
+            </div>
+          )}
+
+          {/* Barra de progreso */}
           {totalItems > 0 && (
-            <div className="mt-5 bg-white/10 rounded-2xl p-4">
-              <div className="flex justify-between text-xs text-[#C8DDE9] mb-2">
-                <span>Preparación pre-viaje</span>
-                <span>{completados}/{totalItems} completados</span>
+            <div className="mt-4">
+              <div className="flex justify-between items-center mb-1.5">
+                <span className="text-xs text-slate-500 font-medium">Preparación pre-viaje</span>
+                <span className="text-xs font-semibold text-[#2D9E8C]">{completados}/{totalItems}</span>
               </div>
-              <div className="w-full bg-white/20 rounded-full h-2">
-                <div className="bg-amber-400 h-2 rounded-full transition-all" style={{ width: `${progreso}%` }} />
+              <div className="h-1.5 bg-[#F0F4F8] rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-[#2D9E8C] rounded-full transition-all duration-500"
+                  style={{ width: `${progreso}%` }}
+                />
               </div>
             </div>
           )}
         </div>
       </header>
 
-      <main className="max-w-2xl mx-auto px-5 py-5 pb-28 -mt-2">
+      <main className="max-w-2xl mx-auto px-5 py-5 pb-28 space-y-4">
 
-        {/* Acciones principales */}
-        <div className="grid grid-cols-2 gap-3 mb-5">
+        {/* Avisos de embarazo */}
+        {avisosEmbarazo.map(aviso => aviso.nivel === 'critico' ? (
+          <div key={aviso.nombre} className="bg-red-50 rounded-2xl border border-red-200 p-4">
+            <div className="flex items-start gap-3">
+              <XCircle className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
+              <div>
+                <p className="text-sm font-bold text-red-700 mb-1">
+                  {aviso.nombre} no debería viajar — Semana {aviso.semanas}
+                </p>
+                <p className="text-xs text-red-600 leading-relaxed">
+                  Con {aviso.semanas} semanas al momento del viaje, la mayoría de las aerolíneas <strong>no permitirán el embarque</strong>. Consulta con tu médico y la aerolínea antes de planificar.
+                </p>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div key={aviso.nombre} className="bg-amber-50 rounded-2xl border border-amber-200 p-4">
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="h-5 w-5 text-amber-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
+              <div>
+                <p className="text-sm font-bold text-amber-700 mb-1">
+                  {aviso.nombre} — Semana {aviso.semanas} al inicio del viaje
+                </p>
+                <p className="text-xs text-amber-700 leading-relaxed">
+                  A partir de la semana 28 muchas aerolíneas exigen <strong>certificado médico</strong>. Consulta con tu médico y la aerolínea con anticipación.
+                </p>
+              </div>
+            </div>
+          </div>
+        ))}
+
+        {/* ── Acciones principales ───────────────────────────────────── */}
+        <div className="grid grid-cols-2 gap-3">
           {[
-            { href: `/viaje/${id}/checklist`,  emoji: '✅', label: 'Checklist',      sub: `${completados}/${totalItems} listos`,  bg: 'bg-green-50' },
-            { href: `/viaje/${id}/riesgos`,    emoji: '🗺️', label: 'Riesgos',        sub: 'Ver destino',                          bg: 'bg-[#E0F5F2]' },
-            { href: `/viaje/${id}/sintomas`,   emoji: '🌡️', label: 'Síntomas',       sub: 'Evaluar ahora',                        bg: 'bg-amber-50' },
-            { href: `/viaje/${id}/botiquin`,   emoji: '💊',  label: 'Botiquín',       sub: 'Lo que llevar',                        bg: 'bg-blue-50' },
-          ].map(a => (
-            <Link key={a.href} href={a.href}>
-              <div className="bg-white rounded-2xl border border-slate-100 p-4 hover:border-[#2D9E8C]/30 hover:shadow-sm transition-all">
-                <div className={`w-11 h-11 ${a.bg} rounded-2xl flex items-center justify-center text-xl mb-3`}>
-                  {a.emoji}
+            {
+              href:  `/viaje/${id}/checklist`,
+              Icon:  CheckSquare,
+              label: 'Checklist',
+              sub:   totalItems > 0 ? `${completados}/${totalItems} completados` : 'Preparación pre-viaje',
+              color: 'text-emerald-600',
+              bg:    'bg-emerald-50',
+            },
+            {
+              href:  `/viaje/${id}/riesgos`,
+              Icon:  Shield,
+              label: 'Riesgos',
+              sub:   'Ver destino completo',
+              color: 'text-[#2D9E8C]',
+              bg:    'bg-[#E8F7F4]',
+            },
+            {
+              href:  `/viaje/${id}/sintomas`,
+              Icon:  Stethoscope,
+              label: 'Síntomas',
+              sub:   'Evaluar ahora',
+              color: 'text-amber-600',
+              bg:    'bg-amber-50',
+            },
+            {
+              href:  `/viaje/${id}/botiquin`,
+              Icon:  Pill,
+              label: 'Botiquín',
+              sub:   'Lo que llevar',
+              color: 'text-blue-600',
+              bg:    'bg-blue-50',
+            },
+          ].map(({ href, Icon, label, sub, color, bg }) => (
+            <Link key={href} href={href}>
+              <div
+                className="bg-white rounded-2xl border border-[#E8EEF4] p-4 cursor-pointer transition-all duration-150 hover:border-[#2D9E8C]/30 hover:shadow-sm"
+                style={{ boxShadow: 'var(--shadow-xs)' }}
+              >
+                <div className={`w-10 h-10 ${bg} rounded-xl flex items-center justify-center mb-3`}>
+                  <Icon className={`h-5 w-5 ${color}`} strokeWidth={1.8} aria-hidden="true" />
                 </div>
-                <p className="font-semibold text-slate-900 text-sm">{a.label}</p>
-                <p className="text-xs text-slate-400 mt-0.5">{a.sub}</p>
+                <p className="font-semibold text-[#1A3D5C] text-sm">{label}</p>
+                <p className="text-xs text-slate-400 mt-0.5">{sub}</p>
               </div>
             </Link>
           ))}
         </div>
 
-        {/* Riesgos resumen */}
+        {/* ── Resumen de riesgos ─────────────────────────────────────── */}
         {destino && (
-          <div className="bg-white rounded-2xl border border-slate-100 p-5 mb-4">
+          <div className="bg-white rounded-2xl border border-[#E8EEF4] p-5"
+            style={{ boxShadow: 'var(--shadow-xs)' }}>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-semibold text-slate-900"
+              <h2 className="font-semibold text-[#1A3D5C] text-sm"
                 style={{ fontFamily: 'var(--font-fraunces)' }}>
                 Riesgos del destino
               </h2>
               <Link href={`/viaje/${id}/riesgos`}
                 className="text-xs text-[#2D9E8C] font-semibold flex items-center gap-1">
-                Ver todo <ChevronRight className="h-3 w-3" />
+                Ver todo <ChevronRight className="h-3 w-3" aria-hidden="true" />
               </Link>
             </div>
-            <div className="flex flex-col gap-2.5">
+            <div className="space-y-2.5">
               {RIESGOS_INFO.slice(0, 4).map(r => {
                 const nivel = destino.riesgos[r.key as keyof typeof destino.riesgos] as NivelRiesgo
                 return (
@@ -195,129 +280,105 @@ export default async function DetalleViajePage({ params }: { params: Promise<{ i
           </div>
         )}
 
-        {/* Vacunas */}
-        {destino && destino.vacunas_recomendadas.length > 0 && (
-          <div className="bg-white rounded-2xl border border-slate-100 p-5 mb-4">
-            <h2 className="font-semibold text-slate-900 mb-3"
+        {/* ── Vacunas ────────────────────────────────────────────────── */}
+        {destino && (destino.vacunas_recomendadas.length > 0 || destino.vacunas_requeridas.length > 0) && (
+          <div className="bg-white rounded-2xl border border-[#E8EEF4] p-5"
+            style={{ boxShadow: 'var(--shadow-xs)' }}>
+            <h2 className="font-semibold text-[#1A3D5C] text-sm mb-3"
               style={{ fontFamily: 'var(--font-fraunces)' }}>
-              💉 Vacunas recomendadas
+              Vacunas
             </h2>
             <div className="flex flex-wrap gap-2">
               {destino.vacunas_requeridas.map(v => (
-                <span key={v} className="text-xs bg-red-50 text-red-700 border border-red-100 px-3 py-1 rounded-full font-semibold">
-                  {v} ⚠️
+                <span key={v} className="text-xs bg-red-50 text-red-700 border border-red-100 px-2.5 py-1 rounded-full font-semibold">
+                  {v} · Requerida
                 </span>
               ))}
               {(() => {
                 const requeridas = destino.vacunas_requeridas.map(v => v.toLowerCase())
                 return destino.vacunas_recomendadas
-                  .filter(v => !requeridas.some(r => r.includes(v.toLowerCase().split(' ')[0]) || v.toLowerCase().includes(r.split(' ')[0])))
+                  .filter(v => !requeridas.some(r =>
+                    r.includes(v.toLowerCase().split(' ')[0]) ||
+                    v.toLowerCase().includes(r.split(' ')[0])
+                  ))
                   .map(v => (
-                    <span key={v} className="text-xs bg-green-50 text-green-700 border border-green-100 px-3 py-1 rounded-full font-medium">
+                    <span key={v} className="text-xs bg-[#E8F7F4] text-[#2D9E8C] border border-[#2D9E8C]/20 px-2.5 py-1 rounded-full font-medium">
                       {v}
                     </span>
                   ))
               })()}
             </div>
             <p className="text-xs text-slate-400 mt-3 leading-relaxed">
-              Consulta con un profesional de salud con al menos 4-6 semanas de anticipación.
+              Consulta con un profesional de salud con al menos 4–6 semanas de anticipación.
             </p>
           </div>
         )}
 
         {/* Notas pediátricas */}
         {destino?.riesgos.notas_pediatricas && (
-          <div className="bg-amber-50 rounded-2xl border border-amber-100 p-4 mb-4">
-            <p className="text-xs font-semibold text-amber-700 mb-1">👶 Consideraciones para niños</p>
-            <p className="text-xs text-amber-600 leading-relaxed">{destino.riesgos.notas_pediatricas}</p>
+          <div className="bg-amber-50 rounded-2xl border border-amber-100 p-4">
+            <p className="text-xs font-semibold text-amber-700 mb-1">Consideraciones para niños</p>
+            <p className="text-xs text-amber-700 leading-relaxed">{destino.riesgos.notas_pediatricas}</p>
           </div>
         )}
 
-        {/* Avisos de embarazo */}
-        {avisosEmbarazo.map(aviso => aviso.nivel === 'critico' ? (
-          <div key={aviso.nombre} className="bg-red-50 rounded-2xl border border-red-200 p-4 mb-4">
-            <div className="flex items-start gap-3">
-              <XCircle className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />
-              <div>
-                <p className="text-sm font-bold text-red-700 mb-1">
-                  ⚠️ {aviso.nombre} no debería viajar — Semana {aviso.semanas} de embarazo
-                </p>
-                <p className="text-xs text-red-600 leading-relaxed">
-                  Con {aviso.semanas} semanas al momento del viaje, la mayoría de las aerolíneas <strong>no permitirán el embarque</strong>. Se recomienda enfáticamente no realizar este viaje. Consulta con tu médico y la aerolínea antes de planificar.
-                </p>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div key={aviso.nombre} className="bg-amber-50 rounded-2xl border border-amber-200 p-4 mb-4">
-            <div className="flex items-start gap-3">
-              <AlertTriangle className="h-5 w-5 text-amber-500 flex-shrink-0 mt-0.5" />
-              <div>
-                <p className="text-sm font-bold text-amber-700 mb-1">
-                  {aviso.nombre} — Semana {aviso.semanas} de embarazo al inicio del viaje
-                </p>
-                <p className="text-xs text-amber-700 leading-relaxed">
-                  A partir de la semana 28 muchas aerolíneas exigen un <strong>certificado médico</strong> que acredite que el embarazo es de bajo riesgo y la fecha probable de parto. Consulta con tu médico y la aerolínea con anticipación.
-                </p>
-              </div>
-            </div>
-          </div>
-        ))}
-
-        {/* Botón reporte PDF */}
+        {/* ── PDF ──────────────────────────────────────────────────── */}
         {puedeDescargarPDF ? (
           <a
             href={`/api/reporte/${id}`}
             download
-            className="flex items-center justify-between bg-white rounded-2xl border border-slate-100 p-4 hover:border-[#2D9E8C]/30 hover:shadow-sm transition-all mb-4 group"
+            className="flex items-center justify-between bg-white rounded-2xl border border-[#E8EEF4] p-4 hover:border-[#2D9E8C]/30 transition-colors"
+            style={{ boxShadow: 'var(--shadow-xs)' }}
           >
             <div className="flex items-center gap-3">
-              <div className="w-11 h-11 bg-teal-50 rounded-2xl flex items-center justify-center text-xl group-hover:bg-teal-100 transition-colors">
-                📄
+              <div className="w-10 h-10 bg-[#E8F7F4] rounded-xl flex items-center justify-center">
+                <FileText className="h-5 w-5 text-[#2D9E8C]" strokeWidth={1.8} aria-hidden="true" />
               </div>
               <div>
-                <p className="font-semibold text-slate-900 text-sm">Descargar reporte PDF</p>
-                <p className="text-xs text-slate-400 mt-0.5">Reporte familiar completo de salud</p>
+                <p className="font-semibold text-[#1A3D5C] text-sm">Descargar reporte PDF</p>
+                <p className="text-xs text-slate-400 mt-0.5">Reporte familiar completo</p>
               </div>
             </div>
-            <BookOpen className="h-4 w-4 text-[#2D9E8C]" />
+            <BookOpen className="h-4 w-4 text-[#2D9E8C]" aria-hidden="true" />
           </a>
         ) : (
           <Link href="/precios">
-            <div className="flex items-center justify-between bg-[#E0F5F2] rounded-2xl border border-[#2D9E8C]/20 p-4 hover:border-teal-300 transition-all mb-4">
+            <div className="flex items-center justify-between bg-[#E8F7F4] rounded-2xl border border-[#2D9E8C]/20 p-4 hover:border-[#2D9E8C]/40 transition-colors">
               <div className="flex items-center gap-3">
-                <div className="w-11 h-11 bg-[#E0F5F2] rounded-2xl flex items-center justify-center text-xl">
-                  📄
+                <div className="w-10 h-10 bg-[#2D9E8C]/10 rounded-xl flex items-center justify-center">
+                  <FileText className="h-5 w-5 text-[#2D9E8C]" strokeWidth={1.8} aria-hidden="true" />
                 </div>
                 <div>
                   <p className="font-semibold text-[#1A3D5C] text-sm">Reporte PDF familiar</p>
                   <p className="text-xs text-[#2D9E8C] mt-0.5">Disponible en Preparación Total</p>
                 </div>
               </div>
-              <Shield className="h-4 w-4 text-[#2D9E8C]" />
+              <Shield className="h-4 w-4 text-[#2D9E8C]" aria-hidden="true" />
             </div>
           </Link>
         )}
 
-        {/* Teleorientación CTA */}
+        {/* ── CTA Teleorientación ────────────────────────────────────── */}
         <Link href="/teleorientacion">
-          <div className="bg-gradient-to-r from-[#1A3D5C] to-[#1F4D72] rounded-2xl p-5 flex items-center justify-between hover:from-[#254E72] hover:to-[#1F4D72] transition-all">
+          <div className="bg-[#1A3D5C] rounded-2xl p-5 flex items-center justify-between hover:bg-[#254E72] transition-colors cursor-pointer">
             <div>
               <p className="font-semibold text-white text-sm">¿Tienes dudas médicas?</p>
               <p className="text-[#A8C5DA] text-xs mt-0.5">Habla con un especialista en medicina del viajero</p>
             </div>
-            <div className="text-2xl">👩‍⚕️</div>
+            <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center flex-shrink-0">
+              <Stethoscope className="h-5 w-5 text-white" strokeWidth={1.8} aria-hidden="true" />
+            </div>
           </div>
         </Link>
 
         {/* Disclaimer */}
-        <p className="text-[11px] text-slate-400 text-center mt-6 leading-relaxed">
-          Fuente: CDC Yellow Book 2026 · {destino?.revisado_at && `Revisado ${destino.revisado_at}`}<br />
+        <p className="text-[11px] text-slate-400 text-center leading-relaxed">
+          Fuente: CDC Yellow Book 2026{destino?.revisado_at ? ` · Revisado ${destino.revisado_at}` : ''}<br />
           SARIQAMA entrega orientación sanitaria. No reemplaza evaluación médica profesional.
         </p>
 
         {/* Eliminar viaje */}
-        <div className="mt-6">
+        <div className="pt-2">
           <EliminarViajeBtn viajeId={id} />
         </div>
       </main>

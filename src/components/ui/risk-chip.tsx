@@ -1,20 +1,48 @@
 import { cn } from "@/lib/utils"
 import type { NivelRiesgo } from "@/types"
 
-const ESTILOS: Record<NivelRiesgo, string> = {
-  muy_alto: "bg-red-100 text-red-700 border-red-200",
-  alto:     "bg-orange-100 text-orange-700 border-orange-200",
-  moderado: "bg-yellow-100 text-yellow-700 border-yellow-200",
-  bajo:     "bg-green-100 text-green-700 border-green-200",
-  no_aplica:"bg-slate-100 text-slate-500 border-slate-200",
-}
-
-const ETIQUETAS: Record<NivelRiesgo, string> = {
-  muy_alto: "Muy alto",
-  alto:     "Alto",
-  moderado: "Moderado",
-  bajo:     "Bajo",
-  no_aplica:"No aplica",
+const CONFIG: Record<NivelRiesgo, {
+  label: string
+  dot: string
+  text: string
+  bg: string
+  border: string
+}> = {
+  muy_alto: {
+    label:  "Muy alto",
+    dot:    "bg-red-500",
+    text:   "text-red-700",
+    bg:     "bg-red-50",
+    border: "border-red-100",
+  },
+  alto: {
+    label:  "Alto",
+    dot:    "bg-orange-500",
+    text:   "text-orange-700",
+    bg:     "bg-orange-50",
+    border: "border-orange-100",
+  },
+  moderado: {
+    label:  "Moderado",
+    dot:    "bg-amber-400",
+    text:   "text-amber-700",
+    bg:     "bg-amber-50",
+    border: "border-amber-100",
+  },
+  bajo: {
+    label:  "Bajo",
+    dot:    "bg-emerald-500",
+    text:   "text-emerald-700",
+    bg:     "bg-emerald-50",
+    border: "border-emerald-100",
+  },
+  no_aplica: {
+    label:  "No aplica",
+    dot:    "bg-slate-300",
+    text:   "text-slate-500",
+    bg:     "bg-slate-50",
+    border: "border-slate-100",
+  },
 }
 
 interface RiskChipProps {
@@ -23,13 +51,18 @@ interface RiskChipProps {
 }
 
 export function RiskChip({ nivel, className }: RiskChipProps) {
+  const { label, dot, text, bg, border } = CONFIG[nivel]
+
   return (
-    <span className={cn(
-      "inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold border",
-      ESTILOS[nivel],
-      className
-    )}>
-      {ETIQUETAS[nivel]}
+    <span
+      className={cn(
+        "inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold border",
+        bg, border, text,
+        className
+      )}
+    >
+      <span className={cn("w-1.5 h-1.5 rounded-full flex-shrink-0", dot)} aria-hidden="true" />
+      {label}
     </span>
   )
 }

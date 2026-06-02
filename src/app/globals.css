@@ -49,72 +49,91 @@
 }
 
 :root {
-  /* ── SARIQAMA Brand Palette (from logo) ─────────────────────────
-   * Navy    #1A3D5C — structural: headers, wordmark, dark backgrounds
-   * Teal    #2D9E8C — interactive: buttons, links, chips, accents
-   * Gold    #D4A338 — accent: taglines, decorative diamonds, highlights
-   * Terra   #C27058 — warm accent: secondary decorative
+  /* ── SARIQAMA Brand Palette ──────────────────────────────────────
+   * Navy    #1A3D5C — texto principal, headers, wordmark
+   * Teal    #2D9E8C — interactivos: botones, links, estados activos
+   * Gold    #D4A338 — acento premium / destacados
+   * Terra   #C27058 — riesgo/advertencia cálida
    * ─────────────────────────────────────────────────────────────── */
   --navy:         #1A3D5C;
   --navy-dark:    #0F2D45;
   --navy-light:   #254E72;
   --teal:         #2D9E8C;
   --teal-dark:    #237F70;
-  --teal-light:   #E0F5F2;
+  --teal-light:   #E8F7F4;
+  --teal-subtle:  #F0FBF9;
   --gold:         #D4A338;
   --gold-dark:    #B8892C;
   --gold-light:   #FBF0D4;
   --terra:        #C27058;
   --terra-light:  #F7E8E3;
 
-  /* Legacy semantic tokens (kept for compatibility) */
-  --tc: #2D9E8C;
-  --tc-light: #E0F5F2;
-  --tc-dark: #237F70;
-  --tg: #16A34A;
-  --tg-light: #DCFCE7;
-  --ta: #D4A338;
-  --ta-light: #FBF0D4;
-  --tr: #DC2626;
-  --tr-light: #FEE2E2;
-  --tbg: #F7FFFE;
-  --ts: #64748B;
-  --td: #1A3D5C;
+  /* ── Superficies "Clinical Calm" ──────────────────────────────── */
+  --surface:          #FFFFFF;
+  --surface-subtle:   #F8FAFB;
+  --surface-teal:     #F0FBF9;
+  --border-default:   #E8EEF4;
+  --border-subtle:    #F0F4F8;
 
-  /* shadcn tokens — mapeados a SARIQAMA */
+  /* ── Texto semántico ──────────────────────────────────────────── */
+  --text-primary:    #1A3D5C;
+  --text-secondary:  #475569;
+  --text-muted:      #94A3B8;
+  --text-teal:       #2D9E8C;
+
+  /* ── Estado clínico (riesgo) ──────────────────────────────────── */
+  --risk-critical:      #DC2626;
+  --risk-critical-bg:   #FEF2F2;
+  --risk-high:          #EA580C;
+  --risk-high-bg:       #FFF7ED;
+  --risk-moderate:      #CA8A04;
+  --risk-moderate-bg:   #FEFCE8;
+  --risk-low:           #16A34A;
+  --risk-low-bg:        #F0FDF4;
+  --risk-none:          #64748B;
+  --risk-none-bg:       #F8FAFC;
+
+  /* Legacy tokens (compat) */
+  --tc: #2D9E8C; --tc-light: #E8F7F4; --tc-dark: #237F70;
+  --tg: #16A34A; --tg-light: #F0FDF4;
+  --ta: #D4A338; --ta-light: #FBF0D4;
+  --tr: #DC2626; --tr-light: #FEF2F2;
+  --tbg: #FFFFFF; --ts: #475569; --td: #1A3D5C;
+
+  /* shadcn tokens — Clinical Calm */
   color-scheme: light;
-  --background: #F7FFFE;
-  --foreground: #1A3D5C;
-  --card: #FFFFFF;
-  --card-foreground: #1A3D5C;
-  --popover: #FFFFFF;
-  --popover-foreground: #1A3D5C;
-  --primary: #2D9E8C;
-  --primary-foreground: #FFFFFF;
-  --secondary: #E0F5F2;
+  --background:           #FFFFFF;
+  --foreground:           #1A3D5C;
+  --card:                 #FFFFFF;
+  --card-foreground:      #1A3D5C;
+  --popover:              #FFFFFF;
+  --popover-foreground:   #1A3D5C;
+  --primary:              #2D9E8C;
+  --primary-foreground:   #FFFFFF;
+  --secondary:            #E8F7F4;
   --secondary-foreground: #1A3D5C;
-  --muted: #F7FFFE;
-  --muted-foreground: #64748B;
-  --accent: #FBF0D4;
-  --accent-foreground: #B8892C;
-  --destructive: #DC2626;
-  --border: #E2E8F0;
-  --input: #E2E8F0;
-  --ring: #2D9E8C;
-  --chart-1: #2D9E8C;
-  --chart-2: #1A3D5C;
-  --chart-3: #D4A338;
-  --chart-4: #DC2626;
-  --chart-5: #C27058;
-  --radius: 1rem;
-  --sidebar: #FFFFFF;
-  --sidebar-foreground: #1A3D5C;
-  --sidebar-primary: #2D9E8C;
+  --muted:                #F8FAFB;
+  --muted-foreground:     #64748B;
+  --accent:               #FBF0D4;
+  --accent-foreground:    #B8892C;
+  --destructive:          #DC2626;
+  --border:               #E8EEF4;
+  --input:                #E8EEF4;
+  --ring:                 #2D9E8C;
+  --chart-1:              #2D9E8C;
+  --chart-2:              #1A3D5C;
+  --chart-3:              #D4A338;
+  --chart-4:              #DC2626;
+  --chart-5:              #C27058;
+  --radius:               0.875rem;
+  --sidebar:              #FFFFFF;
+  --sidebar-foreground:   #1A3D5C;
+  --sidebar-primary:      #2D9E8C;
   --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #E0F5F2;
+  --sidebar-accent:       #E8F7F4;
   --sidebar-accent-foreground: #1A3D5C;
-  --sidebar-border: #E2E8F0;
-  --sidebar-ring: #2D9E8C;
+  --sidebar-border:       #E8EEF4;
+  --sidebar-ring:         #2D9E8C;
 }
 
 .dark {
@@ -151,17 +170,31 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
-/* ── Shadow scale con tinte navy ───────────────────────────────────────── */
+/* ── Shadow scale — Clinical Calm (sutiles, navy-tinted) ───────────────── */
 :root {
-  --shadow-xs:  0 1px 2px rgba(26,61,92,0.05);
-  --shadow-sm:  0 1px 4px rgba(26,61,92,0.07), 0 0 1px rgba(26,61,92,0.04);
-  --shadow-md:  0 4px 14px rgba(26,61,92,0.10), 0 1px 4px rgba(26,61,92,0.05);
-  --shadow-lg:  0 8px 28px rgba(26,61,92,0.12), 0 2px 8px rgba(26,61,92,0.06);
-  --shadow-xl:  0 16px 48px rgba(26,61,92,0.14), 0 4px 12px rgba(26,61,92,0.07);
-  --shadow-glow-teal: 0 0 0 3px rgba(45,158,140,0.20);
-  --shadow-glow-gold: 0 0 0 3px rgba(212,163,56,0.20);
+  /* Cards y superficies */
+  --shadow-xs:   0 1px 2px rgba(26,61,92,0.04);
+  --shadow-sm:   0 1px 3px rgba(26,61,92,0.06), 0 1px 2px rgba(26,61,92,0.04);
+  --shadow-md:   0 4px 12px rgba(26,61,92,0.08), 0 1px 3px rgba(26,61,92,0.05);
+  --shadow-lg:   0 8px 24px rgba(26,61,92,0.10), 0 2px 6px rgba(26,61,92,0.05);
+  --shadow-xl:   0 16px 40px rgba(26,61,92,0.12), 0 4px 10px rgba(26,61,92,0.06);
+  /* Interactivos */
+  --shadow-card:     0 0 0 1px rgba(26,61,92,0.06), 0 1px 3px rgba(26,61,92,0.06);
+  --shadow-elevated: 0 0 0 1px rgba(26,61,92,0.06), 0 4px 12px rgba(26,61,92,0.08);
+  --shadow-glow-teal: 0 0 0 3px rgba(45,158,140,0.18);
+  --shadow-glow-gold: 0 0 0 3px rgba(212,163,56,0.18);
 
-  /* Animation tokens */
+  /* ── Escala tipográfica ───────────────────────────────────────── */
+  --text-xs:   0.6875rem; /* 11px */
+  --text-sm:   0.8125rem; /* 13px */
+  --text-base: 0.9375rem; /* 15px */
+  --text-lg:   1.0625rem; /* 17px */
+  --text-xl:   1.25rem;   /* 20px */
+  --text-2xl:  1.5rem;    /* 24px */
+  --text-3xl:  1.875rem;  /* 30px */
+  --text-4xl:  2.25rem;   /* 36px */
+
+  /* ── Animation tokens ────────────────────────────────────────── */
   --ease-out:  cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in:   cubic-bezier(0.4, 0, 1, 1);
   --ease-base: cubic-bezier(0.4, 0, 0.2, 1);
@@ -207,29 +240,45 @@
 .animate-scale-in  { animation: scale-in var(--duration-base) var(--ease-out) both; }
 .animate-float     { animation: float 3s ease-in-out infinite; }
 
-/* Card elevada — usar en lugar de border-only cards */
+/* ── Card "Clinical" — borde sutil + sombra mínima ─────────────────────── */
+.card-clinical {
+  background: #FFFFFF;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-default, #E8EEF4);
+  box-shadow: var(--shadow-xs);
+  transition: box-shadow var(--duration-base) var(--ease-base),
+              border-color var(--duration-base) var(--ease-base),
+              transform var(--duration-base) var(--ease-base);
+}
+.card-clinical:hover {
+  box-shadow: var(--shadow-md);
+  border-color: rgba(45,158,140,0.25);
+  transform: translateY(-1px);
+}
+
+/* Card elevada — shadow más pronunciada */
 .card-elevated {
-  background: white;
-  border-radius: 1rem;
-  box-shadow: var(--shadow-sm);
+  background: #FFFFFF;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
   transition: box-shadow var(--duration-base) var(--ease-base),
               transform var(--duration-base) var(--ease-base);
 }
 .card-elevated:hover {
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-elevated);
   transform: translateY(-2px);
 }
 
-/* Glass card — para usar sobre fondos de color */
+/* Glass card — para usar sobre fondos de color oscuro */
 .card-glass {
   background: rgba(255,255,255,0.12);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.20);
-  border-radius: 1rem;
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: var(--radius);
 }
 
-/* Hover lift — para cards en Server Components (sin JS handlers) */
+/* Hover lift — Server Components (sin JS handlers) */
 .hover-lift {
   transition: box-shadow var(--duration-base) var(--ease-base),
               transform var(--duration-base) var(--ease-base);
@@ -237,16 +286,28 @@
 }
 .hover-lift:hover {
   box-shadow: var(--shadow-lg);
-  transform: translateY(-4px);
+  transform: translateY(-3px);
 }
 
-/* Gradiente mesh de fondo */
+/* Icono acción — círculo teal sutil para quick actions */
+.icon-action {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.75rem;
+  background: var(--teal-subtle, #F0FBF9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Gradiente mesh de fondo (landing) */
 .mesh-bg {
-  background-color: #F7FFFE;
+  background-color: #FFFFFF;
   background-image:
-    radial-gradient(at 20% 30%, rgba(45,158,140,0.08) 0px, transparent 60%),
-    radial-gradient(at 80% 10%, rgba(26,61,92,0.06) 0px, transparent 50%),
-    radial-gradient(at 60% 80%, rgba(212,163,56,0.05) 0px, transparent 50%);
+    radial-gradient(at 20% 30%, rgba(45,158,140,0.05) 0px, transparent 60%),
+    radial-gradient(at 80% 10%, rgba(26,61,92,0.04) 0px, transparent 50%),
+    radial-gradient(at 60% 80%, rgba(212,163,56,0.03) 0px, transparent 50%);
 }
 
 /* Gradient heading */
@@ -285,6 +346,8 @@
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-dm-sans), 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -294,10 +357,16 @@
   }
   h1, h2, h3, .font-heading {
     font-family: var(--font-fraunces), 'Fraunces', serif;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+  /* Input y button base height */
+  input, button, select, textarea {
+    font-family: inherit;
   }
   /* Scrollbar sutil */
-  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
   ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: rgba(26,61,92,0.15); border-radius: 99px; }
-  ::-webkit-scrollbar-thumb:hover { background: rgba(26,61,92,0.30); }
+  ::-webkit-scrollbar-thumb { background: rgba(26,61,92,0.12); border-radius: 99px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(26,61,92,0.25); }
 }
