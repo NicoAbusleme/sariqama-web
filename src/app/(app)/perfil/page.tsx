@@ -48,25 +48,26 @@ export default async function PerfilPage() {
   const inicial = (familia.nombre as string).charAt(0).toUpperCase()
 
   return (
-    <div className="min-h-screen bg-[#F7FFFE]">
-      {/* Header */}
-      <header className="bg-gradient-to-br from-[#1A3D5C] to-[#0F2D45] px-5 pt-12 pb-8">
+    <div className="min-h-screen bg-[#F8FAFB]">
+      {/* ── Header limpio ─────────────────────────────────────────────── */}
+      <header className="bg-white border-b border-[#E8EEF4] px-5 pt-6 pb-6">
         <div className="max-w-2xl mx-auto flex flex-col items-center text-center">
-          <div className="w-20 h-20 rounded-full bg-white flex items-center justify-center mb-3">
+          {/* Avatar */}
+          <div className="w-16 h-16 rounded-full bg-[#1A3D5C] flex items-center justify-center mb-3 ring-4 ring-[#E8F7F4]">
             <span
-              className="text-3xl font-bold text-[#2D9E8C]"
+              className="text-2xl font-bold text-white"
               style={{ fontFamily: 'var(--font-fraunces)' }}
             >
               {inicial}
             </span>
           </div>
           <h1
-            className="text-2xl font-semibold text-white mb-1"
+            className="text-xl font-semibold text-[#1A3D5C]"
             style={{ fontFamily: 'var(--font-fraunces)' }}
           >
             {familia.nombre}
           </h1>
-          <p className="text-[#A8C5DA] text-sm">{user.email}</p>
+          <p className="text-sm text-slate-400 mt-0.5">{user.email}</p>
         </div>
       </header>
 
@@ -74,8 +75,8 @@ export default async function PerfilPage() {
         {/* Integrantes */}
         <section className="mt-5">
           <div className="flex items-center gap-2 mb-3">
-            <Users className="h-4 w-4 text-slate-500" />
-            <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+            <Users className="h-4 w-4 text-slate-400" aria-hidden="true" />
+            <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-widest">
               Integrantes de la familia
             </p>
           </div>
@@ -86,10 +87,10 @@ export default async function PerfilPage() {
               return (
                 <div
                   key={v.id}
-                  className="bg-white rounded-2xl border border-slate-100 p-4"
+                  className="bg-white rounded-2xl border border-[#E8EEF4] p-4"
                 >
                   <div className="flex items-center gap-3 mb-2">
-                    <div className="w-10 h-10 rounded-full bg-[#E0F5F2] flex items-center justify-center flex-shrink-0">
+                    <div className="w-10 h-10 rounded-full bg-[#E8F7F4] flex items-center justify-center flex-shrink-0">
                       <span className="text-sm font-bold text-[#2D9E8C]">
                         {(v.nombre as string).charAt(0).toUpperCase()}
                       </span>
@@ -134,7 +135,7 @@ export default async function PerfilPage() {
           </div>
 
           <Link href="/perfil/agregar-viajero">
-            <button className="mt-3 w-full border-2 border-dashed border-[#2D9E8C]/40 rounded-2xl py-3 text-sm font-medium text-[#2D9E8C] hover:border-[#2D9E8C] hover:bg-[#E0F5F2] transition-colors cursor-pointer">
+            <button className="mt-3 w-full border-2 border-dashed border-[#2D9E8C]/40 rounded-2xl py-3 text-sm font-medium text-[#2D9E8C] hover:border-[#2D9E8C] hover:bg-[#E8F7F4] transition-colors cursor-pointer">
               + Agregar integrante
             </button>
           </Link>
@@ -142,7 +143,7 @@ export default async function PerfilPage() {
 
         {/* Mis viajes */}
         <section className="mt-5">
-          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">
+          <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-widest mb-3">
             Mis viajes
           </p>
 
@@ -180,10 +181,10 @@ export default async function PerfilPage() {
 
         {/* Cuenta */}
         <section className="mt-5">
-          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">
+          <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-widest mb-3">
             Cuenta
           </p>
-          <div className="bg-white rounded-2xl border border-slate-100 p-4">
+          <div className="bg-white rounded-2xl border border-[#E8EEF4] p-4">
             <p className="text-xs text-slate-400 mb-0.5">Correo electrónico</p>
             <p className="text-sm font-medium text-slate-800 mb-4">{user.email}</p>
             <form action={cerrarSesion}>
@@ -242,7 +243,7 @@ function ViajeCard({ viaje, today }: { viaje: ViajeRow; today: string }) {
     status === 'en_curso'
       ? { label: 'En curso', cls: 'bg-green-100 text-green-700' }
       : status === 'proximo'
-      ? { label: 'Próximo', cls: 'bg-[#E0F5F2] text-[#2D9E8C]' }
+      ? { label: 'Próximo', cls: 'bg-[#E8F7F4] text-[#2D9E8C]' }
       : { label: 'Finalizado', cls: 'bg-slate-100 text-slate-400' }
 
   return (
