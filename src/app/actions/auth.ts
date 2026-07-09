@@ -3,6 +3,8 @@
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
+import { headers } from 'next/headers'
+import { loginRatelimit } from '@/lib/ratelimit'
 
 export async function registrar(formData: FormData) {
   const supabase = await createClient()
@@ -36,15 +38,22 @@ export async function registrar(formData: FormData) {
 }
 
 export async function iniciarSesion(formData: FormData) {
-  const supabase = await createClient()
+  // Rate limiting: máx 5 intentos por IP en 15 minutos
+  const ip = (await headers()).get('x-forwarded-for')?.split(',')[0]?.trim() ?? '127.0.0.1'
+  const { success, remaining } = await loginRatelimit.limit(ip)
+  if (!success) {
+    return { error: `Demasiados intentos fallidos. Espera unos minutos antes de volver a intentarlo.` }
+  }
 
+  const supabase = await createClient()
   const email = formData.get('email') as string
   const password = formData.get('password') as string
 
   const { error } = await supabase.auth.signInWithPassword({ email, password })
 
   if (error) {
-    return { error: 'Correo o contraseña incorrectos' }
+    const aviso = remaining <= 1 ? ` (${remaining} intento${remaining === 1 ? '' : 's'} restante)` : ''
+    return { error: `Correo o contraseña incorrectos.${aviso}` }
   }
 
   redirect('/dashboard')
