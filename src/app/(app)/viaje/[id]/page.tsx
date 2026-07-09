@@ -10,6 +10,7 @@ import { FlagImg } from '@/components/ui/flag-img'
 import { RiskChip } from '@/components/ui/risk-chip'
 import { EliminarViajeBtn } from './EliminarViajeBtn'
 import type { NivelRiesgo } from '@/types'
+import { decryptViajero } from '@/lib/crypto'
 
 function calcularSemanasEmbarazo(fum: string, fechaViaje: string): number | null {
   if (!fum || !fechaViaje) return null
@@ -52,8 +53,9 @@ export default async function DetalleViajePage({ params }: { params: Promise<{ i
   const { data: checklist } = await supabase
     .from('checklist_items').select('*').eq('viaje_id', id).order('prioridad')
 
-  const { data: viajeros } = await supabase
+  const { data: rawViajeros } = await supabase
     .from('viajeros').select('nombre, condiciones, embarazo_fum').eq('familia_id', familia.id)
+  const viajeros = (rawViajeros ?? []).map(decryptViajero)
 
   type AvisoEmbarazo = { nombre: string; semanas: number; nivel: 'advertencia' | 'critico' }
   const avisosEmbarazo: AvisoEmbarazo[] = (viajeros ?? [])

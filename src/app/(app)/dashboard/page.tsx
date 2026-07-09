@@ -22,7 +22,7 @@ export default async function DashboardPage() {
   if (!familia) redirect("/onboarding")
 
   const { data: viajeros } = await supabase
-    .from("viajeros").select("*").eq("familia_id", familia.id).order("edad", { ascending: false })
+    .from("viajeros").select("id, nombre, edad, es_nino").eq("familia_id", familia.id).order("edad", { ascending: false })
 
   const { data: viajes } = await supabase
     .from("viajes").select("*").eq("familia_id", familia.id)

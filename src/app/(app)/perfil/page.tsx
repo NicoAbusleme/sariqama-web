@@ -6,6 +6,7 @@ import { FlagImg } from '@/components/ui/flag-img'
 import { getDestinoBySlug } from '@/lib/content/destinos'
 import { cerrarSesion } from '@/app/actions/auth'
 import { EliminarCuentaBtn } from './EliminarCuentaBtn'
+import { decryptViajero } from '@/lib/crypto'
 
 const CONDICION_META: Record<string, { label: string; color: string }> = {
   alergia:         { label: 'Alergias',        color: 'bg-orange-50 text-orange-600 border-orange-100' },
@@ -29,11 +30,12 @@ export default async function PerfilPage() {
     .single()
   if (!familia) redirect('/onboarding')
 
-  const { data: viajeros } = await supabase
+  const { data: rawViajeros } = await supabase
     .from('viajeros')
     .select('*')
     .eq('familia_id', familia.id)
     .order('edad', { ascending: false })
+  const viajeros = (rawViajeros ?? []).map(decryptViajero)
 
   const { data: viajes } = await supabase
     .from('viajes')

@@ -3,6 +3,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
+import { encrypt, encryptArray } from '@/lib/crypto'
 
 export async function crearViaje(data: {
   destino_slug: string
@@ -94,15 +95,15 @@ export async function guardarSintomas(data: {
 
   // fiebre en BD es numeric (temperatura). Lo omitimos ya que está en sintomas[].
   const { error } = await supabase.from('sintomas_log').insert({
-    viaje_id:        data.viaje_id,
-    viajero_id:      data.viajero_id ?? null,
-    viajero_nombre:  data.viajero_nombre ?? null,
-    sintomas:        data.sintomas,
-    semaforo:        data.semaforo,
-    dias_sintomas:   data.dias_sintomas,
-    titulo:          data.titulo,
-    exposiciones:    data.exposiciones,
-    acciones:        data.acciones,
+    viaje_id:       data.viaje_id,
+    viajero_id:     data.viajero_id ?? null,
+    viajero_nombre: data.viajero_nombre ?? null,
+    sintomas:       data.sintomas.length ? encryptArray(data.sintomas)! : [],
+    semaforo:       encrypt(data.semaforo),
+    dias_sintomas:  data.dias_sintomas,
+    titulo:         data.titulo,
+    exposiciones:   data.exposiciones,
+    acciones:       data.acciones,
   })
 
   if (error) return { error: error.message }

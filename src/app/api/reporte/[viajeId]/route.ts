@@ -4,6 +4,7 @@ import { getDestinoBySlug } from '@/lib/content/destinos'
 import { renderToBuffer } from '@react-pdf/renderer'
 import { ReportePDF } from '@/lib/pdf/ReportePDF'
 import React, { type ReactElement } from 'react'
+import { decryptViajero } from '@/lib/crypto'
 
 // Planes que tienen acceso al reporte PDF
 const PLANES_CON_ACCESO = ['preparacion', 'acompanamiento']
@@ -54,11 +55,12 @@ export async function GET(
     }
 
     // ── Viajeros ──────────────────────────────────────────────────
-    const { data: viajeros } = await supabase
+    const { data: rawViajeros } = await supabase
       .from('viajeros')
       .select('nombre, edad, es_nino, condiciones')
       .eq('familia_id', familia.id)
       .order('edad', { ascending: false })
+    const viajeros = (rawViajeros ?? []).map(decryptViajero)
 
     // ── Checklist ─────────────────────────────────────────────────
     const { data: checklist } = await supabase

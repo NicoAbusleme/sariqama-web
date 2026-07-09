@@ -7,6 +7,7 @@ import { HistorialCard } from './HistorialCard'
 import { getDestinoBySlug } from '@/lib/content/destinos'
 import { FlagImg } from '@/components/ui/flag-img'
 import { PlanGate } from '@/components/ui/plan-gate'
+import { decryptViajero, decryptSintoma } from '@/lib/crypto'
 
 export default async function SintomasPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -23,17 +24,19 @@ export default async function SintomasPage({ params }: { params: Promise<{ id: s
 
   const userPlan: string = familia.plan ?? 'gratis'
 
-  const { data: viajeros } = await supabase
+  const { data: rawViajeros } = await supabase
     .from('viajeros').select('id, nombre, edad, es_nino, condiciones')
     .eq('familia_id', familia.id).order('edad', { ascending: false })
+  const viajeros = (rawViajeros ?? []).map(decryptViajero)
 
   // Historial de evaluaciones de este viaje
-  const { data: historial } = await supabase
+  const { data: rawHistorial } = await supabase
     .from('sintomas_log')
     .select('*')
     .eq('viaje_id', id)
     .order('created_at', { ascending: false })
     .limit(20)
+  const historial = (rawHistorial ?? []).map(decryptSintoma)
 
   const destino = getDestinoBySlug(viaje.destino_slug)
   const flagCode = destino?.pais_code ?? 'un'
