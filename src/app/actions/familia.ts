@@ -71,6 +71,54 @@ export async function agregarViajeros(viajeros: {
   redirect('/dashboard')
 }
 
+export async function editarViajero(id: string, data: {
+  nombre: string
+  apellido?: string
+  edad: number
+  sexo?: string
+  genero?: string
+  condiciones: string[]
+  inmunosupresion_tipo?: string
+  vih_carga_viral?: string
+  embarazo_fum?: string
+  alergia_tipos?: string[]
+  alergia_huevo?: boolean
+  alergia_plv?: boolean
+  alergia_farmacos_cuales?: string
+}): Promise<{ error?: string }> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'No autorizado' }
+
+  const { data: familia } = await supabase
+    .from('familias').select('id').eq('user_id', user.id).single()
+  if (!familia) return { error: 'Familia no encontrada' }
+
+  const { data: viajero } = await supabase
+    .from('viajeros').select('familia_id').eq('id', id).single()
+  if (!viajero || viajero.familia_id !== familia.id) return { error: 'No autorizado' }
+
+  const { error } = await supabase.from('viajeros').update({
+    nombre:                  data.nombre,
+    apellido:                data.apellido || null,
+    edad:                    data.edad,
+    es_nino:                 data.edad < 18,
+    sexo:                    data.sexo                    ? encrypt(data.sexo)                    : null,
+    genero:                  data.genero                  ? encrypt(data.genero)                  : null,
+    condiciones:             data.condiciones.length       ? encryptArray(data.condiciones)!       : [],
+    inmunosupresion_tipo:    data.inmunosupresion_tipo    ? encrypt(data.inmunosupresion_tipo)    : null,
+    vih_carga_viral:         data.vih_carga_viral         ? encrypt(data.vih_carga_viral)         : null,
+    embarazo_fum:            data.embarazo_fum            ? encrypt(data.embarazo_fum)            : null,
+    alergia_tipos:           data.alergia_tipos?.length   ? encryptArray(data.alergia_tipos)      : null,
+    alergia_huevo:           data.alergia_huevo ?? false,
+    alergia_plv:             data.alergia_plv ?? false,
+    alergia_farmacos_cuales: data.alergia_farmacos_cuales ? encrypt(data.alergia_farmacos_cuales) : null,
+  }).eq('id', id)
+
+  if (error) return { error: error.message }
+  redirect('/perfil')
+}
+
 export async function agregarUnViajero(data: {
   nombre: string
   apellido?: string

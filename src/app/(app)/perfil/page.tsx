@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { Users, ChevronRight, LogOut } from 'lucide-react'
+import { Users, ChevronRight, LogOut, Pencil } from 'lucide-react'
 import { FlagImg } from '@/components/ui/flag-img'
 import { getDestinoBySlug } from '@/lib/content/destinos'
 import { cerrarSesion } from '@/app/actions/auth'
@@ -98,7 +98,7 @@ export default async function PerfilPage() {
                       </span>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-slate-900 text-sm">{v.nombre}{v.apellido ? ` ${v.apellido}` : ''}</p>
+                      <p className="font-semibold text-slate-900 text-sm">{v.nombre as string}{v.apellido ? ` ${v.apellido}` : ''}</p>
                       <p className="text-xs text-slate-400">
                         {v.edad} años{' '}
                         {v.es_nino && <span className="text-xs">👶</span>}
@@ -114,6 +114,11 @@ export default async function PerfilPage() {
                         )}
                       </p>
                     </div>
+                    <Link href={`/perfil/editar-viajero/${v.id}`}
+                      className="flex-shrink-0 w-8 h-8 rounded-xl flex items-center justify-center text-slate-400 hover:text-[#2D9E8C] hover:bg-[#E8F7F4] transition-colors"
+                      aria-label={`Editar ${v.nombre}`}>
+                      <Pencil className="h-3.5 w-3.5" />
+                    </Link>
                   </div>
                   {condicionesFiltradas.length > 0 && (
                     <div className="flex flex-wrap gap-1.5 mt-2">

@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect, notFound } from 'next/navigation'
 import {
   ChevronLeft, CheckSquare, Shield, Stethoscope, BookOpen,
-  ChevronRight, AlertTriangle, XCircle, Plane, Pill, FileText,
+  ChevronRight, AlertTriangle, XCircle, Plane, Pill, FileText, Pencil,
 } from 'lucide-react'
 import Link from 'next/link'
 import { getDestinoBySlug } from '@/lib/content/destinos'
@@ -151,6 +151,15 @@ export default async function DetalleViajePage({ params }: { params: Promise<{ i
               ))}
             </div>
           )}
+
+          {/* Editar viaje */}
+          <div className="mt-3">
+            <Link href={`/viaje/${id}/editar`}
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-400 hover:text-[#2D9E8C] transition-colors">
+              <Pencil className="h-3 w-3" aria-hidden="true" />
+              Editar fechas, tipos o seguro
+            </Link>
+          </div>
 
           {/* Barra de progreso */}
           {totalItems > 0 && (

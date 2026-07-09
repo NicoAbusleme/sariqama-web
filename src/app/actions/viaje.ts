@@ -112,6 +112,35 @@ export async function guardarSintomas(data: {
   return { ok: true }
 }
 
+export async function editarViaje(id: string, data: {
+  fecha_salida: string
+  fecha_regreso: string
+  tipos: string[]
+  seguro_viaje?: string
+  seguro_compania?: string
+}): Promise<{ error?: string }> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'No autorizado' }
+
+  const { data: viaje } = await supabase.from('viajes').select('familia_id').eq('id', id).single()
+  if (!viaje) return { error: 'Viaje no encontrado' }
+  const { data: familia } = await supabase.from('familias').select('id').eq('user_id', user.id).single()
+  if (!familia || viaje.familia_id !== familia.id) return { error: 'No autorizado' }
+
+  const { error } = await supabase.from('viajes').update({
+    fecha_salida:    data.fecha_salida,
+    fecha_regreso:   data.fecha_regreso,
+    tipo:            data.tipos[0],
+    tipos:           data.tipos,
+    seguro_viaje:    data.seguro_viaje ?? null,
+    seguro_compania: data.seguro_compania ?? null,
+  }).eq('id', id)
+
+  if (error) return { error: error.message }
+  redirect(`/viaje/${id}`)
+}
+
 export async function toggleChecklistItem(itemId: string, completado: boolean, viajeId: string) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
