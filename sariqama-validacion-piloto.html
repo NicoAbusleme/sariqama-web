@@ -1,0 +1,700 @@
+
+<title>SARIQAMA — Estrategia de Validación del Piloto</title>
+<style>
+  :root {
+    --navy:        #1A3D5C;
+    --teal:        #2D9E8C;
+    --teal-light:  #E8F7F4;
+    --teal-border: #B2E4DC;
+    --amber:       #F59E0B;
+    --amber-light: #FEF3C7;
+    --red:         #EF4444;
+    --red-light:   #FEE2E2;
+    --bg:          #F8FAFB;
+    --surface:     #FFFFFF;
+    --border:      #E8EEF4;
+    --text-1:      #0F172A;
+    --text-2:      #475569;
+    --text-3:      #94A3B8;
+    --tag-bg:      #EFF6FF;
+    --tag-text:    #1E40AF;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg:          #0B1521;
+      --surface:     #142030;
+      --border:      #1E3347;
+      --text-1:      #F1F5F9;
+      --text-2:      #94A3B8;
+      --text-3:      #475569;
+      --teal-light:  #0D2B25;
+      --teal-border: #1A4A40;
+      --amber-light: #2D1F00;
+      --red-light:   #2D0A0A;
+      --tag-bg:      #1E2D4A;
+      --tag-text:    #93C5FD;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg:          #0B1521;
+    --surface:     #142030;
+    --border:      #1E3347;
+    --text-1:      #F1F5F9;
+    --text-2:      #94A3B8;
+    --text-3:      #475569;
+    --teal-light:  #0D2B25;
+    --teal-border: #1A4A40;
+    --amber-light: #2D1F00;
+    --red-light:   #2D0A0A;
+    --tag-bg:      #1E2D4A;
+    --tag-text:    #93C5FD;
+  }
+  :root[data-theme="light"] {
+    --navy:        #1A3D5C;
+    --teal:        #2D9E8C;
+    --teal-light:  #E8F7F4;
+    --teal-border: #B2E4DC;
+    --amber:       #F59E0B;
+    --amber-light: #FEF3C7;
+    --red:         #EF4444;
+    --red-light:   #FEE2E2;
+    --bg:          #F8FAFB;
+    --surface:     #FFFFFF;
+    --border:      #E8EEF4;
+    --text-1:      #0F172A;
+    --text-2:      #475569;
+    --text-3:      #94A3B8;
+    --tag-bg:      #EFF6FF;
+    --tag-text:    #1E40AF;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text-1);
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 15px;
+    line-height: 1.65;
+    padding: 2rem 1.25rem 5rem;
+  }
+
+  .doc {
+    max-width: 740px;
+    margin: 0 auto;
+  }
+
+  /* Header */
+  .doc-header {
+    border-bottom: 2px solid var(--teal);
+    padding-bottom: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+  .doc-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: .6rem;
+  }
+  .doc-title {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: clamp(1.6rem, 4vw, 2.2rem);
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1.2;
+    text-wrap: balance;
+    margin-bottom: .5rem;
+  }
+  :root[data-theme="dark"] .doc-title,
+  @media (prefers-color-scheme: dark) { .doc-title { color: #7DD3C8; } }
+  .doc-subtitle {
+    color: var(--text-2);
+    font-size: .95rem;
+  }
+  .doc-meta {
+    display: flex;
+    gap: 1.25rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+  }
+  .meta-chip {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-3);
+    letter-spacing: .04em;
+  }
+  .meta-chip span { color: var(--text-2); }
+
+  /* Section */
+  .section { margin-bottom: 2rem; }
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--text-3);
+    margin-bottom: .75rem;
+  }
+  .section-title {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: .9rem;
+    text-wrap: balance;
+  }
+  :root[data-theme="dark"] .section-title { color: #7DD3C8; }
+
+  /* Card */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.25rem 1.4rem;
+    margin-bottom: .75rem;
+  }
+  .card-teal { border-left: 3px solid var(--teal); }
+  .card-amber { border-left: 3px solid var(--amber); }
+  .card-navy  { border-left: 3px solid var(--navy); }
+
+  /* Hipótesis */
+  .hypothesis-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: .75rem;
+  }
+  .hypothesis-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.1rem 1.2rem;
+  }
+  .hypothesis-number {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: .4rem;
+  }
+  .hypothesis-title {
+    font-weight: 700;
+    color: var(--text-1);
+    font-size: .9rem;
+    margin-bottom: .3rem;
+  }
+  .hypothesis-body {
+    font-size: .82rem;
+    color: var(--text-2);
+    line-height: 1.5;
+  }
+
+  /* Perfil */
+  .profile-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: .75rem;
+  }
+  .profile-card {
+    background: var(--teal-light);
+    border: 1px solid var(--teal-border);
+    border-radius: 12px;
+    padding: 1rem;
+  }
+  .profile-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--teal);
+    margin-bottom: .4rem;
+  }
+  .profile-body {
+    font-size: .85rem;
+    color: var(--text-1);
+    line-height: 1.5;
+  }
+
+  /* Preguntas */
+  .q-list { display: flex; flex-direction: column; gap: .6rem; }
+  .q-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: .85rem 1rem;
+    display: flex;
+    gap: .75rem;
+    align-items: flex-start;
+  }
+  .q-num {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--teal-light);
+    color: var(--teal);
+    font-size: 11px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: .05rem;
+  }
+  .q-text {
+    font-size: .9rem;
+    color: var(--text-1);
+    line-height: 1.5;
+  }
+  .q-why {
+    font-size: .78rem;
+    color: var(--text-2);
+    margin-top: .25rem;
+    font-style: italic;
+  }
+  .q-item.key { border-color: var(--amber); }
+  .q-item.key .q-num {
+    background: var(--amber-light);
+    color: var(--amber);
+  }
+  .q-item.key .q-num::after { content: '★'; font-style: normal; }
+
+  /* Métricas */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: .75rem;
+  }
+  .metric-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem;
+    text-align: center;
+  }
+  .metric-value {
+    font-family: Georgia, serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--teal);
+    line-height: 1;
+    margin-bottom: .3rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .metric-label {
+    font-size: .78rem;
+    color: var(--text-2);
+    line-height: 1.4;
+  }
+
+  /* Señales */
+  .signal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .75rem;
+  }
+  .signal-card {
+    border-radius: 12px;
+    padding: 1rem 1.1rem;
+  }
+  .signal-card.good { background: var(--teal-light); border: 1px solid var(--teal-border); }
+  .signal-card.bad  { background: var(--red-light);  border: 1px solid #FECACA; }
+  .signal-header {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin-bottom: .6rem;
+  }
+  .signal-card.good .signal-header { color: var(--teal); }
+  .signal-card.bad  .signal-header { color: #B91C1C; }
+  .signal-list { list-style: none; display: flex; flex-direction: column; gap: .35rem; }
+  .signal-list li { font-size: .82rem; color: var(--text-1); line-height: 1.4; padding-left: 1rem; position: relative; }
+  .signal-list li::before { position: absolute; left: 0; }
+  .signal-card.good .signal-list li::before { content: '✓'; color: var(--teal); font-weight: 700; }
+  .signal-card.bad  .signal-list li::before { content: '✗'; color: #EF4444; font-weight: 700; }
+
+  /* Tip box */
+  .tip {
+    background: var(--amber-light);
+    border: 1px solid #FDE68A;
+    border-radius: 10px;
+    padding: .85rem 1rem;
+    font-size: .85rem;
+    color: var(--text-1);
+    display: flex;
+    gap: .6rem;
+    align-items: flex-start;
+    margin-top: .75rem;
+  }
+  .tip-icon { font-size: 1rem; flex-shrink: 0; margin-top: .05rem; }
+
+  /* Protocolo */
+  .protocol-step {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: .6rem;
+    align-items: flex-start;
+  }
+  .step-time {
+    flex-shrink: 0;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--teal);
+    background: var(--teal-light);
+    border: 1px solid var(--teal-border);
+    border-radius: 6px;
+    padding: .2rem .5rem;
+    margin-top: .1rem;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .step-body { font-size: .87rem; color: var(--text-1); line-height: 1.5; }
+  .step-body strong { color: var(--navy); }
+  :root[data-theme="dark"] .step-body strong { color: #7DD3C8; }
+
+  /* Divider */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 2rem 0;
+  }
+
+  /* Tag */
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    background: var(--tag-bg);
+    color: var(--tag-text);
+    border-radius: 6px;
+    padding: .15rem .5rem;
+    margin-right: .35rem;
+    margin-bottom: .35rem;
+  }
+
+  @media (max-width: 560px) {
+    .signal-grid { grid-template-columns: 1fr; }
+    .hypothesis-grid { grid-template-columns: 1fr; }
+  }
+</style>
+
+<div class="doc">
+
+  <!-- Header -->
+  <header class="doc-header">
+    <p class="doc-eyebrow">SARIQAMA · Piloto</p>
+    <h1 class="doc-title">Estrategia de Validación</h1>
+    <p class="doc-subtitle">Qué debemos aprender de los primeros usuarios y cómo hacerlo</p>
+    <div class="doc-meta">
+      <p class="meta-chip">Fase <span>Piloto</span></p>
+      <p class="meta-chip">Muestra objetivo <span>8–15 familias</span></p>
+      <p class="meta-chip">Duración estimada <span>4–6 semanas</span></p>
+    </div>
+  </header>
+
+
+  <!-- Objetivo -->
+  <section class="section">
+    <p class="section-label">Objetivo</p>
+    <div class="card card-teal">
+      <p style="font-size:.95rem; color:var(--text-1); line-height:1.6;">
+        El piloto no es para probar que la app funciona técnicamente — es para descubrir si resuelve un problema real de forma que las personas valoren y por el que estén dispuestas a pagar. Cada conversación debe ayudarnos a decidir si <strong>seguimos, pivotamos o descartamos</strong> alguna hipótesis.
+      </p>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- Hipótesis -->
+  <section class="section">
+    <p class="section-label">Las 3 hipótesis a validar</p>
+    <p class="section-title">¿Qué necesitamos que sea verdad para que SARIQAMA funcione?</p>
+    <div class="hypothesis-grid">
+      <div class="hypothesis-card">
+        <p class="hypothesis-number">Hipótesis 1</p>
+        <p class="hypothesis-title">El problema es real</p>
+        <p class="hypothesis-body">Las familias sienten ansiedad o desorganización frente a la salud cuando viajan a destinos tropicales y no saben bien cómo prepararse.</p>
+      </div>
+      <div class="hypothesis-card">
+        <p class="hypothesis-number">Hipótesis 2</p>
+        <p class="hypothesis-title">La solución resuelve algo</p>
+        <p class="hypothesis-body">SARIQAMA reduce esa ansiedad y entrega información útil, confiable y personalizada que las familias no encontrarían solas fácilmente.</p>
+      </div>
+      <div class="hypothesis-card">
+        <p class="hypothesis-number">Hipótesis 3</p>
+        <p class="hypothesis-title">Hay disposición a pagar</p>
+        <p class="hypothesis-body">Al menos una parte de los usuarios percibe suficiente valor para pagar por una versión premium o por el servicio de teleorientación.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- Perfil del piloto -->
+  <section class="section">
+    <p class="section-label">A quién invitar</p>
+    <p class="section-title">Perfil del usuario ideal para el piloto</p>
+    <div class="profile-grid">
+      <div class="profile-card">
+        <p class="profile-label">Situación</p>
+        <p class="profile-body">Familia con al menos un viaje a destino tropical planificado o reciente (últimos 6 meses)</p>
+      </div>
+      <div class="profile-card">
+        <p class="profile-label">Composición</p>
+        <p class="profile-body">Preferible que viajen con niños o personas con condición médica — son quienes sienten más el problema</p>
+      </div>
+      <div class="profile-card">
+        <p class="profile-label">Tecnología</p>
+        <p class="profile-body">Usan smartphone con comodidad — no tienen que ser tech savvy, pero sí deben poder navegar una app</p>
+      </div>
+      <div class="profile-card">
+        <p class="profile-label">Motivación</p>
+        <p class="profile-body">Alguien dispuesto a dar feedback honesto, no solo a ser amable. Evitar amigos/familia cercana al inicio</p>
+      </div>
+    </div>
+    <div class="tip">
+      <span class="tip-icon">💡</span>
+      <span>Apunta a 10–15 familias. Con menos de 8 hay demasiado ruido estadístico; con más de 20 en esta fase, el costo de gestión supera el aprendizaje.</span>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- Protocolo de sesión -->
+  <section class="section">
+    <p class="section-label">Protocolo</p>
+    <p class="section-title">Cómo estructurar cada sesión de validación</p>
+
+    <div class="protocol-step">
+      <span class="step-time">0–5 min</span>
+      <p class="step-body"><strong>Contexto:</strong> Explica que estás aprendiendo, no vendiendo. Pide permiso para grabar (audio). "No hay respuestas correctas, todo lo que digas nos ayuda."</p>
+    </div>
+    <div class="protocol-step">
+      <span class="step-time">5–20 min</span>
+      <p class="step-body"><strong>Entrevista pre-uso:</strong> Preguntas sobre su experiencia pasada sin mostrar la app todavía. Escucha sin interrumpir.</p>
+    </div>
+    <div class="protocol-step">
+      <span class="step-time">20–40 min</span>
+      <p class="step-body"><strong>Uso libre:</strong> Deja que naveguen la app solos. No expliques nada — observa dónde se quedan, qué hacen primero, qué ignoran.</p>
+    </div>
+    <div class="protocol-step">
+      <span class="step-time">40–55 min</span>
+      <p class="step-body"><strong>Entrevista post-uso:</strong> Preguntas sobre lo que acaban de experimentar. Ahora sí puedes clarificar.</p>
+    </div>
+    <div class="protocol-step">
+      <span class="step-time">55–60 min</span>
+      <p class="step-body"><strong>Cierre:</strong> Pregunta de recomendación y contactos. Agradece y comenta próximos pasos.</p>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- Preguntas Pre -->
+  <section class="section">
+    <p class="section-label">Entrevista pre-uso</p>
+    <p class="section-title">Antes de mostrar la app — valida que el problema existe</p>
+    <div class="q-list">
+      <div class="q-item key">
+        <div class="q-num"></div>
+        <div>
+          <p class="q-text">Cuéntame sobre tu último viaje a un destino tropical. ¿Qué preocupaciones de salud tuviste?</p>
+          <p class="q-why">→ Abre la conversación y revela si el problema existe para ellos. Si no tuvieron ninguna, ojo.</p>
+        </div>
+      </div>
+      <div class="q-item">
+        <div class="q-num">2</div>
+        <div>
+          <p class="q-text">¿Cómo te preparaste desde el punto de vista sanitario antes de salir?</p>
+          <p class="q-why">→ Descubre si hay comportamiento actual que podamos mejorar o reemplazar.</p>
+        </div>
+      </div>
+      <div class="q-item">
+        <div class="q-num">3</div>
+        <div>
+          <p class="q-text">¿Buscaste información médica sobre el destino? ¿Dónde? ¿Qué encontraste?</p>
+          <p class="q-why">→ Identifica los competidores reales: Google, el médico de cabecera, grupos de WhatsApp.</p>
+        </div>
+      </div>
+      <div class="q-item">
+        <div class="q-num">4</div>
+        <div>
+          <p class="q-text">¿Tuviste algún problema de salud durante o después del viaje? ¿Cómo lo manejaste?</p>
+          <p class="q-why">→ Valida la urgencia del problema. Los problemas reales vividos hacen al usuario más receptivo.</p>
+        </div>
+      </div>
+      <div class="q-item">
+        <div class="q-num">5</div>
+        <div>
+          <p class="q-text">¿Viajaste o viajas con niños o alguien con una condición médica? ¿Cambió algo tu preparación?</p>
+          <p class="q-why">→ Confirma si el segmento más crítico (familias con vulnerables) siente el problema con mayor intensidad.</p>
+        </div>
+      </div>
+      <div class="q-item key">
+        <div class="q-num"></div>
+        <div>
+          <p class="q-text">¿Cuánto tiempo dedicaste en total a planificar el tema de salud para ese viaje? ¿Te pareció mucho o poco?</p>
+          <p class="q-why">→ Mide el costo actual del problema. Si dijeron "5 minutos y ya", el dolor no es suficiente.</p>
+        </div>
+      </div>
+    </div>
+    <div class="tip">
+      <span class="tip-icon">📌</span>
+      <span>No menciones SARIQAMA en esta parte. El objetivo es escuchar su mundo, no presentar el tuyo.</span>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- Preguntas Post -->
+  <section class="section">
+    <p class="section-label">Entrevista post-uso</p>
+    <p class="section-title">Después de usar la app — valida que la solución funciona</p>
+    <div class="q-list">
+      <div class="q-item key">
+        <div class="q-num"></div>
+        <div>
+          <p class="q-text">Sin que yo te explique nada — ¿qué crees que hace esta app?</p>
+          <p class="q-why">→ Mide claridad del mensaje. Si no pueden describirlo, hay un problema de comunicación grave.</p>
+        </div>
+      </div>
+      <div class="q-item">
+        <div class="q-num">2</div>
+        <div>
+          <p class="q-text">¿Qué fue lo primero que hiciste al abrir la app? ¿Por qué?</p>
+          <p class="q-why">→ Revela la intuición de navegación y si el onboarding guía bien.</p>
+        </div>
+      </div>
+      <div class="q-item">
+        <div class="q-num">3</div>
+        <div>
+          <p class="q-text">¿Qué parte te pareció más útil? ¿Qué parte no entendiste o no usarías?</p>
+          <p class="q-why">→ Prioriza features. Lo que nadie menciona como útil puede estar sobrando.</p>
+        </div>
+      </div>
+      <div class="q-item key">
+        <div class="q-num"></div>
+        <div>
+          <p class="q-text">¿Confiaste en la información médica que te entregó la app? ¿Por qué sí o no?</p>
+          <p class="q-why">→ La confianza es el activo más crítico de una app de salud. Sin ella, nada funciona.</p>
+        </div>
+      </div>
+      <div class="q-item">
+        <div class="q-num">5</div>
+        <div>
+          <p class="q-text">¿Qué tendría que tener esta app que hoy no tiene para que la usaras en tu próximo viaje?</p>
+          <p class="q-why">→ Escucha patrones, no peticiones individuales. Si 5 personas piden lo mismo, es señal.</p>
+        </div>
+      </div>
+      <div class="q-item key">
+        <div class="q-num"></div>
+        <div>
+          <p class="q-text">Si esta app existiera como servicio y tuvieras que pagar por ella, ¿cuánto pagarías y cada cuánto? ¿Por viaje o mensual?</p>
+          <p class="q-why">→ Valida disposición a pagar y modelo de cobro preferido. No sugieras precios tú primero.</p>
+        </div>
+      </div>
+      <div class="q-item key">
+        <div class="q-num"></div>
+        <div>
+          <p class="q-text">¿Se la recomendarías a alguien? ¿A quién exactamente? ¿Qué le dirías que hace?</p>
+          <p class="q-why">→ Si pueden recomendarlo con palabras precisas, entendieron el valor. Y te dan leads gratuitos.</p>
+        </div>
+      </div>
+      <div class="q-item">
+        <div class="q-num">8</div>
+        <div>
+          <p class="q-text">¿Tienes algún amigo o familiar con un viaje planificado a quien le pueda contar sobre esto?</p>
+          <p class="q-why">→ Crecimiento orgánico desde el piloto. Cada usuario satisfecho puede traer al siguiente.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- Métricas en app -->
+  <section class="section">
+    <p class="section-label">Métricas en la app</p>
+    <p class="section-title">Lo que debes observar sin preguntar</p>
+    <div class="card" style="margin-bottom:.75rem">
+      <p style="font-size:.85rem; font-weight:700; color:var(--text-2); text-transform:uppercase; letter-spacing:.06em; margin-bottom:.75rem; font-size:11px;">Comportamiento</p>
+      <div style="display:flex; flex-wrap:wrap; gap:.4rem;">
+        <span class="tag">¿Completan el onboarding?</span>
+        <span class="tag">¿Qué pantallas visitan?</span>
+        <span class="tag">¿Vuelven más de una vez?</span>
+        <span class="tag">¿Completan el checklist?</span>
+        <span class="tag">¿Usan el semáforo de síntomas?</span>
+        <span class="tag">¿Llegan a teleorientación?</span>
+        <span class="tag">¿Dónde abandonan?</span>
+      </div>
+    </div>
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <p class="metric-value">≥ 70%</p>
+        <p class="metric-label">completan el onboarding sin ayuda</p>
+      </div>
+      <div class="metric-card">
+        <p class="metric-value">≥ 50%</p>
+        <p class="metric-label">vuelven a usar la app durante el viaje</p>
+      </div>
+      <div class="metric-card">
+        <p class="metric-value">≥ 30%</p>
+        <p class="metric-label">expresan disposición a pagar algo</p>
+      </div>
+      <div class="metric-card">
+        <p class="metric-value">≥ 30</p>
+        <p class="metric-label">NPS promedio de los usuarios del piloto</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- Señales -->
+  <section class="section">
+    <p class="section-label">Criterios de decisión</p>
+    <p class="section-title">Cómo interpretar lo que escuches</p>
+    <div class="signal-grid">
+      <div class="signal-card good">
+        <p class="signal-header">Señales de seguir</p>
+        <ul class="signal-list">
+          <li>Te cuentan un problema sin que preguntes</li>
+          <li>Preguntan cuándo estará disponible</li>
+          <li>Ofrecen pagar o preguntan el precio solos</li>
+          <li>Mencionan a alguien específico a quien recomendarían</li>
+          <li>Vuelven a abrir la app sin que los pidan</li>
+          <li>Confían en la info médica sin cuestionarla</li>
+        </ul>
+      </div>
+      <div class="signal-card bad">
+        <p class="signal-header">Señales de pivotar</p>
+        <ul class="signal-list">
+          <li>"Interesante" — sin emoción real ni detalle</li>
+          <li>No pueden explicar qué hace la app</li>
+          <li>Dicen que usarían Google en su lugar</li>
+          <li>La confianza en la info médica es baja</li>
+          <li>No completan el onboarding solos</li>
+          <li>El precio que mencionan es $0 o "con el seguro"</li>
+        </ul>
+      </div>
+    </div>
+    <div class="tip">
+      <span class="tip-icon">⚠️</span>
+      <span><strong>El peor resultado no es que digan que no les gusta</strong> — es que sean indiferentes. La indiferencia significa que el problema no duele lo suficiente.</span>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- Notas finales -->
+  <section class="section">
+    <p class="section-label">Para recordar siempre</p>
+    <div class="card card-navy">
+      <p style="font-size:.9rem; color:var(--text-1); line-height:1.7;">
+        Pregunta sobre comportamientos pasados, no sobre intenciones futuras. <em>"¿Usarías esto?"</em> vale poco. <em>"¿Qué hiciste la última vez?"</em> vale mucho. Las personas mienten sobre lo que harán; no mienten sobre lo que hicieron.
+      </p>
+    </div>
+  </section>
+
+</div>
