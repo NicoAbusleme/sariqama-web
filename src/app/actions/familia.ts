@@ -4,6 +4,8 @@ import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
 import { encrypt, encryptArray } from '@/lib/crypto'
+import { viajeroSchema } from '@/lib/validators/schemas'
+import { z } from 'zod'
 
 export async function agregarViajeros(viajeros: {
   nombre: string
@@ -22,6 +24,9 @@ export async function agregarViajeros(viajeros: {
 }[], nombreFamilia?: string) {
   const supabase = await createClient()
   const adminClient = createAdminClient()
+
+  const parsed = z.array(viajeroSchema).min(1).max(10).safeParse(viajeros)
+  if (!parsed.success) return { error: 'Datos de viajeros inválidos' }
 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { error: 'No autorizado' }
@@ -86,6 +91,11 @@ export async function editarViajero(id: string, data: {
   alergia_plv?: boolean
   alergia_farmacos_cuales?: string
 }): Promise<{ error?: string }> {
+  const parsed = viajeroSchema.safeParse(data)
+  if (!parsed.success) return { error: 'Datos inválidos' }
+
+  if (!/^[0-9a-f-]{36}$/i.test(id)) return { error: 'ID inválido' }
+
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { error: 'No autorizado' }
@@ -134,6 +144,9 @@ export async function agregarUnViajero(data: {
   alergia_plv?: boolean
   alergia_farmacos_cuales?: string
 }): Promise<{ error?: string }> {
+  const parsed = viajeroSchema.safeParse(data)
+  if (!parsed.success) return { error: 'Datos inválidos' }
+
   const supabase = await createClient()
 
   const { data: { user } } = await supabase.auth.getUser()

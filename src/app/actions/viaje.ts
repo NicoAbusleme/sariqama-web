@@ -4,18 +4,22 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import { encrypt, encryptArray } from '@/lib/crypto'
+import { crearViajeSchema, editarViajeSchema, guardarSintomasSchema } from '@/lib/validators/schemas'
 
 export async function crearViaje(data: {
   destino_slug: string
   destino_nombre: string
   fecha_salida: string
   fecha_regreso: string
-  tipo: string          // primer tipo seleccionado (compat)
-  tipos: string[]       // todos los tipos seleccionados
+  tipo: string
+  tipos: string[]
   escalas: { destino: string; horas: number }[]
-  seguro_viaje?: string   // 'si' | 'no' | 'no_decidido'
+  seguro_viaje?: string
   seguro_compania?: string
 }) {
+  const parsed = crearViajeSchema.safeParse(data)
+  if (!parsed.success) return { error: 'Datos del viaje inválidos' }
+
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { error: 'No autorizado' }
@@ -54,6 +58,8 @@ export async function crearViaje(data: {
 }
 
 export async function eliminarViaje(viajeId: string) {
+  if (!/^[0-9a-f-]{36}$/i.test(viajeId)) return { error: 'ID inválido' }
+
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { error: 'No autorizado' }
@@ -84,6 +90,9 @@ export async function guardarSintomas(data: {
   exposiciones: string[]
   acciones: string[]
 }) {
+  const parsed = guardarSintomasSchema.safeParse(data)
+  if (!parsed.success) return { error: 'Datos de síntomas inválidos' }
+
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { error: 'No autorizado' }
@@ -119,6 +128,11 @@ export async function editarViaje(id: string, data: {
   seguro_viaje?: string
   seguro_compania?: string
 }): Promise<{ error?: string }> {
+  const parsed = editarViajeSchema.safeParse(data)
+  if (!parsed.success) return { error: 'Datos inválidos' }
+
+  if (!/^[0-9a-f-]{36}$/i.test(id)) return { error: 'ID inválido' }
+
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { error: 'No autorizado' }
@@ -142,6 +156,9 @@ export async function editarViaje(id: string, data: {
 }
 
 export async function toggleChecklistItem(itemId: string, completado: boolean, viajeId: string) {
+  if (!/^[0-9a-f-]{36}$/i.test(itemId) || !/^[0-9a-f-]{36}$/i.test(viajeId)) return { error: 'ID inválido' }
+  if (typeof completado !== 'boolean') return { error: 'Valor inválido' }
+
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { error: 'No autorizado' }

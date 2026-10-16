@@ -5,14 +5,21 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
 import { headers } from 'next/headers'
 import { loginRatelimit } from '@/lib/ratelimit'
+import { registroSchema, loginSchema } from '@/lib/validators/schemas'
 
 export async function registrar(formData: FormData) {
   const supabase = await createClient()
   const adminClient = createAdminClient()
 
-  const email = formData.get('email') as string
-  const password = formData.get('password') as string
-  const nombreFamilia = formData.get('nombreFamilia') as string
+  const parsed = registroSchema.safeParse({
+    email:        formData.get('email'),
+    password:     formData.get('password'),
+    nombreFamilia: formData.get('nombreFamilia'),
+  })
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? 'Datos inválidos' }
+  }
+  const { email, password, nombreFamilia } = parsed.data
 
   const { data, error } = await supabase.auth.signUp({ email, password })
 
@@ -45,9 +52,16 @@ export async function iniciarSesion(formData: FormData) {
     return { error: `Demasiados intentos fallidos. Espera unos minutos antes de volver a intentarlo.` }
   }
 
+  const parsed = loginSchema.safeParse({
+    email:    formData.get('email'),
+    password: formData.get('password'),
+  })
+  if (!parsed.success) {
+    return { error: 'Correo o contraseña incorrectos.' }
+  }
+
   const supabase = await createClient()
-  const email = formData.get('email') as string
-  const password = formData.get('password') as string
+  const { email, password } = parsed.data
 
   const { error } = await supabase.auth.signInWithPassword({ email, password })
 
