@@ -1,7 +1,7 @@
 # SARIQAMA — Documentación de Desarrollo
 
 > Archivo vivo — se actualiza al final de cada sesión de trabajo.
-> Última actualización: 2026-07-09 (Sesión 14)
+> Última actualización: 2026-10-15 (Sesión 16)
 
 ---
 
@@ -54,6 +54,7 @@ Acompaña antes, durante y después de viajes a destinos tropicales con:
 | Supabase proyecto | bivwxnpqjrnwntnqbgok.supabase.co |
 | Supabase dashboard | supabase.com → proyecto sariqama |
 | Vercel dashboard | vercel.com → proyecto sariqama-web |
+| Keep-alive endpoint | sariqama-web.vercel.app/api/keepalive?secret=... (cron cada 5 días en cron-job.org) |
 
 ---
 
@@ -454,8 +455,8 @@ Ambas se obtienen en: Upstash Console → tu base de datos → REST API section.
 - Credential stuffing (probar listas de email/contraseña filtradas)
 - No protege: DDoS (eso es a nivel de red/CDN), spam de registro (pendiente Fase C)
 
-**Pendiente Fase C:**  
-Agregar rate limiting también en `/registro` para prevenir creación masiva de cuentas spam.
+**✅ COMPLETADO Sesión 16 (2026-10-15):**  
+Rate limiting en `/registro` — 5 registros por IP en ventana fija de 1 hora (`registroRatelimit` en `src/lib/ratelimit.ts`, mismo Redis de Upstash). Protege contra creación masiva de cuentas spam.
 
 #### Audit log (post-piloto, antes de escala)
 ```sql
@@ -644,6 +645,39 @@ Fuente: CDC Yellow Book 2026. Revisado: 2026-05.
 ---
 
 ## 🔄 Historial de sesiones
+
+### Sesión 16 — 2026-10-15
+
+**Contexto:** Estabilidad antes del piloto. Keep-alive para Supabase + rate limiting en registro.
+
+**1. Keep-alive automático para Supabase free tier**
+- Problema: Supabase pausa el proyecto después de 7 días sin actividad. Primera request tras una pausa falla o demora 10–30 s.
+- Solución: endpoint `GET /api/keepalive?secret=KEEPALIVE_SECRET` que hace una query mínima (`SELECT id FROM familias LIMIT 1`) para mantener la DB activa.
+- Cron registrado en cron-job.org (gratuito) — ejecuta cada 5 días.
+- Variable de entorno `KEEPALIVE_SECRET` agregada en `.env.local` y Vercel.
+- Archivo nuevo: `src/app/api/keepalive/route.ts`
+
+**2. Rate limiting en `/registro`**
+- Pendiente desde Fase C de seguridad.
+- Añadido `registroRatelimit` en `src/lib/ratelimit.ts` — ventana fija de 1 hora, máx 5 registros por IP.
+- Diferencia con login (ventana deslizante): para registro, ventana fija es suficiente porque el objetivo es frenar bots de creación masiva, no ataques de fuerza bruta.
+- Compartido el mismo cliente Redis de Upstash con `loginRatelimit` (instancia `redis` reutilizada).
+- `registrar()` en `actions/auth.ts` ahora llama `registroRatelimit.limit(ip)` antes de cualquier operación.
+
+**Archivos modificados:**
+- `src/app/api/keepalive/route.ts` — NUEVO
+- `src/lib/ratelimit.ts` — agregado `registroRatelimit`
+- `src/app/actions/auth.ts` — `registrar()` ahora con rate limiting
+- `.env.local` — agregado `KEEPALIVE_SECRET`
+- `SARIQAMA_DESARROLLO.md` — esta entrada
+
+**Pendientes backlog:**
+- [ ] Editar destino de viaje (requiere decisión sobre checklist existente)
+- [ ] Key rotation mechanism (re-encrypt sin downtime) — Fase C
+- [ ] Audit log table — Fase C
+- [ ] Revisión legal GDPR / Ley 19.628 Chile — Fase C
+
+---
 
 ### Sesión 14 — 2026-07-09
 

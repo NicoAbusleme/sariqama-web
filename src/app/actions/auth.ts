@@ -4,10 +4,17 @@ import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
 import { headers } from 'next/headers'
-import { loginRatelimit } from '@/lib/ratelimit'
+import { loginRatelimit, registroRatelimit } from '@/lib/ratelimit'
 import { registroSchema, loginSchema } from '@/lib/validators/schemas'
 
 export async function registrar(formData: FormData) {
+  // Rate limiting: máx 5 registros por IP en 1 hora
+  const ip = (await headers()).get('x-forwarded-for')?.split(',')[0]?.trim() ?? '127.0.0.1'
+  const { success } = await registroRatelimit.limit(ip)
+  if (!success) {
+    return { error: 'Demasiados intentos de registro desde esta dirección. Intenta de nuevo en una hora.' }
+  }
+
   const supabase = await createClient()
   const adminClient = createAdminClient()
 
