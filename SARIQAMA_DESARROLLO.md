@@ -1,7 +1,7 @@
 # SARIQAMA — Documentación de Desarrollo
 
 > Archivo vivo — se actualiza al final de cada sesión de trabajo.
-> Última actualización: 2026-10-15 (Sesión 16)
+> Última actualización: 2026-10-20 (Sesión 17)
 
 ---
 
@@ -645,6 +645,43 @@ Fuente: CDC Yellow Book 2026. Revisado: 2026-05.
 ---
 
 ## 🔄 Historial de sesiones
+
+### Sesión 17 — 2026-10-20
+
+**Contexto:** Auditoría de seguridad + corrección de 5 vulnerabilidades encontradas.
+
+**1. Auditoría de seguridad completa del codebase**
+
+Se ejecutó una revisión de seguridad sobre todo `src/`, `next.config.ts` y la API. Resultado: 5 hallazgos (1 alto, 2 medio, 2 bajo).
+
+**2. Fixes aplicados**
+
+| # | Severidad | Hallazgo | Fix | Archivo |
+|---|-----------|----------|-----|---------|
+| 1 | 🔴 Alto | IDOR en `toggleChecklistItem`: el UPDATE no filtraba por `viaje_id`, permitiendo a un usuario autenticado modificar ítems de otra familia si conocía el UUID | Agregar `.eq('viaje_id', viajeId)` al UPDATE | `viaje.ts` |
+| 2 | 🟡 Medio | Secret del keepalive expuesto en URL query param (queda en logs de Vercel/CDN) | Mover a header `Authorization: Bearer <secret>` | `keepalive/route.ts` |
+| 3 | 🟡 Medio | `unsafe-eval` en CSP activo en producción (solo necesario en dev) | Guard con `process.env.NODE_ENV === 'development'` | `next.config.ts` |
+| 4 | 🟢 Bajo | `crearViaje` usaba objeto `data` en el INSERT en vez de `parsed.data` (descartaba `.trim()` de Zod) | Reemplazar `data.X` por `parsed.data.X` en el insert | `viaje.ts` |
+| 5 | 🟢 Bajo | `decrypt()` retornaba ciphertext crudo en caso de error (podría mostrarse en UI) | Retornar `null` en el catch | `crypto.ts` |
+
+**3. Cron-job.org actualizado**
+- URL del keepalive: sin `?secret=...`
+- Header agregado: `Authorization: Bearer sariqama_keepalive_2026`
+
+**Archivos modificados:**
+- `src/app/actions/viaje.ts`
+- `src/app/api/keepalive/route.ts`
+- `next.config.ts`
+- `src/lib/crypto.ts`
+
+**Pendientes backlog:**
+- [ ] Editar destino de viaje (requiere decisión sobre checklist existente)
+- [ ] Key rotation mechanism — Fase C
+- [ ] Audit log table — Fase C
+- [ ] Revisión legal Ley 19.628 Chile — Fase C
+- [ ] Fase 2: pasarela de pago, TuGo API, CDC RSS, Google OAuth
+
+---
 
 ### Sesión 16 — 2026-10-15
 
