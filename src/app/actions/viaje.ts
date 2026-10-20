@@ -32,15 +32,15 @@ export async function crearViaje(data: {
     .from('viajes')
     .insert({
       familia_id:      familia.id,
-      destino_slug:    data.destino_slug,
-      destino_nombre:  data.destino_nombre,
-      fecha_salida:    data.fecha_salida,
-      fecha_regreso:   data.fecha_regreso,
-      tipo:            data.tipo,
-      tipos:           data.tipos,
-      escalas:         data.escalas,
-      seguro_viaje:    data.seguro_viaje ?? null,
-      seguro_compania: data.seguro_compania ?? null,
+      destino_slug:    parsed.data.destino_slug,
+      destino_nombre:  parsed.data.destino_nombre,
+      fecha_salida:    parsed.data.fecha_salida,
+      fecha_regreso:   parsed.data.fecha_regreso,
+      tipo:            parsed.data.tipo,
+      tipos:           parsed.data.tipos,
+      escalas:         parsed.data.escalas,
+      seguro_viaje:    parsed.data.seguro_viaje ?? null,
+      seguro_compania: parsed.data.seguro_compania ?? null,
     })
     .select('id')
     .single()
@@ -173,6 +173,7 @@ export async function toggleChecklistItem(itemId: string, completado: boolean, v
     .from('checklist_items')
     .update({ completado })
     .eq('id', itemId)
+    .eq('viaje_id', viajeId)
 
   if (error) return { error: error.message }
 

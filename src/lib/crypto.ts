@@ -51,8 +51,7 @@ export function decrypt(value: string | null | undefined): string | null {
     const decrypted = Buffer.concat([decipher.update(encrypted), decipher.final()])
     return decrypted.toString('utf8')
   } catch {
-    // Datos corruptos o clave incorrecta — devolver intacto
-    return value
+    return null
   }
 }
 

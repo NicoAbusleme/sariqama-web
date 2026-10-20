@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 
 export async function GET(request: NextRequest) {
-  const secret = request.nextUrl.searchParams.get('secret')
+  const authHeader = request.headers.get('Authorization')
 
-  if (secret !== process.env.KEEPALIVE_SECRET) {
+  if (authHeader !== `Bearer ${process.env.KEEPALIVE_SECRET}`) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
