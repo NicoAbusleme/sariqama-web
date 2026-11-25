@@ -666,7 +666,7 @@ Se ejecutó una revisión de seguridad sobre todo `src/`, `next.config.ts` y la 
 
 **3. Cron-job.org actualizado**
 - URL del keepalive: sin `?secret=...`
-- Header agregado: `Authorization: Bearer sariqama_keepalive_2026`
+- Header agregado: `Authorization: Bearer <KEEPALIVE_SECRET>` (el valor real vive solo en Vercel y en cron-job.org; nunca en este archivo)
 
 **Archivos modificados:**
 - `src/app/actions/viaje.ts`
